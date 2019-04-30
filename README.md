@@ -19,7 +19,7 @@ atan(y, x)
 
 ## Math
 
-### toRad(node)
+### `toRad(node)`
 
 Transforms an angle in degrees in radians.
 
@@ -27,7 +27,7 @@ Transforms an angle in degrees in radians.
 (deg: Node) => Node
 ```
 
-### toDeg(node)
+### `toDeg(node)`
 
 Transforms an angle in radians in degrees.
 
@@ -35,7 +35,7 @@ Transforms an angle in radians in degrees.
 toDeg(rad: Node) => Node
 ```
 
-### min(...nodes)
+### `min(...nodes)`
 
 Takes one or more nodes as an input and returns a minimum of all the node's values.
 This is equivalent to `Animated.min` but with support for more than two parameters.
@@ -44,7 +44,7 @@ This is equivalent to `Animated.min` but with support for more than two paramete
 min(...args: Node[]) => Node
 ```
 
-### max(...nodes)
+### `max(...nodes)`
 
 Takes one or more nodes as an input and returns a maximum of all the node's values.
 This is equivalent to `Animated.min` but with support for more than two parameters.
@@ -53,7 +53,7 @@ This is equivalent to `Animated.min` but with support for more than two paramete
 max(...args: Node[]) => Node
 ```
 
-### atan(node)
+### `atan(node)`
 
 Returns a arc-tangent of the value in radians of the given node.
 We provide this function in case you are using a version of reanimated that doesn't ship `atan`.
@@ -63,7 +63,7 @@ Beware that this function is not as precise at `Math.atan()` nor `Animated.atan(
 atan(rad: Node<number>) => Node<number>
 ```
 
-### atan2(node)
+### `atan2(node)`
 
 Returns the angle in the plane (in radians) between the positive x-axis and the ray from (0,0) to the point (x,y), `atan2(y,x)`. Beware that this function is not as precise at `Math.atan2()`.
 
