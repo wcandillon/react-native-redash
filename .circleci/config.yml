@@ -37,7 +37,7 @@ jobs:
       - run: yarn test
 
       - deploy:
-          name: Expo Deployment
+          name: NPM Deployment
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
                 yarn semantic-release
