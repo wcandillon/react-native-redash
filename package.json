@@ -8,7 +8,7 @@
     "tsc": "tsc --noEmit",
     "test": "npm run lint && npm run",
     "prepare": "bob build",
-    "semantic-release": "semantic-release"
+    "semantic-release": "npm run semantic-release"
   },
   "repository": {
     "type": "git",
