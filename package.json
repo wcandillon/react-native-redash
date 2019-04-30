@@ -1,0 +1,34 @@
+{
+  "name": "redash",
+  "version": "1.0.0",
+  "description": "Utility library for React Native Reanimated",
+  "main": "dist/index.js",
+  "scripts": {
+    "compile": "rm -rf dist/* && babel . --out-dir dist --ignore node_modules,dist --source-maps",
+    "lint": "eslint src/index.ts",
+    "tsc": "tsc",
+    "test": "npm run lint && npm run compile"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wcandillon/redash.git"
+  },
+  "author": "William Candillon",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/wcandillon/redash/issues"
+  },
+  "homepage": "https://github.com/wcandillon/redash#readme",
+  "peerDependencies": {
+    "react": "*",
+    "react-native": "*",
+    "react-native-reanimated": "*"
+  },
+  "devDependencies": {
+    "@types/react": "^16.8.15",
+    "@types/react-native": "^0.57.51",
+    "eslint": "^5.16.0",
+    "eslint-config-react-native-wcandillon": "^1.0.6",
+    "react-native-reanimated": "^1.0.1"
+  }
+}
