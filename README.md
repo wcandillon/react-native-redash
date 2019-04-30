@@ -14,7 +14,7 @@ yarn add react-native-redash
 ```js
 import {atan2} from "react-native-redash";
 
-atan(y, x)
+atan2(y, x)
 ```
 
 ## Math
