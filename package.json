@@ -8,11 +8,11 @@
     "tsc": "tsc --noEmit",
     "test": "npm run lint && npm run",
     "prepare": "bob build",
-    "semantic-release": "semantic-release-cli"
+    "semantic-release": "semantic-release"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/wcandillon/redash.git"
+    "url": "https://github.com/wcandillon/redash.git"
   },
   "author": "William Candillon",
   "license": "MIT",
@@ -32,7 +32,8 @@
     "eslint": "^5.16.0",
     "eslint-config-react-native-wcandillon": "^1.0.6",
     "react-native-reanimated": "^1.0.1",
-    "semantic-release-cli": "^4.1.2"
+    "semantic-release-cli": "^4.1.2",
+    "semantic-release": "^15.13.3"
   },
   "react-native": "src/index.ts",
   "module": "lib/module/index.js",
