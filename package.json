@@ -1,6 +1,6 @@
 {
   "name": "redash",
-  "version": "1.0.0",
+  "version": "0.0.0-development",
   "description": "Utility library for React Native Reanimated",
   "main": "lib/module/index.js",
   "scripts": {
@@ -30,7 +30,8 @@
     "@types/react-native": "^0.57.51",
     "eslint": "^5.16.0",
     "eslint-config-react-native-wcandillon": "^1.0.6",
-    "react-native-reanimated": "^1.0.1"
+    "react-native-reanimated": "^1.0.1",
+    "semantic-release-cli": "^4.1.2"
   },
   "react-native": "src/index.ts",
   "module": "lib/module/index.js",
