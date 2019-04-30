@@ -4,6 +4,18 @@
 
 Utility library for React Native Reanimated.
 
+## Usage
+
+```sh
+yarn add react-native-redash
+```
+
+```js
+import {atan2} from "react-native-redash";
+
+atan(y, x)
+```
+
 ## Math
 
 ### toRad(node)
