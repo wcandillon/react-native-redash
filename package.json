@@ -5,8 +5,8 @@
   "main": "lib/module/index.js",
   "scripts": {
     "lint": "eslint src/index.ts",
-    "tsc": "tsc",
-    "test": "npm run lint && npm run compile",
+    "tsc": "tsc --noEmit",
+    "test": "npm run lint && npm run",
     "prepare": "bob build"
   },
   "repository": {
