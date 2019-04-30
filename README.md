@@ -14,7 +14,7 @@ yarn add react-native-redash
 ```js
 import {atan2} from "react-native-redash";
 
-atan(y, x)
+atan2(y, x)
 ```
 
 ## Math
@@ -60,7 +60,7 @@ We provide this function in case you are using a version of reanimated that does
 Beware that this function is not as precise at `Math.atan()` nor `Animated.atan()`.
 
 ```js
-atan(rad: Node<number>) => Node<number>
+atan(rad: Node) => Node
 ```
 
 ### `atan2(node)`
