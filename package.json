@@ -7,7 +7,8 @@
     "lint": "eslint src/index.ts",
     "tsc": "tsc --noEmit",
     "test": "npm run lint && npm run",
-    "prepare": "bob build"
+    "prepare": "bob build",
+    "semantic-release": "semantic-release"
   },
   "repository": {
     "type": "git",
