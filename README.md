@@ -1,5 +1,5 @@
 # redash
-Utility library for React Native Reanimated
+Utility library for React Native Reanimated.
 
 ## Math
 
