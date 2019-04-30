@@ -32,8 +32,8 @@
     "eslint": "^5.16.0",
     "eslint-config-react-native-wcandillon": "^1.0.6",
     "react-native-reanimated": "^1.0.1",
-    "semantic-release-cli": "^4.1.2",
-    "semantic-release": "^15.13.3"
+    "semantic-release": "^15.13.3",
+    "semantic-release-cli": "^4.1.2"
   },
   "react-native": "src/index.ts",
   "module": "lib/module/index.js",
