@@ -31,10 +31,12 @@ const {
   Node,
 } = Animated;
 
-type TimingConfig = Parameters<typeof timing>[1];
-type Clock = Parameters<typeof clockRunning>[0];
-type Node = ReturnType<typeof add>;
-type Adaptable<T> = Node | T;
+export { timing, clockRunning, add };
+
+export type TimingConfig = Parameters<typeof timing>[1];
+export type Clock = Parameters<typeof clockRunning>[0];
+export type Node = ReturnType<typeof add>;
+export type Adaptable<T> = Node | T;
 
 // ## Math
 export const toRad = (deg: Adaptable<number>) => multiply(deg, Math.PI / 180);
