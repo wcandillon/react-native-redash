@@ -1,6 +1,7 @@
 # redash
 
 [![CircleCI](https://circleci.com/gh/wcandillon/redash.svg?style=svg)](https://circleci.com/gh/wcandillon/redash)
+[![npm version](https://badge.fury.io/js/react-native.svg)](https://badge.fury.io/js/react-native)
 
 Utility library for React Native Reanimated.
 
