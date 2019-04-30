@@ -1,4 +1,5 @@
 import Animated from "react-native-reanimated";
+
 const {
   event,
   spring,
@@ -27,22 +28,24 @@ const {
   timing,
   Clock,
   greaterOrEq,
-  Node
+  Node,
 } = Animated;
 
-type Node<T> = typeof Node;
-type Adaptable<T> = Node<T> | T;
+type TimingConfig = Parameters<typeof timing>[1];
+type Clock = Parameters<typeof clockRunning>[0];
+type Node = ReturnType<typeof add>;
+type Adaptable<T> = Node | T;
 
 // ## Math
 export const toRad = (deg: Adaptable<number>) => multiply(deg, Math.PI / 180);
 export const toDeg = (rad: Adaptable<number>) => multiply(rad, 180 / Math.PI);
 export const min = (...args: Adaptable<number>[]) => args.reduce((acc, arg) => min2(acc, arg));
 export const max = (...args: Adaptable<number>[]) => args.reduce((acc, arg) => max2(acc, arg));
-export const atan = (x) => sub(
+export const atan = (x: Adaptable<number>) => sub(
   multiply(Math.PI / 4, x),
   multiply(multiply(x, sub(abs(x), 1)), add(0.2447, multiply(0.0663, abs(x)))),
 );
-export const atan2 = (y, x) => {
+export const atan2 = (y: Adaptable<number>, x: Adaptable<number>) => {
   const coeff1 = Math.PI / 4;
   const coeff2 = 3 * coeff1;
   const absY = abs(y);
@@ -56,15 +59,19 @@ export const atan2 = (y, x) => {
 
 // ## Animations
 
-export const getSnapPoint = (value: Adaptable<number>, velocity: Adaptable<number>, points: number[]): Value => {
+export const getSnapPoint = (value: Adaptable<number>, velocity: Adaptable<number>, points: number[]) => {
   const point = add(value, multiply(0.2, velocity));
-  const diffPoint = p => abs(sub(point, p));
+  const diffPoint = (p: Adaptable<number>) => abs(sub(point, p));
   const deltas = points.map(p => diffPoint(p));
   const minDelta = min(...deltas);
-  return points.reduce((acc, p) => cond(eq(diffPoint(p), minDelta), p, acc));
+  return points.reduce((acc: Node, p: number) => cond(eq(diffPoint(p), minDelta), p, acc), new Value());
 };
 
-export const lookup = (array: Adaptable<number>[], index: Adaptable<number>, notFound: Adaptable<string> = new Value("null")) => array.reduce((acc, v, i) => cond(eq(i, index), v, acc), notFound);
+export const lookup = (
+  array: Adaptable<number>[],
+  index: Adaptable<number>,
+  notFound: Node = new Value(),
+) => array.reduce((acc, v, i) => cond(eq(i, index), v, acc), notFound);
 
 export function runSpring(clock: Clock, value: Adaptable<number>, dest: Adaptable<number>) {
   const state = {
@@ -138,9 +145,13 @@ interface RGBColor {
   r: number;
   g: number;
   b: number;
-};
+}
 
-function colorHSV(h: Adaptable<number> /* 0 - 360 */, s: Adaptable<number>  /* 0 - 1 */, v: Adaptable<number> /* 0 - 1 */) {
+function colorHSV(
+  h: Adaptable<number> /* 0 - 360 */,
+  s: Adaptable<number> /* 0 - 1 */,
+  v: Adaptable<number>, /* 0 - 1 */
+) {
   // Converts color from HSV format into RGB
   // Formula explained here: https://www.rapidtables.com/convert/color/hsv-to-rgb.html
   const c = multiply(v, s);
@@ -173,7 +184,8 @@ function colorHSV(h: Adaptable<number> /* 0 - 360 */, s: Adaptable<number>  /* 0
 const rgb2hsv = ({ r, g, b }: RGBColor) => {
   const v = Math.max(r, g, b); const
     n = v - Math.min(r, g, b);
-  const h = n && ((v == r) ? (g - b) / n : ((v == g) ? 2 + (b - r) / n : 4 + (r - g) / n));
+  // eslint-disable-next-line no-nested-ternary
+  const h = n && ((v === r) ? (g - b) / n : ((v === g) ? 2 + (b - r) / n : 4 + (r - g) / n));
   return { h: 60 * (h < 0 ? h + 6 : h), s: v && n / v, v };
 };
 
@@ -208,13 +220,13 @@ export const interpolateColors = (animationValue: Adaptable<number>, inputRange:
 //  { perspective },
 //  translateZ(perspective, z)
 // ]
-// ``` 
+// ```
 export const translateZ = (perspective: Adaptable<number>, z: Adaptable<number>) => (
   { scale: divide(perspective, sub(perspective, z)) }
 );
 
 // ## Gestures
-export const onScroll = (contentOffset: { x?: Value, y?: Value }) => event(
+export const onScroll = (contentOffset: { x?: Node, y?: Node }) => event(
   [
     {
       nativeEvent: {

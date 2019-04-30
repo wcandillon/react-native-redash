@@ -4,7 +4,7 @@
   "description": "Utility library for React Native Reanimated",
   "main": "dist/index.js",
   "scripts": {
-    "compile": "rm -rf dist/* && babel . --out-dir dist --ignore node_modules,dist --source-maps",
+    "build": "rm -rf dist/* && babel src/index.ts --out-dir dist --ignore node_modules,dist --source-maps",
     "lint": "eslint src/index.ts",
     "tsc": "tsc",
     "test": "npm run lint && npm run compile"
@@ -27,6 +27,7 @@
   "devDependencies": {
     "@types/react": "^16.8.15",
     "@types/react-native": "^0.57.51",
+    "babel-cli": "^6.26.0",
     "eslint": "^5.16.0",
     "eslint-config-react-native-wcandillon": "^1.0.6",
     "react-native-reanimated": "^1.0.1"
