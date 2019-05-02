@@ -6,6 +6,7 @@ const { Value } = Animated;
 const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
 
 export type Value = typeof Value;
+export { Value };
 
 interface TextProps {
   text: Value;

@@ -31,7 +31,7 @@ const {
   Value,
 } = Animated;
 
-export type Value = typeof Value;
+export { add };
 export type Node = ReturnType<typeof add>;
 export type Adaptable<T> = Node | T;
 
