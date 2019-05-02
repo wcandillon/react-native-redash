@@ -262,9 +262,9 @@ interface InteractableProps {
   animatedValueY?: any;
   style?: StyleProp<ViewStyle>;
   dragEnabled: boolean;
-  onSnap: (e: { nativeEvent: SnapPoint & { index: number } }) => void;
-  onStop: (e: { nativeEvent: { x: number, y: number } }) => void;
-  onDrag: (e: { nativeEvent: { x: number, y: number, state: "start" | "end" } }) => void;
+  onSnap?: (e: { nativeEvent: SnapPoint & { index: number } }) => void;
+  onStop?: (e: { nativeEvent: { x: number, y: number } }) => void;
+  onDrag?: (e: { nativeEvent: { x: number, y: number, state: "start" | "end" } }) => void;
   initialPosition: Position;
   dragToss: number;
   dragWithSpring?: {tension: number, damping: number};
