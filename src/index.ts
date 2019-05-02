@@ -1,5 +1,8 @@
 import Animated from "react-native-reanimated";
 
+export { default as ReText } from "./ReText";
+export { default as Interactable } from "./Interactable";
+
 const {
   event,
   spring,
