@@ -1,6 +1,7 @@
 import React from "react";
 import Animated from "react-native-reanimated";
 import { PanGestureHandler, State } from "react-native-gesture-handler";
+import { ViewStyle } from "react-native";
 
 const {
   add,
@@ -72,13 +73,16 @@ function snapTo(target, snapPoints, best, clb, dragClb) {
             (pt.x === undefined || pt.x === bx)
             && (pt.y === undefined || pt.y === by)
           ) {
-            clb && clb({ nativeEvent: { ...pt, index } });
-            dragClb
-              && dragClb({
+            if (clb) {
+              clb({ nativeEvent: { ...pt, index } });
+            }
+            if (dragClb) {
+              dragClb({
                 nativeEvent: {
                   x, y, targetSnapPointId: pt.id, state: "end",
                 },
               });
+            }
           }
         });
       }),
@@ -192,7 +196,25 @@ function withLimits(value, lowerBound, upperBound) {
   return result;
 }
 
-export default class Interactable extends React.Component {
+interface SnapPoint {
+  x?: number;
+  y?: number;
+  damping?: number;
+  tension?: number;
+  id?: string;
+}
+
+interface InteractableProps {
+  snapPoints: SnapPoint[];
+  horizontalOnly?: boolean;
+  verticalOnly?: boolean;
+  animatedValueX?: typeof Value;
+  animatedValueY?: typeof Value;
+  style?: ViewStyle;
+  dragEnabled?: boolean;
+}
+
+export default class Interactable extends React.PureComponent<InteractableProps> {
   static defaultProps = {
     dragToss: 0.1,
     dragEnabled: true,
@@ -205,7 +227,7 @@ export default class Interactable extends React.Component {
     const gesture = { x: new Value(0), y: new Value(0) };
     const state = new Value(-1);
 
-    this._onGestureEvent = event([
+    this.onGestureEvent = event([
       {
         nativeEvent: {
           translationX: gesture.x,
@@ -349,10 +371,10 @@ export default class Interactable extends React.Component {
     // front, so we join in reverse order and then reverse the array.
     const sortBuckets = specialBuckets => ({
       x: specialBuckets
-        .map((b, idx) => [...permBuckets[idx], ...b].reverse().map(b => b.x))
+        .map((b, idx) => [...permBuckets[idx], ...b].reverse().map(b1 => b1.x))
         .reduce((acc, b) => acc.concat(b), []),
       y: specialBuckets
-        .map((b, idx) => [...permBuckets[idx], ...b].reverse().map(b => b.y))
+        .map((b, idx) => [...permBuckets[idx], ...b].reverse().map(b1 => b1.y))
         .reduce((acc, b) => acc.concat(b), []),
     });
     const dragBehaviors = sortBuckets(dragBuckets);
@@ -435,8 +457,8 @@ export default class Interactable extends React.Component {
         : step;
 
       // export some values to be available for imperative commands
-      this._dragging[axis] = dragging;
-      this._velocity[axis] = vx;
+      this.dragging[axis] = dragging;
+      this.velocity[axis] = vx;
 
       // update animatedValueX/animatedValueY
       const doUpdateAnReturn = update[axis] ? set(update[axis], x) : x;
@@ -445,25 +467,64 @@ export default class Interactable extends React.Component {
     };
 
     // variables to be used to access reanimated values from imperative commands
-    this._dragging = {};
-    this._velocity = {};
-    this._position = target;
-    this._snapAnchor = snapAnchor;
+    this.dragging = {};
+    this.velocity = {};
+    this.position = target;
+    this.snapAnchor = snapAnchor;
 
-    this._transX = trans("x", "vx", "left", "right");
-    this._transY = trans("y", "vy", "top", "bottom");
+    this.transX = trans("x", "vx", "left", "right");
+    this.transY = trans("y", "vy", "top", "bottom");
+  }
+
+  // imperative commands
+  setVelocity({ x, y }) {
+    if (x !== undefined) {
+      this.dragging.x.setValue(1);
+      this.velocity.x.setValue(x);
+    }
+    if (y !== undefined) {
+      this.dragging.y.setValue(1);
+      this.velocity.y.setValue(y);
+    }
+  }
+
+  snapTo({ index }) {
+    const { snapPoints, onSnap } = this.props;
+    const snapPoint = snapPoints[index];
+    this.snapAnchor.tension.setValue(
+      snapPoint.tension || DEFAULT_SNAP_TENSION,
+    );
+    this.snapAnchor.damping.setValue(
+      snapPoint.damping || DEFAULT_SNAP_DAMPING,
+    );
+    this.snapAnchor.x.setValue(snapPoint.x || 0);
+    this.snapAnchor.y.setValue(snapPoint.y || 0);
+    if (onSnap) {
+      onSnap({ nativeEvent: { ...snapPoint, index } });
+    }
+  }
+
+  changePosition({ x, y }) {
+    if (x !== undefined) {
+      this.dragging.x.setValue(1);
+      this.position.x.setValue(x);
+    }
+    if (y !== undefined) {
+      this.dragging.x.setValue(1);
+      this.position.y.setValue(y);
+    }
   }
 
   render() {
+    const { onGestureEvent } = this;
     const {
-      children, style, horizontalOnly, verticalOnly,
+      children, style, horizontalOnly, verticalOnly, dragEnabled: enabled,
     } = this.props;
     return (
       <PanGestureHandler
         maxPointers={1}
-        enabled={this.props.dragEnabled}
-        onGestureEvent={this._onGestureEvent}
-        onHandlerStateChange={this._onGestureEvent}
+        onHandlerStateChange={onGestureEvent}
+        {...{ onGestureEvent, enabled }}
       >
         <Animated.View
           style={[
@@ -471,8 +532,8 @@ export default class Interactable extends React.Component {
             {
               transform: [
                 {
-                  translateX: verticalOnly ? 0 : this._transX,
-                  translateY: horizontalOnly ? 0 : this._transY,
+                  translateX: verticalOnly ? 0 : this.transX,
+                  translateY: horizontalOnly ? 0 : this.transY,
                 },
               ],
             },
@@ -482,42 +543,5 @@ export default class Interactable extends React.Component {
         </Animated.View>
       </PanGestureHandler>
     );
-  }
-
-  // imperative commands
-  setVelocity({ x, y }) {
-    if (x !== undefined) {
-      this._dragging.x.setValue(1);
-      this._velocity.x.setValue(x);
-    }
-    if (y !== undefined) {
-      this._dragging.y.setValue(1);
-      this._velocity.y.setValue(y);
-    }
-  }
-
-  snapTo({ index }) {
-    const snapPoint = this.props.snapPoints[index];
-    this._snapAnchor.tension.setValue(
-      snapPoint.tension || DEFAULT_SNAP_TENSION,
-    );
-    this._snapAnchor.damping.setValue(
-      snapPoint.damping || DEFAULT_SNAP_DAMPING,
-    );
-    this._snapAnchor.x.setValue(snapPoint.x || 0);
-    this._snapAnchor.y.setValue(snapPoint.y || 0);
-    this.props.onSnap
-      && this.props.onSnap({ nativeEvent: { ...snapPoint, index } });
-  }
-
-  changePosition({ x, y }) {
-    if (x !== undefined) {
-      this._dragging.x.setValue(1);
-      this._position.x.setValue(x);
-    }
-    if (y !== undefined) {
-      this._dragging.x.setValue(1);
-      this._position.y.setValue(y);
-    }
   }
 }

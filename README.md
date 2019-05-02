@@ -28,7 +28,7 @@ Documentation of this component is available (here)[https://github.com/wix/react
 Example usage:
 
 ```js
- <Interactable
+<Interactable
     snapPoints={[{ x: -width }, { x: 0 }, { x: width }]}
     style={{...StyleSheet.absoluteFillObject, backgroundColor: "blue" }}
     onSnap={() => alert("oh snap!")}
