@@ -487,7 +487,11 @@ export default class Interactable extends React.PureComponent<InteractableProps>
       startClock(clock),
     );
 
-    const trans = (axis: "x" | "y", vaxis: "vx" | "vy", lowerBound: "top" | "left" | "right" | "bottom", upperBound: "top" | "left" | "right" | "bottom") => {
+    const trans = (
+      axis: "x" | "y", vaxis: "vx" | "vy",
+      lowerBound: "top" | "left" | "right" | "bottom",
+      upperBound: "top" | "left" | "right" | "bottom",
+    ) => {
       const dragging = new Value(0);
       const start = new Value(0);
       const x = target[axis];
