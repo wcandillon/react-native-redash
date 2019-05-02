@@ -17,6 +17,34 @@ import {atan2} from "react-native-redash";
 atan2(y, x)
 ```
 
+## Components
+
+### `<Interactable>`
+
+Implementation of `Interactable` from `react-native-interactable` with `react-native-gesture-handler` and `react-native-reanimated`.
+The original implementation has been built by (the reanimated team)[https://github.com/kmagiera/react-native-reanimated/blob/master/Example/Interactable.js].
+Documentation of this component is available (here)[https://github.com/wix/react-native-interactable].
+
+Example usage:
+
+```js
+ <Interactable
+    snapPoints={[{ x: -width }, { x: 0 }, { x: width }]}
+    style={{...StyleSheet.absoluteFillObject, backgroundColor: "blue" }}
+    onSnap={() => alert("oh snap!")}
+/>
+```
+
+### `<ReText>`
+
+Component that display an animation value as text.
+
+Example usage:
+
+```js
+<ReText text={new Value("hello world!")} style={{ color: "blue" }} />
+```
+
 ## Math
 
 ### `toRad(node)`
