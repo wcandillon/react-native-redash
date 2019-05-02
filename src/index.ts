@@ -187,18 +187,33 @@ function colorHSV(
   ]);
 }
 
-const rgb2hsv = ({ r, g, b }: RGBColor) => {
-  const v = Math.max(r, g, b); const
-    n = v - Math.min(r, g, b);
-  // eslint-disable-next-line no-nested-ternary
-  const h = n && ((v === r) ? (g - b) / n : ((v === g) ? 2 + (b - r) / n : 4 + (r - g) / n));
-  return { h: 60 * (h < 0 ? h + 6 : h), s: v && n / v, v };
-};
+const rgbToHsv = (c: RGBColor) => {
+  const r = c.r / 255;
+  const g = c.g / 255;
+  const b = c.b / 255;
 
+  const ma = Math.max(r, g, b);
+  const mi = Math.min(r, g, b);
+  let h: number = 0;
+  const v = ma;
+
+  const d = ma - mi;
+  const s = ma === 0 ? 0 : d / ma;
+  if (ma === mi) {
+    h = 0; // achromatic
+  } else {
+    switch (ma) {
+    case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+    case g: h = (b - r) / d + 2; break;
+    case b: h = (r - g) / d + 4; break;
+    default: // do nothing
+    }
+    h /= 6;
+  }
+  return { h, s, v };
+};
 export const interpolateColors = (animationValue: Adaptable<number>, inputRange: number[], colors: RGBColor[]) => {
-  const colorsAsHSV = colors
-    .map(c => rgb2hsv(c))
-    .map(c => ({ h: c.h, s: c.s / 100, v: c.v / 100 }));
+  const colorsAsHSV = colors.map(c => rgbToHsv(c));
   const h = interpolate(animationValue, {
     inputRange,
     outputRange: colorsAsHSV.map(c => c.h),
