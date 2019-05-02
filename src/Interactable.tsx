@@ -262,9 +262,9 @@ interface InteractableProps {
   animatedValueY?: any;
   style?: StyleProp<ViewStyle>;
   dragEnabled: boolean;
-  onSnap: (e: { nativeEvent: SnapPoint & { index: number } }) => void;
-  onStop: (e: { nativeEvent: { x: number, y: number } }) => void;
-  onDrag: (e: { nativeEvent: { x: number, y: number, state: "start" | "end" } }) => void;
+  onSnap?: (e: { nativeEvent: SnapPoint & { index: number } }) => void;
+  onStop?: (e: { nativeEvent: { x: number, y: number } }) => void;
+  onDrag?: (e: { nativeEvent: { x: number, y: number, state: "start" | "end" } }) => void;
   initialPosition: Position;
   dragToss: number;
   dragWithSpring?: {tension: number, damping: number};
@@ -396,7 +396,10 @@ export default class Interactable extends React.PureComponent<InteractableProps>
     }
 
     const handleStartDrag = props.onDrag
-      && call([target.x, target.y], ([x, y]) => props.onDrag({ nativeEvent: { x, y, state: "start" } }));
+      && call(
+        [target.x, target.y],
+        ([x, y]) => props.onDrag && props.onDrag({ nativeEvent: { x, y, state: "start" } }),
+      );
 
     const snapBuckets: [any[], any[], any[]] = [[], [], []];
     const snapAnchor = {
@@ -480,10 +483,10 @@ export default class Interactable extends React.PureComponent<InteractableProps>
       ),
       block([
         props.onStop
-          && cond(
+          ? cond(
             clockRunning(clock),
-            call([target.x, target.y], ([x, y]) => props.onStop({ nativeEvent: { x, y } })),
-          ),
+            call([target.x, target.y], ([x, y]) => props.onStop && props.onStop({ nativeEvent: { x, y } })),
+          ) : [],
         stopClock(clock),
       ]),
       startClock(clock),
@@ -522,12 +525,12 @@ export default class Interactable extends React.PureComponent<InteractableProps>
       const step = cond(
         eq(state, State.ACTIVE),
         [
-          cond(dragging, 0, [
-            handleStartDrag,
+          cond(dragging, 0, block([
+            handleStartDrag || [],
             startClock(clock),
             set(dragging, 1),
             set(start, x),
-          ]),
+          ])),
           set(anchor, add(start, drag)),
           cond(dt, dragBehaviors[axis]),
         ],
