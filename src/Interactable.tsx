@@ -31,7 +31,9 @@ const {
   Value,
 } = Animated;
 
+export type Value = typeof Value;
 export type Node = ReturnType<typeof add>;
+export type Adaptable<T> = Node | T;
 
 const ANIMATOR_PAUSE_CONSECUTIVE_FRAMES = 10;
 const ANIMATOR_PAUSE_ZERO_VELOCITY = 1;
@@ -562,7 +564,7 @@ export default class Interactable extends React.PureComponent<InteractableProps>
   }
 
   // imperative commands
-  setVelocity({ x, y }: { x: number | typeof Value, y: number | typeof Value }) {
+  setVelocity({ x, y }: { x: Adaptable<number>, y: Adaptable<number> }) {
     if (x !== undefined) {
       this.dragging.x.setValue(1);
       this.velocity.x.setValue(x);
@@ -589,7 +591,7 @@ export default class Interactable extends React.PureComponent<InteractableProps>
     }
   }
 
-  changePosition({ x, y }: { x: number | typeof Value, y: number | typeof Value}) {
+  changePosition({ x, y }: { x: Adaptable<number>, y: Adaptable<number>}) {
     if (x !== undefined) {
       this.dragging.x.setValue(1);
       this.position.x.setValue(x);

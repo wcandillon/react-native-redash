@@ -5,8 +5,10 @@ import Animated from "react-native-reanimated";
 const { Value } = Animated;
 const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
 
+export type Value = typeof Value;
+
 interface TextProps {
-  text: typeof Value;
+  text: Value;
   style?: TextStyle;
 }
 
