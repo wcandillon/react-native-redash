@@ -1,7 +1,8 @@
+/* eslint-disable react/sort-comp */
 import React from "react";
 import Animated from "react-native-reanimated";
 import { PanGestureHandler, State } from "react-native-gesture-handler";
-import { ViewStyle } from "react-native";
+import { StyleProp, ViewStyle } from "react-native";
 
 const {
   add,
@@ -30,6 +31,10 @@ const {
   Value,
 } = Animated;
 
+export { add };
+export type Node = ReturnType<typeof add>;
+export type Adaptable<T> = Node | T;
+
 const ANIMATOR_PAUSE_CONSECUTIVE_FRAMES = 10;
 const ANIMATOR_PAUSE_ZERO_VELOCITY = 1;
 const DEFAULT_SNAP_TENSION = 300;
@@ -37,11 +42,11 @@ const DEFAULT_SNAP_DAMPING = 0.7;
 const DEFAULT_GRAVITY_STRENGTH = 400;
 const DEFAULT_GRAVITY_FALLOF = 40;
 
-function sq(x) {
+function sq(x: any) {
   return multiply(x, x);
 }
 
-function influenceAreaWithRadius(radius, anchor) {
+function influenceAreaWithRadius(radius: number, anchor: any) {
   return {
     left: (anchor.x || 0) - radius,
     right: (anchor.x || 0) + radius,
@@ -50,25 +55,25 @@ function influenceAreaWithRadius(radius, anchor) {
   };
 }
 
-function snapTo(target, snapPoints, best, clb, dragClb) {
+function snapTo(target: any, snapPoints: any, best: any, clb: any, dragClb: any) {
   const dist = new Value(0);
-  const snap = pt => [
+  const snap = (pt: any) => [
     set(best.tension, pt.tension || DEFAULT_SNAP_TENSION),
     set(best.damping, pt.damping || DEFAULT_SNAP_DAMPING),
     set(best.x, pt.x || 0),
     set(best.y, pt.y || 0),
   ];
-  const snapDist = pt => add(sq(sub(target.x, pt.x || 0)), sq(sub(target.y, pt.y || 0)));
+  const snapDist = (pt: any) => add(sq(sub(target.x, pt.x || 0)), sq(sub(target.y, pt.y || 0)));
   return [
     set(dist, snapDist(snapPoints[0])),
     ...snap(snapPoints[0]),
-    ...snapPoints.map((pt) => {
+    ...snapPoints.map((pt: any) => {
       const newDist = snapDist(pt);
       return cond(lessThan(newDist, dist), [set(dist, newDist), ...snap(pt)]);
     }),
     (clb || dragClb)
       && call([best.x, best.y, target.x, target.y], ([bx, by, x, y]) => {
-        snapPoints.forEach((pt, index) => {
+        snapPoints.forEach((pt: any, index: number) => {
           if (
             (pt.x === undefined || pt.x === bx)
             && (pt.y === undefined || pt.y === by)
@@ -89,7 +94,7 @@ function snapTo(target, snapPoints, best, clb, dragClb) {
   ];
 }
 
-function springBehavior(dt, target, obj, anchor, tension = 300) {
+function springBehavior(dt: any, target: any, obj: any, anchor: any, tension: number = 300) {
   const dx = sub(target.x, anchor.x);
   const ax = divide(multiply(-1, tension, dx), obj.mass);
   const dy = sub(target.y, anchor.y);
@@ -100,7 +105,7 @@ function springBehavior(dt, target, obj, anchor, tension = 300) {
   };
 }
 
-function frictionBehavior(dt, target, obj, damping = 0.7) {
+function frictionBehavior(dt: any, obj: any, damping: number = 0.7) {
   const friction = pow(damping, multiply(60, dt));
   return {
     x: set(obj.vx, multiply(obj.vx, friction)),
@@ -108,7 +113,7 @@ function frictionBehavior(dt, target, obj, damping = 0.7) {
   };
 }
 
-function anchorBehavior(dt, target, obj, anchor) {
+function anchorBehavior(dt: any, target: any, obj: any, anchor: any) {
   const dx = sub(anchor.x, target.x);
   const dy = sub(anchor.y, target.y);
   return {
@@ -118,12 +123,12 @@ function anchorBehavior(dt, target, obj, anchor) {
 }
 
 function gravityBehavior(
-  dt,
-  target,
-  obj,
-  anchor,
-  strength = DEFAULT_GRAVITY_STRENGTH,
-  falloff = DEFAULT_GRAVITY_FALLOF,
+  dt: any,
+  target: any,
+  obj: any,
+  anchor: any,
+  strength: number = DEFAULT_GRAVITY_STRENGTH,
+  falloff: number = DEFAULT_GRAVITY_FALLOF,
 ) {
   const dx = sub(target.x, anchor.x);
   const dy = sub(target.y, anchor.y);
@@ -140,9 +145,9 @@ function gravityBehavior(
   };
 }
 
-function bounceBehavior(dt, target, obj, area, bounce = 0) {
-  const xnodes = [];
-  const ynodes = [];
+function bounceBehavior(target: any, obj: any, area: any, bounce: number = 0) {
+  const xnodes: Node[] = [];
+  const ynodes: Node[] = [];
   const flipx = set(obj.vx, multiply(-1, obj.vx, bounce));
   const flipy = set(obj.vy, multiply(-1, obj.vy, bounce));
   if (area.left !== undefined) {
@@ -167,7 +172,7 @@ function bounceBehavior(dt, target, obj, area, bounce = 0) {
   };
 }
 
-function withInfluence(area, target, behavior) {
+function withInfluence(area: any, target: any, behavior: any) {
   if (!area) {
     return behavior;
   }
@@ -175,17 +180,17 @@ function withInfluence(area, target, behavior) {
   const testRight = area.right === undefined || lessOrEq(target.x, area.right);
   const testTop = area.top === undefined || lessOrEq(area.top, target.y);
   const testBottom = area.bottom === undefined || lessOrEq(target.y, area.bottom);
-  const testNodes = [testLeft, testRight, testTop, testBottom].filter(
+  const testNodes: any[] = [testLeft, testRight, testTop, testBottom].filter(
     t => t !== true,
   );
-  const test = and(...testNodes);
+  const test = and(testNodes[0], testNodes[1], ...testNodes.slice(2));
   return {
     x: cond(test, behavior.x),
     y: cond(test, behavior.y),
   };
 }
 
-function withLimits(value, lowerBound, upperBound) {
+function withLimits(value: any, lowerBound: any, upperBound: any) {
   let result = value;
   if (lowerBound !== undefined) {
     result = cond(lessThan(value, lowerBound), lowerBound, result);
@@ -204,14 +209,66 @@ interface SnapPoint {
   id?: string;
 }
 
+interface InfluenceArea {
+  left?: number;
+  right?: number;
+  top?: number;
+  bottom?: number;
+}
+
+interface SpringPoint {
+  x?: number;
+  y?: number;
+  tension?: number;
+  damping?: number;
+  influenceArea?: InfluenceArea;
+}
+
+interface GravityPoint {
+  x?: number;
+  y?: number;
+  strength?: number;
+  falloff?: number;
+  damping?: number;
+  influenceArea?: InfluenceArea;
+}
+
+interface FrictionArea {
+  damping?: number;
+  influenceArea?: InfluenceArea;
+}
+
+interface Position {
+  x: number;
+  y: number;
+}
+
+interface Boundaries {
+  left?: number;
+  right?: number;
+  top?: number;
+  bottom?: number;
+  bounce?: number;
+}
+
 interface InteractableProps {
   snapPoints: SnapPoint[];
+  springPoints?: SpringPoint[];
+  gravityPoints?: GravityPoint[];
+  frictionAreas?: FrictionArea[];
   horizontalOnly?: boolean;
   verticalOnly?: boolean;
-  animatedValueX?: typeof Value;
-  animatedValueY?: typeof Value;
-  style?: ViewStyle;
-  dragEnabled?: boolean;
+  animatedValueX?: any;
+  animatedValueY?: any;
+  style?: StyleProp<ViewStyle>;
+  dragEnabled: boolean;
+  onSnap: (e: { nativeEvent: SnapPoint & { index: number } }) => void;
+  onStop: (e: { nativeEvent: { x: number, y: number } }) => void;
+  onDrag: (e: { nativeEvent: { x: number, y: number, state: "start" | "end" } }) => void;
+  initialPosition: Position;
+  dragToss: number;
+  dragWithSpring?: {tension: number, damping: number};
+  boundaries?: Boundaries;
 }
 
 export default class Interactable extends React.PureComponent<InteractableProps> {
@@ -221,7 +278,35 @@ export default class Interactable extends React.PureComponent<InteractableProps>
     initialPosition: { x: 0, y: 0 },
   };
 
-  constructor(props) {
+  transY: any;
+
+  transX: any;
+
+  onGestureEvent: any;
+
+  position: {
+    x: any,
+    y: any
+  };
+
+  dragging: {
+    x?: any,
+    y?: any
+  };
+
+  snapAnchor: {
+    x: any,
+    y: any,
+    tension: any,
+    damping: any
+  };
+
+  velocity: {
+    x?: any,
+    y?: any
+  }
+
+  constructor(props: InteractableProps) {
     super(props);
 
     const gesture = { x: new Value(0), y: new Value(0) };
@@ -262,9 +347,9 @@ export default class Interactable extends React.PureComponent<InteractableProps>
       y: add(target.y, multiply(props.dragToss, obj.vy)),
     };
 
-    const permBuckets = [[], [], []];
+    const permBuckets: [any[], any[], any[]] = [[], [], []];
 
-    const addSpring = (anchor, tension, influence, buckets = permBuckets) => {
+    const addSpring = (anchor: any, tension: any, influence: any, buckets: any = permBuckets) => {
       buckets[0].push(
         withInfluence(
           influence,
@@ -274,22 +359,22 @@ export default class Interactable extends React.PureComponent<InteractableProps>
       );
     };
 
-    const addFriction = (damping, influence, buckets = permBuckets) => {
+    const addFriction = (damping: any, influence: any, buckets: any = permBuckets) => {
       buckets[1].push(
         withInfluence(
           influence,
           target,
-          frictionBehavior(dt, target, obj, damping),
+          frictionBehavior(dt, obj, damping),
         ),
       );
     };
 
     const addGravity = (
-      anchor,
-      strength,
-      falloff,
-      influence,
-      buckets = permBuckets,
+      anchor: any,
+      strength: any,
+      falloff: any,
+      influence: any,
+      buckets: any = permBuckets,
     ) => {
       buckets[0].push(
         withInfluence(
@@ -301,7 +386,7 @@ export default class Interactable extends React.PureComponent<InteractableProps>
     };
 
     const dragAnchor = { x: new Value(0), y: new Value(0) };
-    const dragBuckets = [[], [], []];
+    const dragBuckets: [any[], any[], any[]] = [[], [], []];
     if (props.dragWithSpring) {
       const { tension, damping } = props.dragWithSpring;
       addSpring(dragAnchor, tension, null, dragBuckets);
@@ -313,7 +398,7 @@ export default class Interactable extends React.PureComponent<InteractableProps>
     const handleStartDrag = props.onDrag
       && call([target.x, target.y], ([x, y]) => props.onDrag({ nativeEvent: { x, y, state: "start" } }));
 
-    const snapBuckets = [[], [], []];
+    const snapBuckets: [any[], any[], any[]] = [[], [], []];
     const snapAnchor = {
       x: new Value(props.initialPosition.x || 0),
       y: new Value(props.initialPosition.y || 0),
@@ -332,7 +417,7 @@ export default class Interactable extends React.PureComponent<InteractableProps>
     addFriction(snapAnchor.damping, null, snapBuckets);
 
     if (props.springPoints) {
-      props.springPoints.forEach((pt) => {
+      props.springPoints.forEach((pt: any) => {
         addSpring(pt, pt.tension, pt.influenceArea);
         if (pt.damping) {
           addFriction(pt.damping, pt.influenceArea);
@@ -350,14 +435,13 @@ export default class Interactable extends React.PureComponent<InteractableProps>
       });
     }
     if (props.frictionAreas) {
-      props.frictionAreas.forEach((pt) => {
+      props.frictionAreas.forEach((pt: any) => {
         addFriction(pt.damping, pt.influenceArea);
       });
     }
     if (props.boundaries) {
       snapBuckets[0].push(
         bounceBehavior(
-          dt,
           target,
           obj,
           props.boundaries,
@@ -369,13 +453,13 @@ export default class Interactable extends React.PureComponent<InteractableProps>
     // behaviors can go under one of three buckets depending on their priority
     // we append to each bucket but in Interactable behaviors get added to the
     // front, so we join in reverse order and then reverse the array.
-    const sortBuckets = specialBuckets => ({
+    const sortBuckets = (specialBuckets: any) => ({
       x: specialBuckets
-        .map((b, idx) => [...permBuckets[idx], ...b].reverse().map(b1 => b1.x))
-        .reduce((acc, b) => acc.concat(b), []),
+        .map((b: any, idx: number) => [...permBuckets[idx], ...b].reverse().map(b1 => b1.x))
+        .reduce((acc: any, b2: any) => acc.concat(b2), []),
       y: specialBuckets
-        .map((b, idx) => [...permBuckets[idx], ...b].reverse().map(b1 => b1.y))
-        .reduce((acc, b) => acc.concat(b), []),
+        .map((b: any, idx: number) => [...permBuckets[idx], ...b].reverse().map(b1 => b1.y))
+        .reduce((acc: any, b2: any) => acc.concat(b2), []),
     });
     const dragBehaviors = sortBuckets(dragBuckets);
     const snapBehaviors = sortBuckets(snapBuckets);
@@ -394,19 +478,22 @@ export default class Interactable extends React.PureComponent<InteractableProps>
         greaterOrEq(noMovementFrames.x, ANIMATOR_PAUSE_CONSECUTIVE_FRAMES),
         greaterOrEq(noMovementFrames.y, ANIMATOR_PAUSE_CONSECUTIVE_FRAMES),
       ),
-      [
+      block([
         props.onStop
-          ? cond(
+          && cond(
             clockRunning(clock),
             call([target.x, target.y], ([x, y]) => props.onStop({ nativeEvent: { x, y } })),
-          )
-          : undefined,
+          ),
         stopClock(clock),
-      ],
+      ]),
       startClock(clock),
     );
 
-    const trans = (axis, vaxis, lowerBound, upperBound) => {
+    const trans = (
+      axis: "x" | "y", vaxis: "vx" | "vy",
+      lowerBound: "top" | "left" | "right" | "bottom",
+      upperBound: "top" | "left" | "right" | "bottom",
+    ) => {
       const dragging = new Value(0);
       const start = new Value(0);
       const x = target[axis];
@@ -452,8 +539,8 @@ export default class Interactable extends React.PureComponent<InteractableProps>
           stopWhenNeeded,
         ],
       );
-      const wrapStep = props.enabled
-        ? cond(props.enabled, step, [set(dragging, 1), stopClock(clock)])
+      const wrapStep = props.dragEnabled
+        ? cond(props.dragEnabled as any, step, [set(dragging, 1), stopClock(clock)])
         : step;
 
       // export some values to be available for imperative commands
@@ -477,7 +564,7 @@ export default class Interactable extends React.PureComponent<InteractableProps>
   }
 
   // imperative commands
-  setVelocity({ x, y }) {
+  setVelocity({ x, y }: { x: Adaptable<number>, y: Adaptable<number> }) {
     if (x !== undefined) {
       this.dragging.x.setValue(1);
       this.velocity.x.setValue(x);
@@ -488,7 +575,7 @@ export default class Interactable extends React.PureComponent<InteractableProps>
     }
   }
 
-  snapTo({ index }) {
+  snapTo({ index }: { index: number }) {
     const { snapPoints, onSnap } = this.props;
     const snapPoint = snapPoints[index];
     this.snapAnchor.tension.setValue(
@@ -504,7 +591,7 @@ export default class Interactable extends React.PureComponent<InteractableProps>
     }
   }
 
-  changePosition({ x, y }) {
+  changePosition({ x, y }: { x: Adaptable<number>, y: Adaptable<number>}) {
     if (x !== undefined) {
       this.dragging.x.setValue(1);
       this.position.x.setValue(x);
