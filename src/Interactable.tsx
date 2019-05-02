@@ -396,7 +396,10 @@ export default class Interactable extends React.PureComponent<InteractableProps>
     }
 
     const handleStartDrag = props.onDrag
-      && call([target.x, target.y], ([x, y]) => props.onDrag && props.onDrag({ nativeEvent: { x, y, state: "start" } }));
+      && call(
+        [target.x, target.y],
+        ([x, y]) => props.onDrag && props.onDrag({ nativeEvent: { x, y, state: "start" } }),
+      );
 
     const snapBuckets: [any[], any[], any[]] = [[], [], []];
     const snapAnchor = {
