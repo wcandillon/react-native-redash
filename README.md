@@ -128,6 +128,10 @@ Returns the node from the list of nodes at the specified index. If not, it retur
 lookup(values: Node[], index: Node, notFound: Node) => Node
 ```
 
+### `binaryInterpolation(node, from, to)`
+
+Interpolate the node from 0 to 1 without clamping.
+
 ### `interpolateColors(node, inputRange, colors)`
 
 Interpolate colors based on an animation value and its value range.
@@ -139,21 +143,31 @@ interpolateColors(value: Node, inputRange: number[], colors: Colors)
 Example Usage:
 
 ```js
+const from = {
+  r: 197,
+  g: 43,
+  b: 39
+};
+const to = {
+  r: 225,
+  g: 176,
+  b: 68
+};
 interpolateColors(
   x,
   [0, 1],
-  ["#C52B27", "#E1B044"]
+  [from, to]
 )
 ```
 
-### `getSnapPoint(point, velocity, points)`
+### `snapPoint(point, velocity, points)`
 
 Select a point based on a node value and its velocity.
 Example usage:
 
 ```js
 const snapPoints = [-width, 0, width];
-runSpring(clock, x, getSnapPoint(x, velocityX, snapPoints))
+runSpring(clock, x, snapPoint(x, velocityX, snapPoints))
 ```
 
 ## Transformations
