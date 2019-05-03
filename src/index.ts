@@ -6,7 +6,7 @@ export { default as Interactable } from "./Interactable";
 export {
   atan, atan2, min, max, toRad, toDeg,
 } from "./Math";
-export { interpolateColors } from "./Colors";
+export { default as interpolateColors } from "./Colors";
 
 const {
   event,

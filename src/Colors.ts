@@ -2,7 +2,6 @@ import Animated from "react-native-reanimated";
 
 const {
   cond,
-  clockRunning,
   add,
   multiply,
   lessThan,
@@ -14,16 +13,11 @@ const {
   sub,
   color,
   Extrapolate,
-  timing,
   Node,
 } = Animated;
 
-export { timing, clockRunning, add };
-
-export type TimingConfig = Parameters<typeof timing>[1];
-export type Clock = Parameters<typeof clockRunning>[0];
-export type Node = ReturnType<typeof add>;
-export type Adaptable<T> = Node | T;
+type Node = ReturnType<typeof add>;
+type Adaptable<T> = Node | T;
 
 interface RGBColor {
   r: number;
@@ -104,7 +98,7 @@ const rgbToHsv = (c: RGBColor) => {
   return { h, s, v };
 };
 
-export const interpolateColors = (animationValue: Adaptable<number>, inputRange: number[], colors: RGBColor[]) => {
+const interpolateColors = (animationValue: Adaptable<number>, inputRange: number[], colors: RGBColor[]) => {
   const colorsAsHSV = colors.map(c => rgbToHsv(c));
   const h = interpolate(animationValue, {
     inputRange,
@@ -123,3 +117,5 @@ export const interpolateColors = (animationValue: Adaptable<number>, inputRange:
   });
   return colorHSV(h, s, v);
 };
+
+export default interpolateColors;
