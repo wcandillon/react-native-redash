@@ -1,4 +1,4 @@
-import Animated from "react-native-reanimated";
+import Animated, {Easing} from "react-native-reanimated";
 import { min } from "./Math";
 
 export { default as ReText } from "./ReText";
@@ -95,7 +95,8 @@ export function runSpring(clock: Clock, value: Adaptable<number>, dest: Adaptabl
   ]);
 }
 
-export function runTiming(clock: Clock, value: Adaptable<any>, config: TimingConfig) {
+export function runTiming(clock: Clock, value: Adaptable<any>, timingConfig: Partial<TimingConfig> & { toValue: number }) {
+  const config = { duration: 300, easing: Easing.inOut(Easing.ease), ...timingConfig };
   const state = {
     finished: new Value(0),
     position: new Value(0),
