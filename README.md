@@ -1,6 +1,6 @@
 # redash
 
-[![CircleCI](https://circleci.com/gh/wcandillon/redash.svg?style=svg)](https://circleci.com/gh/wcandillon/redash)
+[![CircleCI](https://circleci.com/gh/wcandillon/react-native-redash.svg?style=svg)](https://circleci.com/gh/wcandillon/react-native-redash)
 [![npm version](https://badge.fury.io/js/react-native-redash.svg)](https://badge.fury.io/js/react-native-redash)
 
 Utility library for React Native Reanimated.
@@ -22,8 +22,8 @@ atan2(y, x)
 ### `<Interactable>`
 
 Implementation of `Interactable` from `react-native-interactable` with `react-native-gesture-handler` and `react-native-reanimated`.
-The original implementation has been built by (the reanimated team)[https://github.com/kmagiera/react-native-reanimated/blob/master/Example/Interactable.js].
-Documentation of this component is available (here)[https://github.com/wix/react-native-interactable].
+The original implementation has been built by [the reanimated team](https://github.com/kmagiera/react-native-reanimated/blob/master/Example/Interactable.js).
+Documentation of this component is available [here](https://github.com/wix/react-native-interactable).
 
 Example usage:
 
