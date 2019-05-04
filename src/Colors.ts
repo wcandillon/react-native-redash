@@ -95,7 +95,7 @@ const rgbToHsv = (c: RGBColor) => {
     }
     h /= 6;
   }
-  return { h, s, v };
+  return { h: h * 360, s, v };
 };
 
 const interpolateColors = (animationValue: Adaptable<number>, inputRange: number[], colors: RGBColor[]) => {
