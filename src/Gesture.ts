@@ -3,7 +3,9 @@ import { State as GestureState } from "react-native-gesture-handler";
 
 import { runDecay } from "./AnimationRunners";
 
-const {Clock, Value, add, block, cond, eq, set, stopClock, sub} = Animated;
+const {
+  Clock, Value, add, block, cond, eq, set, stopClock, sub,
+} = Animated;
 
 type Node = ReturnType<typeof add>;
 type Adaptable<T> = Node | T;
