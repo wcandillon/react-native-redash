@@ -15,7 +15,7 @@ const {
   add,
 } = Animated;
 
-export {timing, clockRunning, add};
+export { timing, clockRunning, add };
 
 export type TimingConfig = Parameters<typeof timing>[1];
 export type Clock = Parameters<typeof clockRunning>[0];
