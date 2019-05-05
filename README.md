@@ -120,6 +120,16 @@ const config = {
 runTiming(clock, 0, config)
 ```
 
+### `runDecay(clock, value, velocity, rerunDecaying)`
+
+Convenience function to run a decay animation.
+
+```js
+runDecay(clock: Clock, value: Node, velocity: Node, rerunDecaying: Node): Node
+```
+
+Example usage: Look
+
 ### `lookup(nodes, index, notFound)`
 
 Returns the node from the list of nodes at the specified index. If not, it returns the notFound node.
@@ -219,3 +229,17 @@ And for an horizontal one.
   horizontal
 />
 ```
+
+### decay
+
+Decorates animated value to decay after pan
+
+- [How it works](https://snack.expo.io/@dsznajder/decay)
+- [Example usage](./Examples/decay.tsx)
+
+### preserveOffset
+
+Decorates animated value to save previous offset of pan
+
+- [How it works](https://snack.expo.io/@dsznajder/preserveoffset)
+- [Example usage](./Examples/preserveOffset.tsx)
