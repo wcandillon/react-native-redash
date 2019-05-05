@@ -20,6 +20,40 @@ type Clock = Parameters<typeof clockRunning>[0];
 type Node = ReturnType<typeof add>;
 type Adaptable<T> = Node | T;
 
+export function runDecay(
+  clock: Clock,
+  value: Adaptable<number>,
+  velocity: Adaptable<number>,
+  rerunDecaying: any,
+) {
+  const state = {
+    finished: new Value(0),
+    velocity: new Value(0),
+    position: new Value(0),
+    time: new Value(0),
+  };
+
+  const config = {
+    deceleration: 0.99,
+  };
+
+  return [
+    cond(clockRunning(clock), 0, [
+      cond(rerunDecaying, 0, [
+        set(rerunDecaying, 1),
+        set(state.finished, 0),
+        set(state.velocity, velocity),
+        set(state.position, value),
+        set(state.time, 0),
+        startClock(clock),
+      ]),
+    ]),
+    decay(clock, state, config),
+    cond(state.finished, stopClock(clock)),
+    state.position,
+  ];
+}
+
 export function runSpring(
   clock: Clock,
   value: Adaptable<number>,
