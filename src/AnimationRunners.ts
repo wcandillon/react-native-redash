@@ -17,10 +17,10 @@ const {
 
 export {timing, clockRunning, add};
 
-type TimingConfig = Parameters<typeof timing>[1];
-type Clock = Parameters<typeof clockRunning>[0];
-type Node = ReturnType<typeof add>;
-type Adaptable<T> = Node | T;
+export type TimingConfig = Parameters<typeof timing>[1];
+export type Clock = Parameters<typeof clockRunning>[0];
+export type Node = ReturnType<typeof add>;
+export type Adaptable<T> = Node | T;
 
 export function runDecay(
   clock: Clock,
