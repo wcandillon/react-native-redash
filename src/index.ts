@@ -7,8 +7,8 @@ export {
   atan, atan2, min, max, toRad, toDeg,
 } from "./Math";
 export { default as interpolateColors } from "./Colors";
-export { runSpring, runTiming, runDecay } from './AnimationRunners'
-export { preserveOffset, decay } from './Gesture'
+export { runSpring, runTiming, runDecay } from "./AnimationRunners";
+export { preserveOffset, decay } from "./Gesture";
 
 const {
   event,
@@ -23,7 +23,6 @@ const {
   sub,
   eq,
   timing,
-  Clock,
   Node,
 } = Animated;
 
