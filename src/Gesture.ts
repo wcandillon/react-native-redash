@@ -6,12 +6,14 @@ import { runDecay } from "./AnimationRunners";
 const {
   Clock,
   Value,
-  lessThan,
-  greaterThan,
   add,
   block,
   cond,
+  divide,
   eq,
+  greaterThan,
+  lessThan,
+  multiply,
   set,
   stopClock,
   sub,
@@ -24,14 +26,14 @@ export const preserveOffset = (
   value: Adaptable<number>,
   state: GestureState,
 ) => {
-  const prev = new Value(0);
+  const previous = new Value(0);
   const offset = new Value(0);
 
   return block([
     cond(
       eq(state, GestureState.BEGAN),
-      [set(prev, 0)],
-      [set(offset, add(offset, sub(value, prev))), set(prev, value)],
+      [set(previous, 0)],
+      [set(offset, add(offset, sub(value, previous))), set(previous, value)],
     ),
     offset,
   ]);
@@ -70,23 +72,43 @@ export const decay = (
 };
 
 export const limit = (
-  val: Adaptable<number>,
+  value: Adaptable<number>,
   state: Adaptable<number>,
   min: number,
   max: number,
 ) => {
   const offset = new Animated.Value(0);
-  const offsetVal = add(offset, val);
+  const offsetValue = add(offset, value);
 
   return block([
     cond(eq(state, GestureState.BEGAN), [
-      cond(lessThan(offsetVal, min), set(offset, sub(min, val))),
-      cond(greaterThan(offsetVal, max), set(offset, sub(max, val))),
+      cond(lessThan(offsetValue, min), set(offset, sub(min, value))),
+      cond(greaterThan(offsetValue, max), set(offset, sub(max, value))),
     ]),
     cond(
-      lessThan(offsetVal, min),
+      lessThan(offsetValue, min),
       min,
-      cond(greaterThan(offsetVal, max), max, offsetVal),
+      cond(greaterThan(offsetValue, max), max, offsetValue),
     ),
+  ]);
+};
+
+export const preserveMultiplicativeOffset = (
+  value: Adaptable<number>,
+  state: Adaptable<number>,
+) => {
+  const previous = new Animated.Value(1);
+  const offset = new Animated.Value(1);
+
+  return block([
+    cond(
+      eq(state, GestureState.BEGAN),
+      [set(previous, 1)],
+      [
+        set(offset, multiply(offset, divide(value, previous))),
+        set(previous, value),
+      ],
+    ),
+    offset,
   ]);
 };
