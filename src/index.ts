@@ -8,7 +8,7 @@ export {
 } from "./Math";
 export { default as interpolateColors } from "./Colors";
 export { runSpring, runTiming, runDecay } from "./AnimationRunners";
-export { preserveOffset, decay } from "./Gesture";
+export { preserveOffset, decay, limit } from "./Gesture";
 
 const {
   event,

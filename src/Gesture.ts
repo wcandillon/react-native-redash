@@ -4,7 +4,17 @@ import { State as GestureState } from "react-native-gesture-handler";
 import { runDecay } from "./AnimationRunners";
 
 const {
-  Clock, Value, add, block, cond, eq, set, stopClock, sub,
+  Clock,
+  Value,
+  lessThan,
+  greaterThan,
+  add,
+  block,
+  cond,
+  eq,
+  set,
+  stopClock,
+  sub,
 } = Animated;
 
 type Node = ReturnType<typeof add>;
@@ -56,5 +66,27 @@ export const decay = (
       ],
     ),
     decayedValue,
+  ]);
+};
+
+export const limit = (
+  val: Adaptable<number>,
+  state: Adaptable<number>,
+  min: number,
+  max: number,
+) => {
+  const offset = new Animated.Value(0);
+  const offsetVal = add(offset, val);
+
+  return block([
+    cond(eq(state, GestureState.BEGAN), [
+      cond(lessThan(offsetVal, min), set(offset, sub(min, val))),
+      cond(greaterThan(offsetVal, max), set(offset, sub(max, val))),
+    ]),
+    cond(
+      lessThan(offsetVal, min),
+      min,
+      cond(greaterThan(offsetVal, max), max, offsetVal),
+    ),
   ]);
 };
