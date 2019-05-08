@@ -12,9 +12,9 @@ yarn add react-native-redash
 ```
 
 ```js
-import {atan2} from "react-native-redash";
+import { atan2 } from "react-native-redash";
 
-atan2(y, x)
+atan2(y, x);
 ```
 
 ## Components
@@ -29,9 +29,9 @@ Example usage:
 
 ```js
 <Interactable
-    snapPoints={[{ x: -width }, { x: 0 }, { x: width }]}
-    style={{...StyleSheet.absoluteFillObject, backgroundColor: "blue" }}
-    onSnap={() => alert("oh snap!")}
+  snapPoints={[{ x: -width }, { x: 0 }, { x: width }]}
+  style={{ ...StyleSheet.absoluteFillObject, backgroundColor: "blue" }}
+  onSnap={() => alert("oh snap!")}
 />
 ```
 
@@ -52,7 +52,7 @@ Example usage:
 Transforms an angle in degrees in radians.
 
 ```js
-(deg: Node) => Node
+(deg: Node) => Node;
 ```
 
 ### `toDeg(node)`
@@ -117,7 +117,7 @@ const config = {
   toValue: 1,
   easing: Easing.linear,
 };
-runTiming(clock, 0, config)
+runTiming(clock, 0, config);
 ```
 
 ### `runDecay(clock, value, velocity, rerunDecaying)`
@@ -156,18 +156,14 @@ Example Usage:
 const from = {
   r: 197,
   g: 43,
-  b: 39
+  b: 39,
 };
 const to = {
   r: 225,
   g: 176,
-  b: 68
+  b: 68,
 };
-interpolateColors(
-  x,
-  [0, 1],
-  [from, to]
-)
+interpolateColors(x, [0, 1], [from, to]);
 ```
 
 ### `snapPoint(point, velocity, points)`
@@ -177,7 +173,7 @@ Example usage:
 
 ```js
 const snapPoints = [-width, 0, width];
-runSpring(clock, x, snapPoint(x, velocityX, snapPoints))
+runSpring(clock, x, snapPoint(x, velocityX, snapPoints));
 ```
 
 ## Transformations
@@ -196,10 +192,7 @@ Example usage with `transform`.
 const perspective = 800;
 const z = new Value(100);
 //...
-transform: [
-  { perspective },
-  translateZ(perspective, z)
-]
+transform: [{ perspective }, translateZ(perspective, z)];
 ```
 
 ## Gestures
@@ -215,19 +208,13 @@ onScroll(contentOffset: { x?: Node; y?: Node; }) => EventNode
 Example usage for a vertical `ScrollView`.
 
 ```js
-<Animated.ScrollView
-  onScroll={onScroll({ y: new Value(0) })}
-  vertical
-/>
+<Animated.ScrollView onScroll={onScroll({ y: new Value(0) })} vertical />
 ```
 
 And for an horizontal one.
 
 ```js
-<Animated.ScrollView
-  onScroll={onScroll({ x: new Value(0) })}
-  horizontal
-/>
+<Animated.ScrollView onScroll={onScroll({ x: new Value(0) })} horizontal />
 ```
 
 ### decay
@@ -237,9 +224,72 @@ Decorates animated value to decay after pan
 - [How it works](https://snack.expo.io/@dsznajder/decay)
 - [Example usage](./Examples/decay.tsx)
 
+```js
+constructor(props) {
+  const dragX = new Value(0);
+  const panState = new Value(0);
+  const velocityX = new Value(0);
+
+  this.handlePan = event([
+    {
+      nativeEvent: {
+        translationX: dragX,
+        state: panState,
+        velocityX,
+      },
+    },
+  ]);
+
+  this.X = decay(dragX, panState, velocityX);
+}
+```
+
 ### preserveOffset
 
 Decorates animated value to save previous offset of pan
 
 - [How it works](https://snack.expo.io/@dsznajder/preserveoffset)
 - [Example usage](./Examples/preserveOffset.tsx)
+
+```js
+constructor(props) {
+  const dragX = new Value(0);
+  const panState = new Value(0);
+
+  this.handlePan = event([
+    {
+      nativeEvent: {
+        translationX: dragX,
+        state: panState,
+      },
+    },
+  ]);
+
+  this.X = preserveOffset(dragX, panState);
+}
+```
+
+### limit
+
+Decorates animated value to set limits of panning
+
+- [How it works](https://snack.expo.io/@dsznajder/limit)
+- [Example usage]('./Examples/limit.tsx')
+
+```js
+constructor(props) {
+  const dragX = new Value(0);
+  const panState = new Value(0);
+
+  this.handlePan = event([
+    {
+      nativeEvent: {
+        translationX: dragX,
+        state: panState,
+      },
+    },
+  ]);
+
+  this.X = limit(dragX, panState, -100, 100);
+}
+```
