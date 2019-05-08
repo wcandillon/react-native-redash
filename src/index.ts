@@ -50,6 +50,11 @@ export const binaryInterpolation = (
   inputRange: [0, 1],
   outputRange: [origin, destination],
 });
+                                      
+const didAllClocksStopped = (clocks: typeof Clock[]) => clocks.reduce((acc, clock) => and(acc, eq(clockRunning(clock), 0)), new Value(1));
+const didAClocksStopped = (clocks: typeof Clock[]) => clocks.reduce((acc, clock) => or(acc, eq(clockRunning(clock), 0)), new Value(0));
+const didAllClocksStarted = (clocks: typeof Clock[]) => clocks.reduce((acc, clock) => and(acc, eq(clockRunning(clock), 1)), new Value(1));
+const didAClocksStarted = (clocks: typeof Clock[]) => clocks.reduce((acc, clock) => or(acc, eq(clockRunning(clock), 1)), new Value(0));
 
 export const lookup = (
   array: Adaptable<number>[],
