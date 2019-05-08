@@ -269,6 +269,31 @@ constructor(props) {
 }
 ```
 
+### preserveMultiplicativeOffset
+
+Decorates animated value to save previous offset of pinch
+
+- [How it works](https://snack.expo.io/@dsznajder/preserveMultiplicativeOffset)
+- [Example usage]('./Examples/preserveMultiplicativeOffset.tsx')
+
+```js
+constructor(props) {
+  const scale = new Value(0);
+  const scaleState = new Value(0);
+
+  this.handleZoom = event([
+    {
+      nativeEvent: {
+        scale,
+        state: panState,
+      },
+    },
+  ]);
+
+  this.X = preserveMultiplicativeOffset(scale, scaleState);
+}
+```
+
 ### limit
 
 Decorates animated value to set limits of panning
