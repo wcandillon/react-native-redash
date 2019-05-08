@@ -10,7 +10,7 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
 
-    const scale = new Value(0);
+    const scale = new Value(1);
     const scaleState = new Value(0);
 
     this.handleZoom = event([
