@@ -1,4 +1,4 @@
-import Animated, {SpringConfig} from "react-native-reanimated";
+import Animated from "react-native-reanimated";
 
 const {
   Clock,
@@ -15,8 +15,11 @@ const {
   add,
 } = Animated;
 
-export { timing, clockRunning, add };
+export {
+  timing, spring, clockRunning, add,
+};
 
+export type SpringConfig= Parameters<typeof spring>[1];
 export type TimingConfig = Parameters<typeof timing>[1];
 export type Clock = Parameters<typeof clockRunning>[0];
 export type Node = ReturnType<typeof add>;
@@ -68,7 +71,7 @@ export function runSpring(
     overshootClamping: false,
     restSpeedThreshold: 0.001,
     restDisplacementThreshold: 0.001,
-  }
+  },
 ) {
   const state = {
     finished: new Value(0),
@@ -83,7 +86,7 @@ export function runSpring(
       set(state.time, 0),
       set(state.position, value),
       set(state.velocity, 0),
-      set(config.toValue, dest),
+      set(config.toValue as any, dest),
       startClock(clock),
     ]),
     spring(clock, state, config),
