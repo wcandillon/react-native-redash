@@ -11,24 +11,20 @@ const {
   min: min2,
   max: max2,
   greaterOrEq,
-  Node,
 } = Animated;
 
-type Node = ReturnType<typeof add>;
-type Adaptable<T> = Node | T;
-
 // ## Math
-export const toRad = (deg: Adaptable<number>) => multiply(deg, Math.PI / 180);
-export const toDeg = (rad: Adaptable<number>) => multiply(rad, 180 / Math.PI);
+export const toRad = (deg: Animated.Adaptable<number>) => multiply(deg, Math.PI / 180);
+export const toDeg = (rad: Animated.Adaptable<number>) => multiply(rad, 180 / Math.PI);
 
-export const min = (...args: Adaptable<number>[]) => args.reduce((acc, arg) => min2(acc, arg));
-export const max = (...args: Adaptable<number>[]) => args.reduce((acc, arg) => max2(acc, arg));
+export const min = (...args: Animated.Adaptable<number>[]) => args.reduce((acc, arg) => min2(acc, arg));
+export const max = (...args: Animated.Adaptable<number>[]) => args.reduce((acc, arg) => max2(acc, arg));
 
-export const atan = (rad: Adaptable<number>) => sub(
+export const atan = (rad: Animated.Adaptable<number>) => sub(
   multiply(Math.PI / 4, rad),
   multiply(multiply(rad, sub(abs(rad), 1)), add(0.2447, multiply(0.0663, abs(rad)))),
 );
-export const atan2 = (y: Adaptable<number>, x: Adaptable<number>) => {
+export const atan2 = (y: Animated.Adaptable<number>, x: Animated.Adaptable<number>) => {
   const coeff1 = Math.PI / 4;
   const coeff2 = 3 * coeff1;
   const absY = abs(y);

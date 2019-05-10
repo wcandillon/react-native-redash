@@ -3,7 +3,7 @@
 [![CircleCI](https://circleci.com/gh/wcandillon/react-native-redash.svg?style=svg)](https://circleci.com/gh/wcandillon/react-native-redash)
 [![npm version](https://badge.fury.io/js/react-native-redash.svg)](https://badge.fury.io/js/react-native-redash)
 
-Utility library for React Native Reanimated.
+Utility library for React Native Gesture Handler and Reanimated.
 
 ## Usage
 
@@ -130,12 +130,21 @@ runDecay(clock: Clock, value: Node, velocity: Node, rerunDecaying: Node): Node
 
 Example usage: Look
 
-### `lookup(nodes, index, notFound)`
+### `find(nodes, index, notFound)`
 
 Returns the node from the list of nodes at the specified index. If not, it returns the notFound node.
 
 ```js
-lookup(values: Node[], index: Node, notFound: Node) => Node
+find(values: Node[], index: Node, notFound: Node) => Node
+```
+
+
+### `contains(nodes, index, notFound)`
+
+Returns 1 if the node value is contained in the array of nodes, 0 otherwise.
+
+```js
+contains(values: Node[], value: Node) => Node
 ```
 
 ### `binaryInterpolation(node, from, to)`

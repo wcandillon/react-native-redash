@@ -1,7 +1,6 @@
 import Animated from "react-native-reanimated";
 
 const {
-  Clock,
   Value,
   block,
   timing,
@@ -12,24 +11,13 @@ const {
   set,
   startClock,
   clockRunning,
-  add,
 } = Animated;
 
-export {
-  timing, spring, clockRunning, add,
-};
-
-export type SpringConfig= Parameters<typeof spring>[1];
-export type TimingConfig = Parameters<typeof timing>[1];
-export type Clock = Parameters<typeof clockRunning>[0];
-export type Node = ReturnType<typeof add>;
-export type Adaptable<T> = Node | T;
-
 export function runDecay(
-  clock: Clock,
-  value: Adaptable<number>,
-  velocity: Adaptable<number>,
-  rerunDecaying: any,
+  clock: Animated.Clock,
+  value: Animated.Adaptable<number>,
+  velocity: Animated.Adaptable<number>,
+  rerunDecaying: Animated.Value<number>,
 ) {
   const state = {
     finished: new Value(0),
@@ -60,10 +48,10 @@ export function runDecay(
 }
 
 export function runSpring(
-  clock: Clock,
-  value: Adaptable<number>,
-  dest: Adaptable<number>,
-  config: SpringConfig = {
+  clock: Animated.Clock,
+  value: Animated.Adaptable<number>,
+  dest: Animated.Adaptable<number>,
+  config: Animated.SpringConfig = {
     toValue: new Value(0),
     damping: 7,
     mass: 1,
@@ -96,9 +84,9 @@ export function runSpring(
 }
 
 export function runTiming(
-  clock: Clock,
-  value: Adaptable<any>,
-  config: TimingConfig,
+  clock: Animated.Clock,
+  value: Animated.Adaptable<any>,
+  config: Animated.TimingConfig,
 ) {
   const state = {
     finished: new Value(0),

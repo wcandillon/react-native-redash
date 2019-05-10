@@ -2,17 +2,10 @@ import * as React from "react";
 import { TextInput, TextStyle } from "react-native";
 import Animated from "react-native-reanimated";
 
-const { Value, concat } = Animated;
 const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
 
-export { Value };
-export type Value = typeof Value;
-
-export { concat };
-export type Node = ReturnType<typeof concat>;
-
 interface TextProps {
-  text: Node;
+  text: Animated.Node<string>;
   style?: TextStyle;
 }
 
