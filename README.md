@@ -130,12 +130,12 @@ runDecay(clock: Clock, value: Node, velocity: Node, rerunDecaying: Node): Node
 
 Example usage: Look
 
-### `lookup(nodes, index, notFound)`
+### `find(nodes, index, notFound)`
 
 Returns the node from the list of nodes at the specified index. If not, it returns the notFound node.
 
 ```js
-lookup(values: Node[], index: Node, notFound: Node) => Node
+find(values: Node[], index: Node, notFound: Node) => Node
 ```
 
 
