@@ -53,11 +53,16 @@ export const binaryInterpolation = (
   outputRange: [origin, destination],
 });
 
-export const lookup = (
+export const find = (
   array: Adaptable<number>[],
   index: Adaptable<number>,
   notFound: Node = new Value(),
 ) => array.reduce((acc, v, i) => cond(eq(i, index), v, acc), notFound);
+
+const contains = (
+  values: typeof Value[],
+  value: typeof Value,
+) => values.reduce((acc, v) => or(acc, eq(value, v)), new Value(0));
 
 // ## Transformations
 export const translateZ = (perspective: Adaptable<number>, z: Adaptable<number>) => (
