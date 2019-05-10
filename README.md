@@ -138,6 +138,15 @@ Returns the node from the list of nodes at the specified index. If not, it retur
 lookup(values: Node[], index: Node, notFound: Node) => Node
 ```
 
+
+### `contains(nodes, index, notFound)`
+
+Returns 1 if the node value is contained in the array of nodes, 0 otherwise.
+
+```js
+contains(values: Node[], value: Node) => Node
+```
+
 ### `binaryInterpolation(node, from, to)`
 
 Interpolate the node from 0 to 1 without clamping.
