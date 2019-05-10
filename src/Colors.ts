@@ -13,11 +13,7 @@ const {
   sub,
   color,
   Extrapolate,
-  Node,
 } = Animated;
-
-type Node = ReturnType<typeof add>;
-type Adaptable<T> = Node | T;
 
 interface RGBColor {
   r: number;
@@ -25,7 +21,7 @@ interface RGBColor {
   b: number;
 }
 
-function match(condsAndResPairs: Adaptable<number>[], offset = 0): any {
+function match(condsAndResPairs: Animated.Adaptable<number>[], offset = 0): any {
   if (condsAndResPairs.length - offset === 1) {
     return condsAndResPairs[offset];
   } if (condsAndResPairs.length - offset === 0) {
@@ -39,9 +35,9 @@ function match(condsAndResPairs: Adaptable<number>[], offset = 0): any {
 }
 
 function colorHSV(
-  h: Adaptable<number> /* 0 - 360 */,
-  s: Adaptable<number> /* 0 - 1 */,
-  v: Adaptable<number>, /* 0 - 1 */
+  h: Animated.Adaptable<number> /* 0 - 360 */,
+  s: Animated.Adaptable<number> /* 0 - 1 */,
+  v: Animated.Adaptable<number>, /* 0 - 1 */
 ) {
   // Converts color from HSV format into RGB
   // Formula explained here: https://www.rapidtables.com/convert/color/hsv-to-rgb.html
@@ -51,7 +47,11 @@ function colorHSV(
 
   const m = sub(v, c);
 
-  const colorRGB = (r: Adaptable<number>, g: Adaptable<number>, b: Adaptable<number>) => color(
+  const colorRGB = (
+    r: Animated.Adaptable<number>,
+    g: Animated.Adaptable<number>,
+    b: Animated.Adaptable<number>,
+  ) => color(
     round(multiply(255, add(r, m))),
     round(multiply(255, add(g, m))),
     round(multiply(255, add(b, m))),
@@ -98,7 +98,7 @@ const rgbToHsv = (c: RGBColor) => {
   return { h: h * 360, s, v };
 };
 
-const interpolateColors = (animationValue: Adaptable<number>, inputRange: number[], colors: RGBColor[]) => {
+const interpolateColors = (animationValue: Animated.Adaptable<number>, inputRange: number[], colors: RGBColor[]) => {
   const colorsAsHSV = colors.map(c => rgbToHsv(c));
   const h = interpolate(animationValue, {
     inputRange,

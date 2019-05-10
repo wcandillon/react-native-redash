@@ -15,7 +15,6 @@ export {
 const {
   event,
   cond,
-  clockRunning,
   Value,
   add,
   multiply,
@@ -24,53 +23,49 @@ const {
   divide,
   sub,
   eq,
-  timing,
-  Node,
+  or,
 } = Animated;
 
-export { timing, clockRunning, add };
-
-export type TimingConfig = Parameters<typeof timing>[1];
-export type Clock = Parameters<typeof clockRunning>[0];
-export type Node = ReturnType<typeof add>;
-export type Adaptable<T> = Node | T;
-
 // ## Animations
-export const snapPoint = (value: Adaptable<number>, velocity: Adaptable<number>, points: number[]) => {
+export const snapPoint = (
+  value: Animated.Adaptable<number>,
+  velocity: Animated.Adaptable<number>,
+  points: number[],
+) => {
   const point = add(value, multiply(0.2, velocity));
-  const diffPoint = (p: Adaptable<number>) => abs(sub(point, p));
+  const diffPoint = (p: Animated.Adaptable<number>) => abs(sub(point, p));
   const deltas = points.map(p => diffPoint(p));
   const minDelta = min(...deltas);
-  return points.reduce((acc: Node, p: number) => cond(eq(diffPoint(p), minDelta), p, acc), new Value());
+  return points.reduce((acc: Animated.Node<any>, p: number) => cond(eq(diffPoint(p), minDelta), p, acc), new Value());
 };
 
 export const binaryInterpolation = (
-  value: Adaptable<number>,
-  origin: Adaptable<number>,
-  destination: Adaptable<number>,
+  value: Animated.Adaptable<number>,
+  origin: Animated.Adaptable<number>,
+  destination: Animated.Adaptable<number>,
 ) => interpolate(value, {
   inputRange: [0, 1],
   outputRange: [origin, destination],
 });
 
 export const find = (
-  array: Adaptable<number>[],
-  index: Adaptable<number>,
-  notFound: Node = new Value(),
+  array: Animated.Adaptable<number>[],
+  index: Animated.Adaptable<number>,
+  notFound: Animated.Node<any> = new Value(),
 ) => array.reduce((acc, v, i) => cond(eq(i, index), v, acc), notFound);
 
-const contains = (
-  values: typeof Value[],
-  value: typeof Value,
-) => values.reduce((acc, v) => or(acc, eq(value, v)), new Value(0));
+export const contains = (
+  values: Animated.Node<number>[],
+  value: Animated.Node<number>,
+): Animated.Node<number> => values.reduce((acc, v) => or(acc, eq(value, v)), new Value(0));
 
 // ## Transformations
-export const translateZ = (perspective: Adaptable<number>, z: Adaptable<number>) => (
+export const translateZ = (perspective: Animated.Adaptable<number>, z: Animated.Adaptable<number>) => (
   { scale: divide(perspective, sub(perspective, z)) }
 );
 
 // ## Gestures
-export const onScroll = (contentOffset: { x?: Node, y?: Node }) => event(
+export const onScroll = (contentOffset: { x?: Animated.Node<number>, y?: Animated.Node<number> }) => event(
   [
     {
       nativeEvent: {
