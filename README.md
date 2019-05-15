@@ -99,6 +99,10 @@ Returns the angle in the plane (in radians) between the positive x-axis and the 
 atan2(y: Node, x Node) => Node
 ```
 
+### `convertCoordinates(offsetX, offsetY)`
+
+Helper function to convert animation values from the React Native coordinate system to cartesian or polar coordinate system back and forth.
+
 ## Animations
 
 ### `runTiming(clock, value, config)`

@@ -10,6 +10,8 @@ const {
   sub,
   min: min2,
   max: max2,
+  cos,
+  sin,
   greaterOrEq,
 } = Animated;
 
@@ -34,4 +36,35 @@ export const atan2 = (y: Animated.Adaptable<number>, x: Animated.Adaptable<numbe
     sub(coeff2, multiply(coeff1, divide(add(x, absY), sub(absY, x)))),
   ]);
   return cond(lessThan(y, 0), multiply(angle, -1), angle);
+};
+
+export const convertCoordinates = (xCenter: Animated.Adaptable<number>, yCenter: Animated.Adaptable<number>) => {
+  const x1toX2 = (x1: Animated.Adaptable<number>) => sub(x1, xCenter);
+  const x2toX1 = (x2: Animated.Adaptable<number>) => add(x2, xCenter);
+  const y1toY2 = (y1: Animated.Adaptable<number>) => add(multiply(y1, -1), yCenter);
+  const y2toY1 = (y2: Animated.Adaptable<number>) => add(multiply(y2, -1), yCenter);
+  return {
+    canvasToCartesian: (
+      x: Animated.Adaptable<number>,
+      y: Animated.Adaptable<number>,
+    ) => [x1toX2(x), y1toY2(y)],
+    cartesianToCanvas: (
+      x: Animated.Adaptable<number>,
+      y: Animated.Adaptable<number>,
+    ) => [x2toX1(x), y2toY1(y)],
+    polarToCartesian: (
+      ϑ: Animated.Adaptable<number>,
+      r: Animated.Adaptable<number>,
+    ) => [
+      multiply(r, cos(ϑ)),
+      multiply(r, sin(ϑ)),
+    ],
+    polarToCanvas: (
+      ϑ: Animated.Adaptable<number>,
+      r: Animated.Adaptable<number>,
+    ) => [
+      x2toX1(multiply(r, cos(ϑ))),
+      y2toY1(multiply(r, sin(ϑ))),
+    ],
+  };
 };
