@@ -574,6 +574,7 @@ export default class Interactable extends React.PureComponent<InteractableProps>
     }
   }
 
+  /*
   snapTo({ index }: { index: number }) {
     const { snapPoints, onSnap } = this.props;
     const snapPoint = snapPoints[index];
@@ -589,6 +590,7 @@ export default class Interactable extends React.PureComponent<InteractableProps>
       onSnap({ nativeEvent: { ...snapPoint, index } });
     }
   }
+  */
 
   changePosition({ x, y }: { x: Animated.Adaptable<number>, y: Animated.Adaptable<number>}) {
     if (x !== undefined) {
