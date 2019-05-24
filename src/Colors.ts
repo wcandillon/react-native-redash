@@ -98,7 +98,7 @@ const rgbToHsv = (c: RGBColor) => {
   return { h: h * 360, s, v };
 };
 
-const interpolateColors = (animationValue: Animated.Adaptable<number>, inputRange: number[], colors: RGBColor[]) => {
+const interpolateColorsHSV = (animationValue: Animated.Adaptable<number>, inputRange: number[], colors: RGBColor[]) => {
   const colorsAsHSV = colors.map(c => rgbToHsv(c));
   const h = interpolate(animationValue, {
     inputRange,
@@ -116,6 +116,41 @@ const interpolateColors = (animationValue: Animated.Adaptable<number>, inputRang
     extrapolate: Extrapolate.CLAMP,
   });
   return colorHSV(h, s, v);
+};
+
+const interpolateColorsRGB = (animationValue: Animated.Adaptable<number>, inputRange: number[], colors: RGBColor[]) => {
+  const r = round(
+    interpolate(animationValue, {
+      inputRange,
+      outputRange: colors.map(c => c.r),
+      extrapolate: Extrapolate.CLAMP,
+    }),
+  );
+  const g = round(
+    interpolate(animationValue, {
+      inputRange,
+      outputRange: colors.map(c => c.g),
+      extrapolate: Extrapolate.CLAMP,
+    }),
+  );
+  const b = round(
+    interpolate(animationValue, {
+      inputRange,
+      outputRange: colors.map(c => c.b),
+      extrapolate: Extrapolate.CLAMP,
+    }),
+  );
+  return color(r, g, b);
+};
+
+const interpolateColors = (
+  animationValue: Animated.Adaptable<number>,
+  inputRange: number[],
+  colors: RGBColor[],
+  colorSpace: "hsv" | "rgb" = "rgb",
+) => {
+  if (colorSpace === "hsv") return interpolateColorsHSV(animationValue, inputRange, colors);
+  return interpolateColorsRGB(animationValue, inputRange, colors);
 };
 
 export default interpolateColors;
