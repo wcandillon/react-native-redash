@@ -19,12 +19,10 @@ const {
   sub,
 } = Animated;
 
-type Node = ReturnType<typeof add>;
-type Adaptable<T> = Node | T;
 
 export const preserveOffset = (
-  value: Adaptable<number>,
-  state: Adaptable<GestureState>,
+  value: Animated.Adaptable<number>,
+  state: Animated.Adaptable<GestureState>,
 ) => {
   const previous = new Value(0);
   const offset = new Value(0);
@@ -40,9 +38,9 @@ export const preserveOffset = (
 };
 
 export const decay = (
-  value: Adaptable<number>,
+  value: Animated.Adaptable<number>,
   state: GestureState,
-  velocity: Adaptable<number>,
+  velocity: Animated.Adaptable<number>,
 ) => {
   const decayedValue = new Value(0);
   const offset = new Value(0);
@@ -72,8 +70,8 @@ export const decay = (
 };
 
 export const limit = (
-  value: Adaptable<number>,
-  state: Adaptable<number>,
+  value: Animated.Adaptable<number>,
+  state: Animated.Adaptable<number>,
   min: number,
   max: number,
 ) => {
@@ -94,8 +92,8 @@ export const limit = (
 };
 
 export const preserveMultiplicativeOffset = (
-  value: Adaptable<number>,
-  state: Adaptable<number>,
+  value: Animated.Adaptable<number>,
+  state: Animated.Adaptable<number>,
 ) => {
   const previous = new Animated.Value(1);
   const offset = new Animated.Value(1);
