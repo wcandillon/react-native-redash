@@ -24,7 +24,7 @@ type Adaptable<T> = Node | T;
 
 export const preserveOffset = (
   value: Adaptable<number>,
-  state: GestureState,
+  state: Adaptable<GestureState>,
 ) => {
   const previous = new Value(0);
   const offset = new Value(0);
