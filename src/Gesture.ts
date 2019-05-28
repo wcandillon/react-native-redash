@@ -39,7 +39,7 @@ export const preserveOffset = (
 
 export const decay = (
   value: Animated.Adaptable<number>,
-  state: GestureState,
+  state: Animated.Adaptable<GestureState>,
   velocity: Animated.Adaptable<number>,
 ) => {
   const decayedValue = new Value(0);
@@ -71,7 +71,7 @@ export const decay = (
 
 export const limit = (
   value: Animated.Adaptable<number>,
-  state: Animated.Adaptable<number>,
+  state: Animated.Adaptable<GestureState>,
   min: number,
   max: number,
 ) => {
