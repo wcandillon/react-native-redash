@@ -69,6 +69,29 @@ export const decay = (
   ]);
 };
 
+const snap = (
+  translation: Animated.Value<number>,
+  state: Animated.Value<State>,
+  snapPoint: number
+) => {
+  const springedValue = new Value(0);
+  const offset = new Value(0);
+  const clock = new Clock();
+  const rerunSpring = new Value(0);
+  return block([
+    cond(
+      eq(state, State.END),
+      [set(springedValue, runSpring(clock, add(translation, offset), snapPoint))],
+      [
+        stopClock(clock),
+        cond(eq(state, State.BEGAN), [set(rerunSpring, 0), set(offset, sub(springedValue, translation))]),
+        set(springedValue, add(translation, offset))
+      ]
+    ),
+    springedValue
+  ]);
+};
+
 export const limit = (
   value: Animated.Adaptable<number>,
   state: Animated.Adaptable<GestureState>,
