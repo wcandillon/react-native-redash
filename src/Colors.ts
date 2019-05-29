@@ -143,7 +143,6 @@ const interpolateColorsRGB = (animationValue: Animated.Adaptable<number>, inputR
   return color(r, g, b);
 };
 
-// eslint-disable-next-line import/prefer-default-export
 export const interpolateColors = (
   animationValue: Animated.Adaptable<number>,
   inputRange: number[],

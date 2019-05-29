@@ -64,7 +64,6 @@ export const getY = (d: string, x: Animated.Node<number>): Animated.Node<number>
   return cond(eq(index, notFound), notFound, y);
 };
 
-// eslint-disable-next-line import/prefer-default-export
 export const getX = (d: string, y: Animated.Node<number>): Animated.Node<number> => {
   const parts = getParts(d);
   const notFound: Animated.Node<number> = new Value(-1);
