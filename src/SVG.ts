@@ -21,7 +21,7 @@ interface Parts {
   endY: number[];
 }
 
-const getParts = (d: string): Parts => {
+export const getParts = (d: string): Parts => {
   const properties = path.svgPathProperties(d);
   const parts = properties.getParts();
   const search: ({ startX: number; endX: number; startY: number; endY: number; })[] = [];
@@ -47,9 +47,8 @@ const getParts = (d: string): Parts => {
   };
 };
 
-// eslint-disable-next-line import/prefer-default-export
-export const getY = (d: string, x: Animated.Node<number>): Animated.Node<number> => {
-  const parts = getParts(d);
+export const getY = (d: string | Parts, x: Animated.Node<number>): Animated.Node<number> => {
+  const parts = typeof d === "string" ? getParts(d) : d;
   const notFound: Animated.Node<number> = new Value(-1);
   const index = parts.search.reduce(
     (acc, p, i) => cond(and(greaterOrEq(x, p.startX), lessOrEq(x, p.endX)), i, acc),
@@ -66,8 +65,8 @@ export const getY = (d: string, x: Animated.Node<number>): Animated.Node<number>
   return cond(eq(index, notFound), notFound, y);
 };
 
-export const getX = (d: string, y: Animated.Node<number>): Animated.Node<number> => {
-  const parts = getParts(d);
+export const getX = (d: string | Parts, y: Animated.Node<number>): Animated.Node<number> => {
+  const parts = typeof d === "string" ? getParts(d) : d;
   const notFound: Animated.Node<number> = new Value(-1);
   const index = parts.search.reduce(
     (acc, p, i) => cond(and(greaterOrEq(y, p.startY), lessOrEq(y, p.endY)), i, acc),
