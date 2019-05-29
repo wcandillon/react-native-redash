@@ -53,5 +53,8 @@
       "module",
       "typescript"
     ]
+  },
+  "dependencies": {
+    "svg-path-properties": "^0.4.8"
   }
 }

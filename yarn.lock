@@ -7296,6 +7296,10 @@ supports-hyperlinks@^1.0.1:
     has-flag "^2.0.0"
     supports-color "^5.0.0"
 
+svg-path-properties@^0.4.8:
+  version "0.4.8"
+  resolved "https://registry.yarnpkg.com/svg-path-properties/-/svg-path-properties-0.4.8.tgz#376a833e4bfdc414045532f4d2ee3c79ea0b998d"
+
 table@^5.2.3:
   version "5.2.3"
   resolved "https://registry.yarnpkg.com/table/-/table-5.2.3.tgz#cde0cc6eb06751c009efab27e8c820ca5b67b7f2"
