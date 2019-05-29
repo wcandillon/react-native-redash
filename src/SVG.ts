@@ -24,13 +24,15 @@ interface Parts {
 const getParts = (d: string): Parts => {
   const properties = path.svgPathProperties(d);
   const parts = properties.getParts();
-  const search: { startX: number; endX: number }[] = [];
+  const search: ({ startX: number; endX: number; startY: number; endY: number; })[] = [];
   const startX: number[] = [];
   const startY: number[] = [];
   const endX: number[] = [];
   const endY: number[] = [];
-  parts.forEach((part) => {
-    search.push({ startX: part.start.x, endX: part.end.x });
+  parts.forEach((part: any) => {
+    search.push({
+      startX: part.start.x, endX: part.end.x, startY: part.start.y, endY: part.end.y,
+    });
     startX.push(part.start.x);
     startY.push(part.start.y);
     endX.push(part.end.x);
