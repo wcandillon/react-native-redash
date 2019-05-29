@@ -1,7 +1,7 @@
 import Animated from "react-native-reanimated";
 import { State as GestureState } from "react-native-gesture-handler";
 
-import { runDecay } from "./AnimationRunners";
+import { runDecay, runSpring } from "./AnimationRunners";
 
 const {
   Clock,
@@ -66,6 +66,40 @@ export const decay = (
       ],
     ),
     decayedValue,
+  ]);
+};
+
+export const spring = (
+  translation: Animated.Value<number>,
+  state: Animated.Value<GestureState>,
+  snapPoint: number,
+  defaultOffset: number = 0,
+) => {
+  const springedValue = new Value(0);
+  const offset = new Value(defaultOffset);
+  const clock = new Clock();
+  const rerunSpring = new Value(0);
+  // http://chenglou.github.io/react-motion/demos/demo5-spring-parameters-chooser/
+  const springConfig = {
+    toValue: new Value(0),
+    damping: 15,
+    mass: 1,
+    stiffness: 150,
+    overshootClamping: false,
+    restSpeedThreshold: 0.001,
+    restDisplacementThreshold: 0.001,
+  };
+  return block([
+    cond(
+      eq(state, GestureState.END),
+      [set(springedValue, runSpring(clock, add(translation, offset), snapPoint, springConfig))],
+      [
+        stopClock(clock),
+        cond(eq(state, GestureState.BEGAN), [set(rerunSpring, 0), set(offset, sub(springedValue, translation))]),
+        set(springedValue, add(translation, offset)),
+      ],
+    ),
+    springedValue,
   ]);
 };
 

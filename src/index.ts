@@ -3,15 +3,12 @@ import { min } from "./Math";
 
 export { default as ReText } from "./ReText";
 export { default as Interactable } from "./Interactable";
-export {
-  atan, atan2, min, max, toRad, toDeg,
-} from "./Math";
-export { default as interpolateColors } from "./Colors";
-export { runSpring, runTiming, runDecay } from "./AnimationRunners";
-export {
-  preserveOffset, preserveMultiplicativeOffset, decay, limit,
-} from "./Gesture";
-
+export * from "./Math";
+export * from "./Colors";
+export * from "./AnimationRunners";
+export * from "./Gesture";
+export * from "./Arrays";
+export * from "./SVG";
 const {
   event,
   cond,
@@ -23,7 +20,6 @@ const {
   divide,
   sub,
   eq,
-  or,
 } = Animated;
 
 // ## Animations
@@ -47,17 +43,6 @@ export const binaryInterpolation = (
   inputRange: [0, 1],
   outputRange: [origin, destination],
 });
-
-export const find = (
-  array: Animated.Adaptable<number>[],
-  index: Animated.Adaptable<number>,
-  notFound: Animated.Node<any> = new Value(),
-) => array.reduce((acc, v, i) => cond(eq(i, index), v, acc), notFound);
-
-export const contains = (
-  values: Animated.Node<number>[],
-  value: Animated.Node<number>,
-): Animated.Node<number> => values.reduce((acc, v) => or(acc, eq(value, v)), new Value(0));
 
 // ## Transformations
 export const translateZ = (perspective: Animated.Adaptable<number>, z: Animated.Adaptable<number>) => (

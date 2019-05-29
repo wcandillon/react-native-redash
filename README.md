@@ -81,6 +81,16 @@ This is equivalent to `Animated.min` but with support for more than two paramete
 max(...args: Node[]) => Node
 ```
 
+### `clamp(node: Node, lowerBound: Adaptable, upperBound: Adaptable)`
+
+Clamps a node with a lower and upper bound.
+
+```js
+clamp(new Value(-1), 0, 100); // 0
+clamp(new Value(1), 0, 100); // 1
+clamp(new Value(101), 0, 100); // 100
+```
+
 ### `atan(node)`
 
 Returns a arc-tangent of the value in radians of the given node.
@@ -98,6 +108,34 @@ Returns the angle in the plane (in radians) between the positive x-axis and the 
 ```js
 atan2(y: Node, x Node) => Node
 ```
+
+## Arrays
+
+### `find(nodes, index, notFound)`
+
+Returns the node from the list of nodes at the specified index. If not, it returns the notFound node.
+
+```js
+find(values: Node[], index: Node, notFound: Node) => Node
+```
+
+### `contains(nodes, index, notFound)`
+
+Returns 1 if the node value is contained in the array of nodes, 0 otherwise.
+
+```js
+contains(values: Node[], value: Node) => Node
+```
+
+## SVG
+
+### `getX(SVGPath: String, y: Node): Node`
+
+Given an SVG Path, returns the `x` coordinate of the path given an `y` coordinate.
+
+### `getY(SVGPath: String, x: Node): Node`
+
+Given an SVG Path, returns the `y` coordinate of the path given an `x` coordinate.
 
 ## Animations
 
@@ -126,25 +164,6 @@ Convenience function to run a decay animation.
 
 ```js
 runDecay(clock: Clock, value: Node, velocity: Node, rerunDecaying: Node): Node
-```
-
-Example usage: Look
-
-### `find(nodes, index, notFound)`
-
-Returns the node from the list of nodes at the specified index. If not, it returns the notFound node.
-
-```js
-find(values: Node[], index: Node, notFound: Node) => Node
-```
-
-
-### `contains(nodes, index, notFound)`
-
-Returns 1 if the node value is contained in the array of nodes, 0 otherwise.
-
-```js
-contains(values: Node[], value: Node) => Node
 ```
 
 ### `binaryInterpolation(node, from, to)`
@@ -333,5 +352,29 @@ constructor(props) {
   ]);
 
   this.X = limit(dragX, panState, -100, 100);
+}
+```
+
+### spring
+
+Decorates animated value to spring after pan
+
+
+```js
+constructor(props) {
+  const dragX = new Value(0);
+  const panState = new Value(0);
+  const snapPoint = new Value(100);
+
+  this.handlePan = event([
+    {
+      nativeEvent: {
+        state: panState,
+        velocityX,
+      },
+    },
+  ]);
+
+  this.X = spring(dragX, panState, snapPoint);
 }
 ```

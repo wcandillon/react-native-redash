@@ -143,7 +143,7 @@ const interpolateColorsRGB = (animationValue: Animated.Adaptable<number>, inputR
   return color(r, g, b);
 };
 
-const interpolateColors = (
+export const interpolateColors = (
   animationValue: Animated.Adaptable<number>,
   inputRange: number[],
   colors: RGBColor[],
@@ -152,5 +152,3 @@ const interpolateColors = (
   if (colorSpace === "hsv") return interpolateColorsHSV(animationValue, inputRange, colors);
   return interpolateColorsRGB(animationValue, inputRange, colors);
 };
-
-export default interpolateColors;
