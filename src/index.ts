@@ -8,7 +8,7 @@ export * from "./Colors";
 export * from "./AnimationRunners";
 export * from "./Gesture";
 export * from "./Arrays";
-
+export * from "./SVG";
 const {
   event,
   cond,
