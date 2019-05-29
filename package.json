@@ -55,6 +55,6 @@
     ]
   },
   "dependencies": {
-    "svg-path-properties": "^0.4.8"
+    "svg-path-properties": "0.4.8"
   }
 }
