@@ -81,6 +81,16 @@ This is equivalent to `Animated.min` but with support for more than two paramete
 max(...args: Node[]) => Node
 ```
 
+### `clamp(node: Node, lowerBound: Adaptable, upperBound: Adaptable)`
+
+Clamps a node with a lower and upper bound.
+
+```js
+clamp(new Value(-1), 0, 100); // 0
+clamp(new Value(1), 0, 100); // 1
+clamp(new Value(101), 0, 100); // 100
+```
+
 ### `atan(node)`
 
 Returns a arc-tangent of the value in radians of the given node.
