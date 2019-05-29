@@ -69,7 +69,7 @@ export const decay = (
   ]);
 };
 
-export const snap = (
+export const spring = (
   translation: Animated.Value<number>,
   state: Animated.Value<GestureState>,
   snapPoint: number,
