@@ -11,6 +11,7 @@ const {
   set,
   startClock,
   clockRunning,
+  onChange,
 } = Animated;
 
 export function runDecay(
@@ -96,6 +97,7 @@ export function runTiming(
   };
 
   return block([
+    onChange(config.toValue, set(state.frameTime, 0)),
     cond(clockRunning(clock), 0, [
       set(state.finished, 0),
       set(state.time, 0),
