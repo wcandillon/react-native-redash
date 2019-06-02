@@ -579,9 +579,9 @@ export default class Interactable extends React.PureComponent<
       );
       const wrapStep = props.dragEnabled
         ? cond(props.dragEnabled as any, step, [
-          set(dragging, 1),
-          stopClock(clock)
-        ])
+            set(dragging, 1),
+            stopClock(clock)
+          ])
         : step;
 
       // export some values to be available for imperative commands
