@@ -19,44 +19,54 @@ const {
   interpolate,
   divide,
   sub,
-  eq,
+  eq
 } = Animated;
 
 // ## Animations
 export const snapPoint = (
   value: Animated.Adaptable<number>,
   velocity: Animated.Adaptable<number>,
-  points: number[],
+  points: number[]
 ) => {
   const point = add(value, multiply(0.2, velocity));
   const diffPoint = (p: Animated.Adaptable<number>) => abs(sub(point, p));
   const deltas = points.map(p => diffPoint(p));
   const minDelta = min(...deltas);
-  return points.reduce((acc: Animated.Node<any>, p: number) => cond(eq(diffPoint(p), minDelta), p, acc), new Value());
+  return points.reduce(
+    (acc: Animated.Node<any>, p: number) =>
+      cond(eq(diffPoint(p), minDelta), p, acc),
+    new Value()
+  );
 };
 
 export const binaryInterpolation = (
   value: Animated.Adaptable<number>,
   origin: Animated.Adaptable<number>,
-  destination: Animated.Adaptable<number>,
-) => interpolate(value, {
-  inputRange: [0, 1],
-  outputRange: [origin, destination],
-});
+  destination: Animated.Adaptable<number>
+) =>
+  interpolate(value, {
+    inputRange: [0, 1],
+    outputRange: [origin, destination]
+  });
 
 // ## Transformations
-export const translateZ = (perspective: Animated.Adaptable<number>, z: Animated.Adaptable<number>) => (
-  { scale: divide(perspective, sub(perspective, z)) }
-);
+export const translateZ = (
+  perspective: Animated.Adaptable<number>,
+  z: Animated.Adaptable<number>
+) => ({ scale: divide(perspective, sub(perspective, z)) });
 
 // ## Gestures
-export const onScroll = (contentOffset: { x?: Animated.Node<number>, y?: Animated.Node<number> }) => event(
-  [
-    {
-      nativeEvent: {
-        contentOffset,
-      },
-    },
-  ],
-  { useNativeDriver: true },
-);
+export const onScroll = (contentOffset: {
+  x?: Animated.Node<number>;
+  y?: Animated.Node<number>;
+}) =>
+  event(
+    [
+      {
+        nativeEvent: {
+          contentOffset
+        }
+      }
+    ],
+    { useNativeDriver: true }
+  );

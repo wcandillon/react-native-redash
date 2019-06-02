@@ -109,6 +109,13 @@ Returns the angle in the plane (in radians) between the positive x-axis and the 
 atan2(y: Node, x Node) => Node
 ```
 
+### `cubicBezier(t, p0, p1, p2, p3)`
+
+Returns the coordinate of a cubic bezier curve.
+`t` is the length of the curve from 0 to 1. `cubicBezier(0, p0, p1, p2, p3) => p0` and `cubicBezier(1, p0, p1, p2, p3) => p3`.
+`p0` and `p3` are respectively the starting and ending point of the curve.
+`p1` and `p2` are the control points.
+
 ## Arrays
 
 ### `find(nodes, index, notFound)`
@@ -129,13 +136,27 @@ contains(values: Node[], value: Node) => Node
 
 ## SVG
 
-### `getX(SVGPath: String, y: Node): Node`
+### `getPath(SVGPath: String): ReanimatedPath`
 
-Given an SVG Path, returns the `x` coordinate of the path given an `y` coordinate.
+Given an SVG Path, returns an denormalized object of values that can be used for animations on that path.
+From the perspective of the user, the returned value should be considered a black box.
+Here is an example below:
 
-### `getY(SVGPath: String, x: Node): Node`
+```ts
+// We get the data from the SVG Path denormalized a way that can be handled with Reanimated
+const path = getPath(d);
+const { y, x } = getPointAtLength(path, length);
+```
 
-Given an SVG Path, returns the `y` coordinate of the path given an `x` coordinate.
+### `getPointAtLength(path): { x: Node, y: Node }`
+
+Implementation of (getPointAtLength)[https://developer.mozilla.org/en-US/docs/Web/API/SVGPathElement/getPointAtLength] for Reanimated.
+
+```ts
+// We get the data from the SVG Path denormalized a way that can be handled with Reanimated
+const path = getPath(d);
+const { y, x } = getPointAtLength(path, length);
+```
 
 ## Animations
 

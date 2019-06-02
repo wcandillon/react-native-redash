@@ -818,6 +818,10 @@ abbrev@1, abbrev@~1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/abbrev/-/abbrev-1.1.1.tgz#f8f2c887ad10bf67f634f005b6987fed3179aac8"
 
+abs-svg-path@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/abs-svg-path/-/abs-svg-path-0.1.1.tgz#df601c8e8d2ba10d4a76d625e236a9a39c2723bf"
+
 absolute-path@^0.0.0:
   version "0.0.0"
   resolved "https://registry.yarnpkg.com/absolute-path/-/absolute-path-0.0.0.tgz#a78762fbdadfb5297be99b15d35a785b2f095bf7"
@@ -2655,17 +2659,26 @@ eslint-config-airbnb@^17.1.0:
     object.assign "^4.1.0"
     object.entries "^1.0.4"
 
-eslint-config-react-native-wcandillon@^1.0.6:
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/eslint-config-react-native-wcandillon/-/eslint-config-react-native-wcandillon-1.0.6.tgz#867c78f8b659239a31ca749825c01e7afefabc17"
+eslint-config-prettier@^4.3.0:
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/eslint-config-prettier/-/eslint-config-prettier-4.3.0.tgz#c55c1fcac8ce4518aeb77906984e134d9eb5a4f0"
+  dependencies:
+    get-stdin "^6.0.0"
+
+eslint-config-react-native-wcandillon@1.1.3:
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/eslint-config-react-native-wcandillon/-/eslint-config-react-native-wcandillon-1.1.3.tgz#6591d58e4a4dd9fcf7057ec26766e06155da0a27"
   dependencies:
     "@typescript-eslint/eslint-plugin" "1.3.0"
     "@typescript-eslint/parser" "1.3.0"
     eslint-config-airbnb "^17.1.0"
+    eslint-config-prettier "^4.3.0"
     eslint-plugin-import "^2.14.0"
     eslint-plugin-jsx-a11y "^6.1.2"
+    eslint-plugin-prettier "^3.1.0"
     eslint-plugin-react "^7.12.4"
     eslint-plugin-react-native "^3.6.0"
+    prettier "^1.17.1"
     typescript "^3.2.4"
 
 eslint-import-resolver-node@^0.3.2:
@@ -2710,6 +2723,12 @@ eslint-plugin-jsx-a11y@^6.1.2:
     emoji-regex "^7.0.2"
     has "^1.0.3"
     jsx-ast-utils "^2.0.1"
+
+eslint-plugin-prettier@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-prettier/-/eslint-plugin-prettier-3.1.0.tgz#8695188f95daa93b0dc54b249347ca3b79c4686d"
+  dependencies:
+    prettier-linter-helpers "^1.0.0"
 
 eslint-plugin-react-native-globals@^0.1.1:
   version "0.1.2"
@@ -2993,6 +3012,10 @@ fancy-log@^1.3.2:
 fast-deep-equal@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/fast-deep-equal/-/fast-deep-equal-2.0.1.tgz#7b05218ddf9667bf7f370bf7fdb2cb15fdd0aa49"
+
+fast-diff@^1.1.2:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/fast-diff/-/fast-diff-1.2.0.tgz#73ee11982d86caaf7959828d519cfe927fac5f03"
 
 fast-glob@^2.2.6:
   version "2.2.6"
@@ -3324,6 +3347,10 @@ get-caller-file@^1.0.1:
 get-caller-file@^2.0.1:
   version "2.0.5"
   resolved "https://registry.yarnpkg.com/get-caller-file/-/get-caller-file-2.0.5.tgz#4f94412a82db32f36e3b0b9741f8a97feb031f7e"
+
+get-stdin@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/get-stdin/-/get-stdin-6.0.0.tgz#9e09bf712b360ab9225e812048f71fde9c89657b"
 
 get-stream@^3.0.0:
   version "3.0.0"
@@ -5342,6 +5369,12 @@ normalize-path@^2.0.1, normalize-path@^2.1.1:
   dependencies:
     remove-trailing-separator "^1.0.1"
 
+normalize-svg-path@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/normalize-svg-path/-/normalize-svg-path-1.0.1.tgz#6f729ad6b70bb4ca4eff2fe4b107489efe1d56fe"
+  dependencies:
+    svg-arc-to-cubic-bezier "^3.0.0"
+
 normalize-url@^4.0.0:
   version "4.3.0"
   resolved "https://registry.yarnpkg.com/normalize-url/-/normalize-url-4.3.0.tgz#9c49e10fc1876aeb76dba88bf1b2b5d9fa57b2ee"
@@ -5904,6 +5937,10 @@ parse-node-version@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/parse-node-version/-/parse-node-version-1.0.1.tgz#e2b5dbede00e7fa9bc363607f53327e8b073189b"
 
+parse-svg-path@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/parse-svg-path/-/parse-svg-path-0.1.2.tgz#7a7ec0d1eb06fa5325c7d3e009b859a09b5d49eb"
+
 parseurl@~1.3.2:
   version "1.3.3"
   resolved "https://registry.yarnpkg.com/parseurl/-/parseurl-1.3.3.tgz#9da19e7bee8d12dff0513ed5b76957793bc2e8d4"
@@ -6032,6 +6069,16 @@ prepend-http@^1.0.1:
 preserve@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/preserve/-/preserve-0.2.0.tgz#815ed1f6ebc65926f865b310c0713bcb3315ce4b"
+
+prettier-linter-helpers@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/prettier-linter-helpers/-/prettier-linter-helpers-1.0.0.tgz#d23d41fe1375646de2d0104d3454a3008802cf7b"
+  dependencies:
+    fast-diff "^1.1.2"
+
+prettier@^1.17.1:
+  version "1.17.1"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.17.1.tgz#ed64b4e93e370cb8a25b9ef7fef3e4fd1c0995db"
 
 pretty-format@24.0.0-alpha.6:
   version "24.0.0-alpha.6"
@@ -7307,9 +7354,9 @@ supports-hyperlinks@^1.0.1:
     has-flag "^2.0.0"
     supports-color "^5.0.0"
 
-svg-path-properties@0.4.8:
-  version "0.4.8"
-  resolved "https://registry.yarnpkg.com/svg-path-properties/-/svg-path-properties-0.4.8.tgz#376a833e4bfdc414045532f4d2ee3c79ea0b998d"
+svg-arc-to-cubic-bezier@^3.0.0:
+  version "3.1.3"
+  resolved "https://registry.yarnpkg.com/svg-arc-to-cubic-bezier/-/svg-arc-to-cubic-bezier-3.1.3.tgz#7b5f76445310ef03238964c39ae7dbc761fda879"
 
 table@^5.2.3:
   version "5.2.3"
