@@ -29,6 +29,63 @@ Example usage:
 <ReText text={new Value("hello world!")} style={{ color: "blue" }} />
 ```
 
+## SVG
+
+### `parsePath(SVGPath: String): ReanimatedPath`
+
+Given an SVG Path, returns an denormalized object of values that can be used for animations on that path.
+From the perspective of the user, the returned value should be considered a black box.
+Here is an example below:
+
+```ts
+// We get the data from the SVG Path denormalized a way that can be handled with Reanimated
+const path = parsePath(d);
+const { y, x } = getPointAtLength(path, length);
+```
+
+### `getPointAtLength(path): { x: Node, y: Node }`
+
+Implementation of (getPointAtLength)[https://developer.mozilla.org/en-US/docs/Web/API/SVGPathElement/getPointAtLength] for Reanimated.
+
+```ts
+// We get the data from the SVG Path denormalized a way that can be handled with Reanimated
+const path = parsePath(d);
+const { y, x } = getPointAtLength(path, length);
+```
+
+### `interpolatePath(path1, path2, progress): path`
+
+Interpolate from one SVG point to the other, this function assumes that each path has the same number of points.
+
+```tsx
+const rhino = "M 217.765 29.683 C 225.855 29.683 ";
+const rhinoPath = parsePath(rhino);
+const elephant = "M 223.174 43.413 ...";
+const elephantPath = parsePath(elephant);
+return (
+    <>
+      <Animated.Code>
+        {() =>
+          set(
+            progress,
+            runTiming(clock, progress, {
+              toValue: 1,
+              duration: 2000,
+              easing: Easing.linear
+            })
+          )
+        }
+      </Animated.Code>
+      <Svg style={styles.container} viewBox="0 0 409 280">
+        <AnimatedPath
+          d={interpolatePath(rhinoPath, elephantPath, progress)}
+          fill="#7d8f9b"
+        />
+      </Svg>
+    </>
+  );
+```
+
 ## Math
 
 ### `toRad(node)`
@@ -116,63 +173,6 @@ Returns 1 if the node value is contained in the array of nodes, 0 otherwise.
 
 ```js
 contains(values: Node[], value: Node) => Node
-```
-
-## SVG
-
-### `parsePath(SVGPath: String): ReanimatedPath`
-
-Given an SVG Path, returns an denormalized object of values that can be used for animations on that path.
-From the perspective of the user, the returned value should be considered a black box.
-Here is an example below:
-
-```ts
-// We get the data from the SVG Path denormalized a way that can be handled with Reanimated
-const path = parsePath(d);
-const { y, x } = getPointAtLength(path, length);
-```
-
-### `getPointAtLength(path): { x: Node, y: Node }`
-
-Implementation of (getPointAtLength)[https://developer.mozilla.org/en-US/docs/Web/API/SVGPathElement/getPointAtLength] for Reanimated.
-
-```ts
-// We get the data from the SVG Path denormalized a way that can be handled with Reanimated
-const path = parsePath(d);
-const { y, x } = getPointAtLength(path, length);
-```
-
-### `interpolatePath(path1, path2, progress): path`
-
-Interpolate from one SVG point to the other, this function assumes that each path has the same number of points.
-
-```tsx
-const rhino = "M 217.765 29.683 C 225.855 29.683 ";
-const rhinoPath = parsePath(rhino);
-const elephant = "M 223.174 43.413 ...";
-const elephantPath = parsePath(elephant);
-return (
-    <>
-      <Animated.Code>
-        {() =>
-          set(
-            progress,
-            runTiming(clock, progress, {
-              toValue: 1,
-              duration: 2000,
-              easing: Easing.linear
-            })
-          )
-        }
-      </Animated.Code>
-      <Svg style={styles.container} viewBox="0 0 409 280">
-        <AnimatedPath
-          d={interpolatePath(rhinoPath, elephantPath, progress)}
-          fill="#7d8f9b"
-        />
-      </Svg>
-    </>
-  );
 ```
 
 ## Animations
