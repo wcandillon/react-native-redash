@@ -5,9 +5,18 @@ import normalizeSVG from "normalize-svg-path";
 import { find } from "./Arrays";
 
 import { cubicBezier } from "./Math";
+import { bInterpolate } from "./Animations";
 import cubicBezierLength from "./CubicBezierLength";
 
-const { Value, lessOrEq, greaterOrEq, and, cond, interpolate } = Animated;
+const {
+  Value,
+  lessOrEq,
+  greaterOrEq,
+  and,
+  cond,
+  interpolate,
+  concat: reConcat
+} = Animated;
 
 // const COMMAND = 0;
 const MX = 1;
@@ -22,6 +31,11 @@ const CY = 6;
 type SVGMoveCommand = ["M", number, number];
 type SVGCurveCommand = ["C", number, number, number, number, number, number];
 type SVGNormalizedCommands = [SVGMoveCommand, ...SVGCurveCommand[]];
+
+const concat = (
+  ...args: Array<Animated.Adaptable<string> | Animated.Adaptable<number>>
+): Animated.Node<string> =>
+  reConcat(args[0] as any, args[1] as any, ...(args.slice(2) as any[]));
 
 interface Point {
   x: number;
@@ -51,7 +65,7 @@ export interface ReanimatedPath {
   p3x: number[];
   p3y: number[];
 }
-export const getPath = (d: string): ReanimatedPath => {
+export const parsePath = (d: string): ReanimatedPath => {
   const [move, ...curves]: SVGNormalizedCommands = normalizeSVG(
     absSVG(parseSVG(d))
   );
@@ -99,27 +113,27 @@ export const getPath = (d: string): ReanimatedPath => {
 };
 
 export const getPointAtLength = (
-  parts: ReanimatedPath,
+  path: ReanimatedPath,
   length: Animated.Node<number>
 ): { x: Animated.Node<number>; y: Animated.Node<number> } => {
   const notFound: Animated.Node<number> = new Value(-1);
-  const index = parts.segments.reduce(
+  const index = path.segments.reduce(
     (acc, p, i) =>
       cond(and(greaterOrEq(length, p.start), lessOrEq(length, p.end)), i, acc),
     notFound
   );
-  const start = find(parts.start, index);
-  const end = find(parts.end, index);
+  const start = find(path.start, index);
+  const end = find(path.end, index);
 
-  const p0x = find(parts.p0x, index);
-  const p1x = find(parts.p1x, index);
-  const p2x = find(parts.p2x, index);
-  const p3x = find(parts.p3x, index);
+  const p0x = find(path.p0x, index);
+  const p1x = find(path.p1x, index);
+  const p2x = find(path.p2x, index);
+  const p3x = find(path.p3x, index);
 
-  const p0y = find(parts.p0y, index);
-  const p1y = find(parts.p1y, index);
-  const p2y = find(parts.p2y, index);
-  const p3y = find(parts.p3y, index);
+  const p0y = find(path.p0y, index);
+  const p1y = find(path.p1y, index);
+  const p2y = find(path.p2y, index);
+  const p3y = find(path.p3y, index);
   const t = interpolate(length, {
     inputRange: [start, end],
     outputRange: [0, 1]
@@ -128,4 +142,34 @@ export const getPointAtLength = (
     x: cubicBezier(t, p0x, p1x, p2x, p3x),
     y: cubicBezier(t, p0y, p1y, p2y, p3y)
   };
+};
+
+export const interpolatePath = (
+  path1: ReanimatedPath,
+  path2: ReanimatedPath,
+  progress: Animated.Value<number>
+): Animated.Node<string> => {
+  const commands = path1.segments.map((_, index) => {
+    const command: Animated.Node<string>[] = [];
+    if (index === 0) {
+      const mx = bInterpolate(progress, path1.p0x[index], path2.p0x[index]);
+      const my = bInterpolate(progress, path1.p0y[index], path2.p0y[index]);
+      command.push(concat("M", mx, ",", my, " "));
+    }
+
+    const p1x = bInterpolate(progress, path1.p1x[index], path2.p1x[index]);
+    const p1y = bInterpolate(progress, path1.p1y[index], path2.p1y[index]);
+
+    const p2x = bInterpolate(progress, path1.p2x[index], path2.p2x[index]);
+    const p2y = bInterpolate(progress, path1.p2y[index], path2.p2y[index]);
+
+    const p3x = bInterpolate(progress, path1.p3x[index], path2.p3x[index]);
+    const p3y = bInterpolate(progress, path1.p3y[index], path2.p3y[index]);
+
+    command.push(
+      concat("C", p1x, ",", p1y, " ", p2x, ",", p2y, " ", p3x, ",", p3y, " ")
+    );
+    return concat(...command);
+  });
+  return concat(...commands);
 };

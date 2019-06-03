@@ -6,6 +6,7 @@ import { runDecay, runSpring } from "./AnimationRunners";
 const {
   Clock,
   Value,
+  event,
   add,
   block,
   cond,
@@ -151,3 +152,18 @@ export const preserveMultiplicativeOffset = (
     offset
   ]);
 };
+
+export const onScroll = (contentOffset: {
+  x?: Animated.Node<number>;
+  y?: Animated.Node<number>;
+}) =>
+  event(
+    [
+      {
+        nativeEvent: {
+          contentOffset
+        }
+      }
+    ],
+    { useNativeDriver: true }
+  );
