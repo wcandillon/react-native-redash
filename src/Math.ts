@@ -14,23 +14,25 @@ const {
   pow
 } = Animated;
 
-// ## Math
-export const toRad = (deg: Animated.Adaptable<number>) =>
-  multiply(deg, Math.PI / 180);
-export const toDeg = (rad: Animated.Adaptable<number>) =>
-  multiply(rad, 180 / Math.PI);
-
 export const min = (...args: Animated.Adaptable<number>[]) =>
   args.reduce((acc, arg) => min2(acc, arg));
+
 export const max = (...args: Animated.Adaptable<number>[]) =>
   args.reduce((acc, arg) => max2(acc, arg));
+
 export const clamp = (
   value: Animated.Node<number>,
   lowerBound: number,
   upperBound: number
-) => min2(max2(lowerBound, value), upperBound);
+): Animated.Node<number> => min2(max2(lowerBound, value), upperBound);
 
-export const atan = (rad: Animated.Adaptable<number>) =>
+export const toRad = (deg: Animated.Adaptable<number>): Animated.Node<number> =>
+  multiply(deg, Math.PI / 180);
+
+export const toDeg = (rad: Animated.Adaptable<number>): Animated.Node<number> =>
+  multiply(rad, 180 / Math.PI);
+
+export const atan = (rad: Animated.Adaptable<number>): Animated.Node<number> =>
   sub(
     multiply(Math.PI / 4, rad),
     multiply(
@@ -42,7 +44,7 @@ export const atan = (rad: Animated.Adaptable<number>) =>
 export const atan2 = (
   y: Animated.Adaptable<number>,
   x: Animated.Adaptable<number>
-) => {
+): Animated.Node<number> => {
   const coeff1 = Math.PI / 4;
   const coeff2 = 3 * coeff1;
   const absY = abs(y);

@@ -9,6 +9,7 @@ import cubicBezierLength from "./CubicBezierLength";
 
 const { Value, lessOrEq, greaterOrEq, and, cond, interpolate } = Animated;
 
+// const COMMAND = 0;
 const MX = 1;
 const MY = 2;
 const CX1 = 1;
@@ -17,6 +18,10 @@ const CX2 = 3;
 const CY2 = 4;
 const CX = 5;
 const CY = 6;
+
+type SVGMoveCommand = ["M", number, number];
+type SVGCurveCommand = ["C", number, number, number, number, number, number];
+type SVGNormalizedCommands = [SVGMoveCommand, ...SVGCurveCommand[]];
 
 interface Point {
   x: number;
@@ -32,9 +37,9 @@ interface BezierCubicCurve {
 }
 
 export interface ReanimatedPath {
-  length: number;
-  search: { start: number; end: number }[];
-  lengths: number[];
+  totalLength: number;
+  segments: { start: number; end: number }[];
+  length: number[];
   start: number[];
   end: number[];
   p0x: number[];
@@ -47,28 +52,28 @@ export interface ReanimatedPath {
   p3y: number[];
 }
 export const getPath = (d: string): ReanimatedPath => {
-  const curves: [string, ...number[]][] = normalizeSVG(absSVG(parseSVG(d)));
-  const parts: BezierCubicCurve[] = curves
-    .filter((_, index) => index !== 0)
-    .map((curve, index) => {
-      const prevCurve = curves[index];
-      const p0 =
-        prevCurve[0] === "M"
-          ? { x: prevCurve[MX], y: prevCurve[MY] }
-          : { x: prevCurve[CX], y: prevCurve[CY] };
-      const p1 = { x: curve[CX1], y: curve[CY1] };
-      const p2 = { x: curve[CX2], y: curve[CY2] };
-      const p3 = { x: curve[CX], y: curve[CY] };
-      const length = cubicBezierLength(p0, p1, p2, p3);
-      return {
-        p0,
-        p1,
-        p2,
-        p3,
-        length
-      };
-    });
-  const search = parts.map((part, index) => {
+  const [move, ...curves]: SVGNormalizedCommands = normalizeSVG(
+    absSVG(parseSVG(d))
+  );
+  const parts: BezierCubicCurve[] = curves.map((curve, index) => {
+    const prevCurve = curves[index - 1];
+    const p0 =
+      index === 0
+        ? { x: move[MX], y: move[MY] }
+        : { x: prevCurve[CX], y: prevCurve[CY] };
+    const p1 = { x: curve[CX1], y: curve[CY1] };
+    const p2 = { x: curve[CX2], y: curve[CY2] };
+    const p3 = { x: curve[CX], y: curve[CY] };
+    const length = cubicBezierLength(p0, p1, p2, p3);
+    return {
+      p0,
+      p1,
+      p2,
+      p3,
+      length
+    };
+  });
+  const segments = parts.map((part, index) => {
     const start = parts.slice(0, index).reduce((acc, p) => acc + p.length, 0);
     const end = start + part.length;
     return {
@@ -77,11 +82,11 @@ export const getPath = (d: string): ReanimatedPath => {
     };
   });
   return {
-    search,
-    length: parts.reduce((acc, part) => acc + part.length, 0),
-    lengths: parts.map(part => part.length),
-    start: search.map(p => p.start),
-    end: search.map(p => p.end),
+    segments,
+    totalLength: parts.reduce((acc, part) => acc + part.length, 0),
+    length: parts.map(part => part.length),
+    start: segments.map(segment => segment.start),
+    end: segments.map(segment => segment.end),
     p0x: parts.map(part => part.p0.x),
     p0y: parts.map(part => part.p0.y),
     p1x: parts.map(part => part.p1.x),
@@ -98,7 +103,7 @@ export const getPointAtLength = (
   length: Animated.Node<number>
 ): { x: Animated.Node<number>; y: Animated.Node<number> } => {
   const notFound: Animated.Node<number> = new Value(-1);
-  const index = parts.search.reduce(
+  const index = parts.segments.reduce(
     (acc, p, i) =>
       cond(and(greaterOrEq(length, p.start), lessOrEq(length, p.end)), i, acc),
     notFound
