@@ -157,12 +157,10 @@ export const onScroll = (contentOffset: {
   x?: Animated.Node<number>;
   y?: Animated.Node<number>;
 }) =>
-  event(
-    [
-      {
-        nativeEvent: {
-          contentOffset
-        }
+  event([
+    {
+      nativeEvent: {
+        contentOffset
       }
-    ]
-  );
+    }
+  ]);
