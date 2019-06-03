@@ -164,6 +164,5 @@ export const onScroll = (contentOffset: {
           contentOffset
         }
       }
-    ],
-    { useNativeDriver: true }
+    ]
   );
