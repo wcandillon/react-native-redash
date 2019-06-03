@@ -28,7 +28,7 @@ const {
   stopClock,
   sub,
   Clock,
-  Value,
+  Value
 } = Animated;
 
 const ANIMATOR_PAUSE_CONSECUTIVE_FRAMES = 10;
@@ -47,19 +47,26 @@ function influenceAreaWithRadius(radius: number, anchor: any) {
     left: (anchor.x || 0) - radius,
     right: (anchor.x || 0) + radius,
     top: (anchor.y || 0) - radius,
-    bottom: (anchor.y || 0) + radius,
+    bottom: (anchor.y || 0) + radius
   };
 }
 
-function snapTo(target: any, snapPoints: any, best: any, clb: any, dragClb: any) {
+function snapTo(
+  target: any,
+  snapPoints: any,
+  best: any,
+  clb: any,
+  dragClb: any
+) {
   const dist = new Value(0);
   const snap = (pt: any) => [
     set(best.tension, pt.tension || DEFAULT_SNAP_TENSION),
     set(best.damping, pt.damping || DEFAULT_SNAP_DAMPING),
     set(best.x, pt.x || 0),
-    set(best.y, pt.y || 0),
+    set(best.y, pt.y || 0)
   ];
-  const snapDist = (pt: any) => add(sq(sub(target.x, pt.x || 0)), sq(sub(target.y, pt.y || 0)));
+  const snapDist = (pt: any) =>
+    add(sq(sub(target.x, pt.x || 0)), sq(sub(target.y, pt.y || 0)));
   return [
     set(dist, snapDist(snapPoints[0])),
     ...snap(snapPoints[0]),
@@ -67,12 +74,12 @@ function snapTo(target: any, snapPoints: any, best: any, clb: any, dragClb: any)
       const newDist = snapDist(pt);
       return cond(lessThan(newDist, dist), [set(dist, newDist), ...snap(pt)]);
     }),
-    (clb || dragClb)
-      && call([best.x, best.y, target.x, target.y], ([bx, by, x, y]) => {
+    (clb || dragClb) &&
+      call([best.x, best.y, target.x, target.y], ([bx, by, x, y]) => {
         snapPoints.forEach((pt: any, index: number) => {
           if (
-            (pt.x === undefined || pt.x === bx)
-            && (pt.y === undefined || pt.y === by)
+            (pt.x === undefined || pt.x === bx) &&
+            (pt.y === undefined || pt.y === by)
           ) {
             if (clb) {
               clb({ nativeEvent: { ...pt, index } });
@@ -80,24 +87,33 @@ function snapTo(target: any, snapPoints: any, best: any, clb: any, dragClb: any)
             if (dragClb) {
               dragClb({
                 nativeEvent: {
-                  x, y, targetSnapPointId: pt.id, state: "end",
-                },
+                  x,
+                  y,
+                  targetSnapPointId: pt.id,
+                  state: "end"
+                }
               });
             }
           }
         });
-      }),
+      })
   ];
 }
 
-function springBehavior(dt: any, target: any, obj: any, anchor: any, tension: number = 300) {
+function springBehavior(
+  dt: any,
+  target: any,
+  obj: any,
+  anchor: any,
+  tension: number = 300
+) {
   const dx = sub(target.x, anchor.x);
   const ax = divide(multiply(-1, tension, dx), obj.mass);
   const dy = sub(target.y, anchor.y);
   const ay = divide(multiply(-1, tension, dy), obj.mass);
   return {
     x: set(obj.vx, add(obj.vx, multiply(dt, ax))),
-    y: set(obj.vy, add(obj.vy, multiply(dt, ay))),
+    y: set(obj.vy, add(obj.vy, multiply(dt, ay)))
   };
 }
 
@@ -105,7 +121,7 @@ function frictionBehavior(dt: any, obj: any, damping: number = 0.7) {
   const friction = pow(damping, multiply(60, dt));
   return {
     x: set(obj.vx, multiply(obj.vx, friction)),
-    y: set(obj.vy, multiply(obj.vy, friction)),
+    y: set(obj.vy, multiply(obj.vy, friction))
   };
 }
 
@@ -114,7 +130,7 @@ function anchorBehavior(dt: any, target: any, obj: any, anchor: any) {
   const dy = sub(anchor.y, target.y);
   return {
     x: set(obj.vx, divide(dx, dt)),
-    y: set(obj.vy, divide(dy, dt)),
+    y: set(obj.vy, divide(dy, dt))
   };
 }
 
@@ -124,7 +140,7 @@ function gravityBehavior(
   obj: any,
   anchor: any,
   strength: number = DEFAULT_GRAVITY_STRENGTH,
-  falloff: number = DEFAULT_GRAVITY_FALLOF,
+  falloff: number = DEFAULT_GRAVITY_FALLOF
 ) {
   const dx = sub(target.x, anchor.x);
   const dy = sub(target.y, anchor.y);
@@ -132,12 +148,12 @@ function gravityBehavior(
   const dr = sqrt(drsq);
   const a = divide(
     multiply(-1, strength, dr, exp(divide(multiply(-0.5, drsq), sq(falloff)))),
-    obj.mass,
+    obj.mass
   );
   const div = divide(a, dr);
   return {
     x: cond(dr, set(obj.vx, add(obj.vx, multiply(dt, dx, div)))),
-    y: cond(dr, set(obj.vy, add(obj.vy, multiply(dt, dy, div)))),
+    y: cond(dr, set(obj.vy, add(obj.vy, multiply(dt, dy, div))))
   };
 }
 
@@ -151,7 +167,7 @@ function bounceBehavior(target: any, obj: any, area: any, bounce: number = 0) {
   }
   if (area.right !== undefined) {
     xnodes.push(
-      cond(and(eq(target.x, area.right), lessThan(0, obj.vx)), flipx),
+      cond(and(eq(target.x, area.right), lessThan(0, obj.vx)), flipx)
     );
   }
   if (area.top !== undefined) {
@@ -159,12 +175,12 @@ function bounceBehavior(target: any, obj: any, area: any, bounce: number = 0) {
   }
   if (area.bottom !== undefined) {
     xnodes.push(
-      cond(and(eq(target.y, area.bottom), lessThan(0, obj.vy)), flipy),
+      cond(and(eq(target.y, area.bottom), lessThan(0, obj.vy)), flipy)
     );
   }
   return {
     x: xnodes,
-    y: ynodes,
+    y: ynodes
   };
 }
 
@@ -175,14 +191,15 @@ function withInfluence(area: any, target: any, behavior: any) {
   const testLeft = area.left === undefined || lessOrEq(area.left, target.x);
   const testRight = area.right === undefined || lessOrEq(target.x, area.right);
   const testTop = area.top === undefined || lessOrEq(area.top, target.y);
-  const testBottom = area.bottom === undefined || lessOrEq(target.y, area.bottom);
+  const testBottom =
+    area.bottom === undefined || lessOrEq(target.y, area.bottom);
   const testNodes: any[] = [testLeft, testRight, testTop, testBottom].filter(
-    t => t !== true,
+    t => t !== true
   );
   const test = and(testNodes[0], testNodes[1], ...testNodes.slice(2));
   return {
     x: cond(test, behavior.x),
-    y: cond(test, behavior.y),
+    y: cond(test, behavior.y)
   };
 }
 
@@ -259,19 +276,23 @@ interface InteractableProps {
   style?: StyleProp<ViewStyle>;
   dragEnabled: boolean;
   onSnap?: (e: { nativeEvent: SnapPoint & { index: number } }) => void;
-  onStop?: (e: { nativeEvent: { x: number, y: number } }) => void;
-  onDrag?: (e: { nativeEvent: { x: number, y: number, state: "start" | "end" } }) => void;
+  onStop?: (e: { nativeEvent: { x: number; y: number } }) => void;
+  onDrag?: (e: {
+    nativeEvent: { x: number; y: number; state: "start" | "end" };
+  }) => void;
   initialPosition: Position;
   dragToss: number;
-  dragWithSpring?: {tension: number, damping: number};
+  dragWithSpring?: { tension: number; damping: number };
   boundaries?: Boundaries;
 }
 
-export default class Interactable extends React.PureComponent<InteractableProps> {
+export default class Interactable extends React.PureComponent<
+  InteractableProps
+> {
   static defaultProps = {
     dragToss: 0.1,
     dragEnabled: true,
-    initialPosition: { x: 0, y: 0 },
+    initialPosition: { x: 0, y: 0 }
   };
 
   transY: any;
@@ -281,26 +302,26 @@ export default class Interactable extends React.PureComponent<InteractableProps>
   onGestureEvent: any;
 
   position: {
-    x: any,
-    y: any
+    x: any;
+    y: any;
   };
 
   dragging: {
-    x?: any,
-    y?: any
+    x?: any;
+    y?: any;
   };
 
   snapAnchor: {
-    x: any,
-    y: any,
-    tension: any,
-    damping: any
+    x: any;
+    y: any;
+    tension: any;
+    damping: any;
   };
 
   velocity: {
-    x?: any,
-    y?: any
-  }
+    x?: any;
+    y?: any;
+  };
 
   constructor(props: InteractableProps) {
     super(props);
@@ -313,19 +334,19 @@ export default class Interactable extends React.PureComponent<InteractableProps>
         nativeEvent: {
           translationX: gesture.x,
           translationY: gesture.y,
-          state,
-        },
-      },
+          state
+        }
+      }
     ]);
 
     const target = {
       x: new Value(props.initialPosition.x || 0),
-      y: new Value(props.initialPosition.y || 0),
+      y: new Value(props.initialPosition.y || 0)
     };
 
     const update = {
       x: props.animatedValueX,
-      y: props.animatedValueY,
+      y: props.animatedValueY
     };
 
     const clock = new Clock();
@@ -335,33 +356,38 @@ export default class Interactable extends React.PureComponent<InteractableProps>
     const obj = {
       vx: new Value(0),
       vy: new Value(0),
-      mass: 1,
+      mass: 1
     };
 
     const tossedTarget = {
       x: add(target.x, multiply(props.dragToss, obj.vx)),
-      y: add(target.y, multiply(props.dragToss, obj.vy)),
+      y: add(target.y, multiply(props.dragToss, obj.vy))
     };
 
     const permBuckets: [any[], any[], any[]] = [[], [], []];
 
-    const addSpring = (anchor: any, tension: any, influence: any, buckets: any = permBuckets) => {
+    const addSpring = (
+      anchor: any,
+      tension: any,
+      influence: any,
+      buckets: any = permBuckets
+    ) => {
       buckets[0].push(
         withInfluence(
           influence,
           target,
-          springBehavior(dt, target, obj, anchor, tension),
-        ),
+          springBehavior(dt, target, obj, anchor, tension)
+        )
       );
     };
 
-    const addFriction = (damping: any, influence: any, buckets: any = permBuckets) => {
+    const addFriction = (
+      damping: any,
+      influence: any,
+      buckets: any = permBuckets
+    ) => {
       buckets[1].push(
-        withInfluence(
-          influence,
-          target,
-          frictionBehavior(dt, obj, damping),
-        ),
+        withInfluence(influence, target, frictionBehavior(dt, obj, damping))
       );
     };
 
@@ -370,14 +396,14 @@ export default class Interactable extends React.PureComponent<InteractableProps>
       strength: any,
       falloff: any,
       influence: any,
-      buckets: any = permBuckets,
+      buckets: any = permBuckets
     ) => {
       buckets[0].push(
         withInfluence(
           influence,
           target,
-          gravityBehavior(dt, target, obj, anchor, strength, falloff),
-        ),
+          gravityBehavior(dt, target, obj, anchor, strength, falloff)
+        )
       );
     };
 
@@ -391,10 +417,13 @@ export default class Interactable extends React.PureComponent<InteractableProps>
       dragBuckets[0].push(anchorBehavior(dt, target, obj, dragAnchor));
     }
 
-    const handleStartDrag = props.onDrag
-      && call(
+    const handleStartDrag =
+      props.onDrag &&
+      call(
         [target.x, target.y],
-        ([x, y]) => props.onDrag && props.onDrag({ nativeEvent: { x, y, state: "start" } }),
+        ([x, y]) =>
+          props.onDrag &&
+          props.onDrag({ nativeEvent: { x, y, state: "start" } })
       );
 
     const snapBuckets: [any[], any[], any[]] = [[], [], []];
@@ -402,14 +431,14 @@ export default class Interactable extends React.PureComponent<InteractableProps>
       x: new Value(props.initialPosition.x || 0),
       y: new Value(props.initialPosition.y || 0),
       tension: new Value(DEFAULT_SNAP_TENSION),
-      damping: new Value(DEFAULT_SNAP_DAMPING),
+      damping: new Value(DEFAULT_SNAP_DAMPING)
     };
     const updateSnapTo = snapTo(
       tossedTarget,
       props.snapPoints,
       snapAnchor,
       props.onSnap,
-      props.onDrag,
+      props.onDrag
     );
 
     addSpring(snapAnchor, snapAnchor.tension, null, snapBuckets);
@@ -424,11 +453,12 @@ export default class Interactable extends React.PureComponent<InteractableProps>
       });
     }
     if (props.gravityPoints) {
-      props.gravityPoints.forEach((pt) => {
+      props.gravityPoints.forEach(pt => {
         const falloff = pt.falloff || DEFAULT_GRAVITY_FALLOF;
         addGravity(pt, pt.strength, falloff, pt.influenceArea);
         if (pt.damping) {
-          const influenceArea = pt.influenceArea || influenceAreaWithRadius(1.4 * falloff, pt);
+          const influenceArea =
+            pt.influenceArea || influenceAreaWithRadius(1.4 * falloff, pt);
           addFriction(pt.damping, influenceArea);
         }
       });
@@ -440,12 +470,7 @@ export default class Interactable extends React.PureComponent<InteractableProps>
     }
     if (props.boundaries) {
       snapBuckets[0].push(
-        bounceBehavior(
-          target,
-          obj,
-          props.boundaries,
-          props.boundaries.bounce,
-        ),
+        bounceBehavior(target, obj, props.boundaries, props.boundaries.bounce)
       );
     }
 
@@ -454,44 +479,54 @@ export default class Interactable extends React.PureComponent<InteractableProps>
     // front, so we join in reverse order and then reverse the array.
     const sortBuckets = (specialBuckets: any) => ({
       x: specialBuckets
-        .map((b: any, idx: number) => [...permBuckets[idx], ...b].reverse().map(b1 => b1.x))
+        .map((b: any, idx: number) =>
+          [...permBuckets[idx], ...b].reverse().map(b1 => b1.x)
+        )
         .reduce((acc: any, b2: any) => acc.concat(b2), []),
       y: specialBuckets
-        .map((b: any, idx: number) => [...permBuckets[idx], ...b].reverse().map(b1 => b1.y))
-        .reduce((acc: any, b2: any) => acc.concat(b2), []),
+        .map((b: any, idx: number) =>
+          [...permBuckets[idx], ...b].reverse().map(b1 => b1.y)
+        )
+        .reduce((acc: any, b2: any) => acc.concat(b2), [])
     });
     const dragBehaviors = sortBuckets(dragBuckets);
     const snapBehaviors = sortBuckets(snapBuckets);
 
     const noMovementFrames = {
       x: new Value(
-        props.verticalOnly ? ANIMATOR_PAUSE_CONSECUTIVE_FRAMES + 1 : 0,
+        props.verticalOnly ? ANIMATOR_PAUSE_CONSECUTIVE_FRAMES + 1 : 0
       ),
       y: new Value(
-        props.horizontalOnly ? ANIMATOR_PAUSE_CONSECUTIVE_FRAMES + 1 : 0,
-      ),
+        props.horizontalOnly ? ANIMATOR_PAUSE_CONSECUTIVE_FRAMES + 1 : 0
+      )
     };
 
     const stopWhenNeeded = cond(
       and(
         greaterOrEq(noMovementFrames.x, ANIMATOR_PAUSE_CONSECUTIVE_FRAMES),
-        greaterOrEq(noMovementFrames.y, ANIMATOR_PAUSE_CONSECUTIVE_FRAMES),
+        greaterOrEq(noMovementFrames.y, ANIMATOR_PAUSE_CONSECUTIVE_FRAMES)
       ),
       block([
         props.onStop
           ? cond(
-            clockRunning(clock),
-            call([target.x, target.y], ([x, y]) => props.onStop && props.onStop({ nativeEvent: { x, y } })),
-          ) : [],
-        stopClock(clock),
+              clockRunning(clock),
+              call(
+                [target.x, target.y],
+                ([x, y]) =>
+                  props.onStop && props.onStop({ nativeEvent: { x, y } })
+              )
+            )
+          : [],
+        stopClock(clock)
       ]),
-      startClock(clock),
+      startClock(clock)
     );
 
     const trans = (
-      axis: "x" | "y", vaxis: "vx" | "vy",
+      axis: "x" | "y",
+      vaxis: "vx" | "vy",
       lowerBound: "top" | "left" | "right" | "bottom",
-      upperBound: "top" | "left" | "right" | "bottom",
+      upperBound: "top" | "left" | "right" | "bottom"
     ) => {
       const dragging = new Value(0);
       const start = new Value(0);
@@ -502,13 +537,13 @@ export default class Interactable extends React.PureComponent<InteractableProps>
       let advance = cond(
         lessThan(abs(vx), ANIMATOR_PAUSE_ZERO_VELOCITY),
         x,
-        add(x, multiply(vx, dt)),
+        add(x, multiply(vx, dt))
       );
       if (props.boundaries) {
         advance = withLimits(
           advance,
           props.boundaries[lowerBound],
-          props.boundaries[upperBound],
+          props.boundaries[upperBound]
         );
       }
       const last = new Value(Number.MAX_SAFE_INTEGER);
@@ -516,30 +551,37 @@ export default class Interactable extends React.PureComponent<InteractableProps>
       const testMovementFrames = cond(
         eq(advance, last),
         set(noMoveFrameCount, add(noMoveFrameCount, 1)),
-        [set(last, advance), set(noMoveFrameCount, 0)],
+        [set(last, advance), set(noMoveFrameCount, 0)]
       );
       const step = cond(
         eq(state, State.ACTIVE),
         [
-          cond(dragging, 0, block([
-            handleStartDrag || [],
-            startClock(clock),
-            set(dragging, 1),
-            set(start, x),
-          ])),
+          cond(
+            dragging,
+            0,
+            block([
+              handleStartDrag || [],
+              startClock(clock),
+              set(dragging, 1),
+              set(start, x)
+            ])
+          ),
           set(anchor, add(start, drag)),
-          cond(dt, dragBehaviors[axis]),
+          cond(dt, dragBehaviors[axis])
         ],
         [
           cond(clockRunning(clock), 0, startClock(clock)),
           cond(dragging, [updateSnapTo, set(dragging, 0)]),
           cond(dt, snapBehaviors[axis]),
           testMovementFrames,
-          stopWhenNeeded,
-        ],
+          stopWhenNeeded
+        ]
       );
       const wrapStep = props.dragEnabled
-        ? cond(props.dragEnabled as any, step, [set(dragging, 1), stopClock(clock)])
+        ? cond(props.dragEnabled as any, step, [
+            set(dragging, 1),
+            stopClock(clock)
+          ])
         : step;
 
       // export some values to be available for imperative commands
@@ -563,7 +605,13 @@ export default class Interactable extends React.PureComponent<InteractableProps>
   }
 
   // imperative commands
-  setVelocity({ x, y }: { x: Animated.Adaptable<number>, y: Animated.Adaptable<number> }) {
+  setVelocity({
+    x,
+    y
+  }: {
+    x: Animated.Adaptable<number>;
+    y: Animated.Adaptable<number>;
+  }) {
     if (x !== undefined) {
       this.dragging.x.setValue(1);
       this.velocity.x.setValue(x);
@@ -592,7 +640,13 @@ export default class Interactable extends React.PureComponent<InteractableProps>
   }
   */
 
-  changePosition({ x, y }: { x: Animated.Adaptable<number>, y: Animated.Adaptable<number>}) {
+  changePosition({
+    x,
+    y
+  }: {
+    x: Animated.Adaptable<number>;
+    y: Animated.Adaptable<number>;
+  }) {
     if (x !== undefined) {
       this.dragging.x.setValue(1);
       this.position.x.setValue(x);
@@ -606,7 +660,11 @@ export default class Interactable extends React.PureComponent<InteractableProps>
   render() {
     const { onGestureEvent } = this;
     const {
-      children, style, horizontalOnly, verticalOnly, dragEnabled: enabled,
+      children,
+      style,
+      horizontalOnly,
+      verticalOnly,
+      dragEnabled: enabled
     } = this.props;
     return (
       <PanGestureHandler
@@ -621,10 +679,10 @@ export default class Interactable extends React.PureComponent<InteractableProps>
               transform: [
                 {
                   translateX: verticalOnly ? 0 : this.transX,
-                  translateY: horizontalOnly ? 0 : this.transY,
-                },
-              ],
-            },
+                  translateY: horizontalOnly ? 0 : this.transY
+                }
+              ]
+            }
           ]}
         >
           {children}

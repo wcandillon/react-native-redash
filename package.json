@@ -31,7 +31,7 @@
     "@types/react": "^16.8.15",
     "@types/react-native": "^0.57.51",
     "eslint": "^5.16.0",
-    "eslint-config-react-native-wcandillon": "^1.0.6",
+    "eslint-config-react-native-wcandillon": "1.1.3",
     "react": "^16.8.6",
     "react-native": "^0.59.5",
     "react-native-gesture-handler": "^1.2.1",
@@ -55,6 +55,8 @@
     ]
   },
   "dependencies": {
-    "svg-path-properties": "0.4.8"
+    "abs-svg-path": "^0.1.1",
+    "normalize-svg-path": "^1.0.1",
+    "parse-svg-path": "^0.1.2"
   }
 }
