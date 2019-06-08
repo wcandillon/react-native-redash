@@ -14,8 +14,7 @@ const {
   greaterOrEq,
   and,
   cond,
-  interpolate,
-  concat: reConcat
+  interpolate
 } = Animated;
 
 // const COMMAND = 0;
@@ -31,11 +30,6 @@ const CY = 6;
 type SVGMoveCommand = ["M", number, number];
 type SVGCurveCommand = ["C", number, number, number, number, number, number];
 type SVGNormalizedCommands = [SVGMoveCommand, ...SVGCurveCommand[]];
-
-const concat = (
-  ...args: Array<Animated.Adaptable<string> | Animated.Adaptable<number>>
-): Animated.Node<string> =>
-  reConcat(args[0] as any, args[1] as any, ...(args.slice(2) as any[]));
 
 interface Point {
   x: number;
@@ -144,19 +138,29 @@ export const getPointAtLength = (
   };
 };
 
+const animatedString(strings: string[], ...values: Animated.Value<number>): Animated.Node<string> {
+  const arr = [];
+  const n = values.length;
+  for (let i = 0; i < n; i++) {
+    arr.push(strings[i], values[i]);
+  }
+  const end = strings[n];
+  if (end) {
+    arr.push(end);
+  }
+  return concat(...arr);
+}
+
+    
 export const interpolatePath = (
   path1: ReanimatedPath,
   path2: ReanimatedPath,
   progress: Animated.Value<number>
 ): Animated.Node<string> => {
   const commands = path1.segments.map((_, index) => {
-    const command: Animated.Node<string>[] = [];
-    if (index === 0) {
-      const mx = bInterpolate(progress, path1.p0x[index], path2.p0x[index]);
-      const my = bInterpolate(progress, path1.p0y[index], path2.p0y[index]);
-      command.push(concat("M", mx, ",", my, " "));
-    }
-
+    const mx = bInterpolate(progress, path1.p0x[index], path2.p0x[index]);
+    const my = bInterpolate(progress, path1.p0y[index], path2.p0y[index]);
+ 
     const p1x = bInterpolate(progress, path1.p1x[index], path2.p1x[index]);
     const p1y = bInterpolate(progress, path1.p1y[index], path2.p1y[index]);
 
@@ -166,10 +170,7 @@ export const interpolatePath = (
     const p3x = bInterpolate(progress, path1.p3x[index], path2.p3x[index]);
     const p3y = bInterpolate(progress, path1.p3y[index], path2.p3y[index]);
 
-    command.push(
-      concat("C", p1x, ",", p1y, " ", p2x, ",", p2y, " ", p3x, ",", p3y, " ")
-    );
-    return concat(...command);
+    return animatedString`${index === 0 ? animatedString`M${mx},${my} ` : ""}C${p1x},${p1y} ${p2x},${p2y} ${p3x},${p3y} `);
   });
   return concat(...commands);
 };
