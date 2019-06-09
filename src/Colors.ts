@@ -162,13 +162,33 @@ const interpolateColorsRGB = (
   return color(r, g, b);
 };
 
+interface ColorInterpolationConfig {
+  inputRange: number[];
+  outputRange: RGBColor[];
+}
+
 export const interpolateColors = (
-  animationValue: Animated.Adaptable<number>,
-  inputRange: number[],
-  colors: RGBColor[],
+  value: Animated.Adaptable<number>,
+  config: ColorInterpolationConfig,
   colorSpace: "hsv" | "rgb" = "hsv"
 ) => {
+  const { inputRange, outputRange } = config;
   if (colorSpace === "hsv")
-    return interpolateColorsHSV(animationValue, inputRange, colors);
-  return interpolateColorsRGB(animationValue, inputRange, colors);
+    return interpolateColorsHSV(value, inputRange, outputRange);
+  return interpolateColorsRGB(value, inputRange, outputRange);
 };
+
+export const bInterpolateColor = (
+  value: Animated.Adaptable<number>,
+  color1: RGBColor,
+  color2: RGBColor,
+  colorSpace: "hsv" | "rgb" = "hsv"
+) =>
+  interpolateColors(
+    value,
+    {
+      inputRange: [0, 1],
+      outputRange: [color1, color2]
+    },
+    colorSpace
+  );
