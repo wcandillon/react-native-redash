@@ -167,7 +167,7 @@ interface ColorInterpolationConfig {
   outputRange: RGBColor[];
 }
 
-export const interpolateColors = (
+export const interpolateColor = (
   value: Animated.Adaptable<number>,
   config: ColorInterpolationConfig,
   colorSpace: "hsv" | "rgb" = "hsv"
@@ -184,7 +184,7 @@ export const bInterpolateColor = (
   color2: RGBColor,
   colorSpace: "hsv" | "rgb" = "hsv"
 ) =>
-  interpolateColors(
+  interpolateColor(
     value,
     {
       inputRange: [0, 1],
