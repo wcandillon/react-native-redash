@@ -5,9 +5,7 @@ import normalizeSVG from "normalize-svg-path";
 import { find } from "./Arrays";
 
 import { cubicBezier } from "./Math";
-import { bInterpolate } from "./Animations";
 import cubicBezierLength from "./CubicBezierLength";
-
 
 const {
   Value,
@@ -148,7 +146,7 @@ export const getPointAtLength = (
 
 const animatedString = (
   strings: ReadonlyArray<Animated.Adaptable<string>>,
-  ...values: Animated.Value<number>[]
+  ...values: Animated.Adaptable<string | number>[]
 ): Animated.Node<string> => {
   const arr = [];
   const n = values.length;
@@ -159,7 +157,7 @@ const animatedString = (
   if (end) {
     arr.push(end);
   }
-  return concat(...arr);
+  return concat(...(arr as any));
 };
 
 interface PathInterpolationConfig {
@@ -229,4 +227,3 @@ export const bInterpolatePath = (
     inputRange: [0, 1],
     outputRange: [path1, path2]
   });
-
