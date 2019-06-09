@@ -53,15 +53,30 @@ const path = parsePath(d);
 const { y, x } = getPointAtLength(path, length);
 ```
 
-### `interpolatePath(path1, path2, progress): path`
+### `interpolatePath(value: Node, { inputRange, outputRange  }): path`
+
+Interpolate from one SVG point to the other, this function assumes that each path has the same number of points.
+
+```tsx
+  const phone1 = "M 18 149C 18 149 25 149 25 149 25 14...";
+  const d = interpolatePath(slider, {
+    inputRange: [0, width, width * 2],
+    outputRange: [phone1, phone2, phone3]
+  });
+  return (
+      <Svg style={styles.svg} viewBox="0 0 100 300">
+        <AnimatedPath fill="black" {...{ d }} />
+      </Svg>
+  );
+```
+
+### `bInterpolatePath(path1, path2, progress): path`
 
 Interpolate from one SVG point to the other, this function assumes that each path has the same number of points.
 
 ```tsx
 const rhino = "M 217.765 29.683 C 225.855 29.683 ";
-const rhinoPath = parsePath(rhino);
 const elephant = "M 223.174 43.413 ...";
-const elephantPath = parsePath(elephant);
 return (
     <>
       <Animated.Code>
@@ -78,7 +93,7 @@ return (
       </Animated.Code>
       <Svg style={styles.container} viewBox="0 0 409 280">
         <AnimatedPath
-          d={interpolatePath(rhinoPath, elephantPath, progress)}
+          d={bInterpolatePath(progress, rhino, elephant)}
           fill="#7d8f9b"
         />
       </Svg>
@@ -208,12 +223,12 @@ runDecay(clock: Clock, value: Node, velocity: Node, rerunDecaying: Node): Node
 
 Interpolate the node from 0 to 1 without clamping.
 
-### `interpolateColors(node, inputRange, colors, [colorSpace = "hsv"])`
+### `interpolateColor(node, { inputRange, outputRange }, [colorSpace = "hsv"])`
 
 Interpolate colors based on an animation value and its value range.
 
 ```js
-interpolateColors(value: Node, inputRange: number[], colors: Colors, colorSpace?: "hsv" | "rgb")
+interpolateColor(value: Node, { inputRange: number[], outputRange: Colors }, colorSpace?: "hsv" | "rgb")
 ```
 
 Example Usage:
@@ -231,14 +246,16 @@ const to = {
 };
 
 // Interpolate in default color space (HSV)
-interpolateColors(x, [0, 1], [from, to]);
+interpolateColor(x, [0, 1], [from, to]);
 
 // Interpolate in RGB color space
-interpolateColors(x, [0, 1], [from, to], "rgb");
+interpolateColor(x, [0, 1], [from, to], "rgb");
 ```
 
-![](https://user-images.githubusercontent.com/616906/58366137-3d667b80-7ece-11e9-9b20-ea5e84494afc.png)
-_Interpolating between red and blue, with in-between colors shown. Image source: [this tool](https://www.alanzucconi.com/2016/01/06/colour-interpolation/4/)._
+
+### `bInterpolateColor(node, color1, color2, [colorSpace = "hsv"])`
+
+Interpolate the node from 0 to 1 without clamping.
 
 ### `snapPoint(point, velocity, points)`
 

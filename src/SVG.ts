@@ -5,7 +5,6 @@ import normalizeSVG from "normalize-svg-path";
 import { find } from "./Arrays";
 
 import { cubicBezier } from "./Math";
-import { bInterpolate } from "./Animations";
 import cubicBezierLength from "./CubicBezierLength";
 
 const {
@@ -65,6 +64,7 @@ export interface ReanimatedPath {
   p3x: number[];
   p3y: number[];
 }
+
 export const parsePath = (d: string): ReanimatedPath => {
   const [move, ...curves]: SVGNormalizedCommands = normalizeSVG(
     absSVG(parseSVG(d))
@@ -144,32 +144,86 @@ export const getPointAtLength = (
   };
 };
 
-export const interpolatePath = (
-  path1: ReanimatedPath,
-  path2: ReanimatedPath,
-  progress: Animated.Value<number>
+const animatedString = (
+  strings: ReadonlyArray<Animated.Adaptable<string>>,
+  ...values: Animated.Adaptable<string | number>[]
 ): Animated.Node<string> => {
-  const commands = path1.segments.map((_, index) => {
-    const command: Animated.Node<string>[] = [];
-    if (index === 0) {
-      const mx = bInterpolate(progress, path1.p0x[index], path2.p0x[index]);
-      const my = bInterpolate(progress, path1.p0y[index], path2.p0y[index]);
-      command.push(concat("M", mx, ",", my, " "));
-    }
+  const arr = [];
+  const n = values.length;
+  for (let i = 0; i < n; i += 1) {
+    arr.push(strings[i], values[i]);
+  }
+  const end = strings[n];
+  if (end) {
+    arr.push(end);
+  }
+  return concat(...(arr as any));
+};
 
-    const p1x = bInterpolate(progress, path1.p1x[index], path2.p1x[index]);
-    const p1y = bInterpolate(progress, path1.p1y[index], path2.p1y[index]);
+interface PathInterpolationConfig {
+  inputRange: ReadonlyArray<Animated.Adaptable<number>>;
+  outputRange: ReadonlyArray<ReanimatedPath | string>;
+}
 
-    const p2x = bInterpolate(progress, path1.p2x[index], path2.p2x[index]);
-    const p2y = bInterpolate(progress, path1.p2y[index], path2.p2y[index]);
+export const interpolatePath = (
+  value: Animated.Adaptable<number>,
+  config: PathInterpolationConfig
+): Animated.Node<string> => {
+  const { inputRange } = config;
+  const paths = config.outputRange.map(path =>
+    typeof path === "string" ? parsePath(path) : path
+  );
+  const path = paths[0];
+  const commands = path.segments.map((_, index) => {
+    const mx = interpolate(value, {
+      inputRange,
+      outputRange: paths.map(p => p.p0x[index])
+    });
+    const my = interpolate(value, {
+      inputRange,
+      outputRange: paths.map(p => p.p0y[index])
+    });
 
-    const p3x = bInterpolate(progress, path1.p3x[index], path2.p3x[index]);
-    const p3y = bInterpolate(progress, path1.p3y[index], path2.p3y[index]);
+    const p1x = interpolate(value, {
+      inputRange,
+      outputRange: paths.map(p => p.p1x[index])
+    });
+    const p1y = interpolate(value, {
+      inputRange,
+      outputRange: paths.map(p => p.p1y[index])
+    });
 
-    command.push(
-      concat("C", p1x, ",", p1y, " ", p2x, ",", p2y, " ", p3x, ",", p3y, " ")
-    );
-    return concat(...command);
+    const p2x = interpolate(value, {
+      inputRange,
+      outputRange: paths.map(p => p.p2x[index])
+    });
+    const p2y = interpolate(value, {
+      inputRange,
+      outputRange: paths.map(p => p.p2y[index])
+    });
+
+    const p3x = interpolate(value, {
+      inputRange,
+      outputRange: paths.map(p => p.p3x[index])
+    });
+    const p3y = interpolate(value, {
+      inputRange,
+      outputRange: paths.map(p => p.p3y[index])
+    });
+
+    return animatedString`${
+      index === 0 ? animatedString`M${mx},${my} ` : ""
+    }C${p1x},${p1y} ${p2x},${p2y} ${p3x},${p3y}`;
   });
   return concat(...commands);
 };
+
+export const bInterpolatePath = (
+  value: Animated.Value<number>,
+  path1: ReanimatedPath,
+  path2: ReanimatedPath
+): Animated.Node<string> =>
+  interpolatePath(value, {
+    inputRange: [0, 1],
+    outputRange: [path1, path2]
+  });
