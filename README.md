@@ -53,15 +53,30 @@ const path = parsePath(d);
 const { y, x } = getPointAtLength(path, length);
 ```
 
-### `interpolatePath(path1, path2, progress): path`
+### `interpolatePath(value: Node, { inputRange, outputRange  }): path`
+
+Interpolate from one SVG point to the other, this function assumes that each path has the same number of points.
+
+```tsx
+  const phone1 = "M 18 149C 18 149 25 149 25 149 25 14...";
+  const d = interpolatePath(slider, {
+    inputRange: [0, width, width * 2],
+    outputRange: [phone1, phone2, phone3]
+  });
+  return (
+      <Svg style={styles.svg} viewBox="0 0 100 300">
+        <AnimatedPath fill="black" {...{ d }} />
+      </Svg>
+  );
+```
+
+### `bInterpolatePath(path1, path2, progress): path`
 
 Interpolate from one SVG point to the other, this function assumes that each path has the same number of points.
 
 ```tsx
 const rhino = "M 217.765 29.683 C 225.855 29.683 ";
-const rhinoPath = parsePath(rhino);
 const elephant = "M 223.174 43.413 ...";
-const elephantPath = parsePath(elephant);
 return (
     <>
       <Animated.Code>
@@ -78,7 +93,7 @@ return (
       </Animated.Code>
       <Svg style={styles.container} viewBox="0 0 409 280">
         <AnimatedPath
-          d={interpolatePath(rhinoPath, elephantPath, progress)}
+          d={bInterpolatePath(progress, rhino, elephant)}
           fill="#7d8f9b"
         />
       </Svg>
