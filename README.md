@@ -223,12 +223,12 @@ runDecay(clock: Clock, value: Node, velocity: Node, rerunDecaying: Node): Node
 
 Interpolate the node from 0 to 1 without clamping.
 
-### `interpolateColors(node, inputRange, colors, [colorSpace = "hsv"])`
+### `interpolateColor(node, { inputRange, outputRange }, [colorSpace = "hsv"])`
 
 Interpolate colors based on an animation value and its value range.
 
 ```js
-interpolateColors(value: Node, inputRange: number[], colors: Colors, colorSpace?: "hsv" | "rgb")
+interpolateColor(value: Node, { inputRange: number[], outputRange: Colors }, colorSpace?: "hsv" | "rgb")
 ```
 
 Example Usage:
@@ -246,14 +246,16 @@ const to = {
 };
 
 // Interpolate in default color space (HSV)
-interpolateColors(x, [0, 1], [from, to]);
+interpolateColor(x, [0, 1], [from, to]);
 
 // Interpolate in RGB color space
-interpolateColors(x, [0, 1], [from, to], "rgb");
+interpolateColor(x, [0, 1], [from, to], "rgb");
 ```
 
-![](https://user-images.githubusercontent.com/616906/58366137-3d667b80-7ece-11e9-9b20-ea5e84494afc.png)
-_Interpolating between red and blue, with in-between colors shown. Image source: [this tool](https://www.alanzucconi.com/2016/01/06/colour-interpolation/4/)._
+
+### `bInterpolateColor(node, color1, color2, [colorSpace = "hsv"])`
+
+Interpolate the node from 0 to 1 without clamping.
 
 ### `snapPoint(point, velocity, points)`
 
