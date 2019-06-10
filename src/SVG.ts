@@ -220,8 +220,8 @@ export const interpolatePath = (
 
 export const bInterpolatePath = (
   value: Animated.Value<number>,
-  path1: ReanimatedPath,
-  path2: ReanimatedPath
+  path1: ReanimatedPath | string,
+  path2: ReanimatedPath | string
 ): Animated.Node<string> =>
   interpolatePath(value, {
     inputRange: [0, 1],
