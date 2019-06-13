@@ -70,7 +70,7 @@ Interpolate from one SVG point to the other, this function assumes that each pat
   );
 ```
 
-### `bInterpolatePath(path1, path2, progress): path`
+### `bInterpolatePath(progress, path1, path2): path`
 
 Interpolate from one SVG point to the other, this function assumes that each path has the same number of points.
 
