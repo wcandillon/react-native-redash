@@ -2,7 +2,7 @@ import Animated from "react-native-reanimated";
 import parseSVG from "parse-svg-path";
 import absSVG from "abs-svg-path";
 import normalizeSVG from "normalize-svg-path";
-import { find } from "./Arrays";
+import { find } from "./Array";
 import { string } from "./String";
 import { cubicBezier } from "./Math";
 import cubicBezierLength from "./CubicBezierLength";
@@ -196,7 +196,7 @@ export const interpolatePath = (
     });
 
     return string`${
-      index === 0 ? animatedString`M${mx},${my} ` : ""
+      index === 0 ? string`M${mx},${my} ` : ""
     }C${p1x},${p1y} ${p2x},${p2y} ${p3x},${p3y}`;
   });
   return concat(...commands);

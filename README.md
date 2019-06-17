@@ -177,7 +177,6 @@ Returns the coordinate of a cubic bezier curve.
 ### `string`
 
 Tagged template for animated string values.
-This function handles nested string values.
 
 ```tsx
 const { x, y } = { x: new Value(0), y: new Value(0) };
