@@ -172,7 +172,20 @@ Returns the coordinate of a cubic bezier curve.
 `p0` and `p3` are respectively the starting and ending point of the curve.
 `p1` and `p2` are the control points.
 
-## Arrays
+## String
+
+### `string`
+
+Tagged template for animated string values.
+This function handles nested string values.
+
+```tsx
+const { x, y } = { x: new Value(0), y: new Value(0) };
+const d = string`M0,0 ${x},${y}`;
+return <AnimatedPath {...{d}} />;
+```
+
+## Array
 
 ### `find(nodes, index, notFound)`
 
@@ -251,7 +264,6 @@ interpolateColor(x, [0, 1], [from, to]);
 // Interpolate in RGB color space
 interpolateColor(x, [0, 1], [from, to], "rgb");
 ```
-
 
 ### `bInterpolateColor(node, color1, color2, [colorSpace = "hsv"])`
 
