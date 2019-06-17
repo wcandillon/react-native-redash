@@ -2,8 +2,8 @@ import Animated from "react-native-reanimated";
 import parseSVG from "parse-svg-path";
 import absSVG from "abs-svg-path";
 import normalizeSVG from "normalize-svg-path";
-import { find } from "./Arrays";
-
+import { find } from "./Array";
+import { string } from "./String";
 import { cubicBezier } from "./Math";
 import cubicBezierLength from "./CubicBezierLength";
 
@@ -144,22 +144,6 @@ export const getPointAtLength = (
   };
 };
 
-const animatedString = (
-  strings: ReadonlyArray<Animated.Adaptable<string>>,
-  ...values: Animated.Adaptable<string | number>[]
-): Animated.Node<string> => {
-  const arr = [];
-  const n = values.length;
-  for (let i = 0; i < n; i += 1) {
-    arr.push(strings[i], values[i]);
-  }
-  const end = strings[n];
-  if (end) {
-    arr.push(end);
-  }
-  return concat(...(arr as any));
-};
-
 interface PathInterpolationConfig {
   inputRange: ReadonlyArray<Animated.Adaptable<number>>;
   outputRange: ReadonlyArray<ReanimatedPath | string>;
@@ -211,8 +195,8 @@ export const interpolatePath = (
       outputRange: paths.map(p => p.p3y[index])
     });
 
-    return animatedString`${
-      index === 0 ? animatedString`M${mx},${my} ` : ""
+    return string`${
+      index === 0 ? string`M${mx},${my} ` : ""
     }C${p1x},${p1y} ${p2x},${p2y} ${p3x},${p3y}`;
   });
   return concat(...commands);
