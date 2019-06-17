@@ -45,10 +45,12 @@ interface BezierCubicCurve {
   p3: Point;
 }
 
-type InterpolationConfig = Parameters<typeof interpolate>[1];
-export interface PathInterpolationConfig
-  extends Omit<InterpolationConfig, "outputRange"> {
+export interface PathInterpolationConfig {
+  inputRange: ReadonlyArray<Animated.Adaptable<number>>;
   outputRange: ReadonlyArray<ReanimatedPath | string>;
+  extrapolate?: Animated.Extrapolate;
+  extrapolateLeft?: Animated.Extrapolate;
+  extrapolateRight?: Animated.Extrapolate;
 }
 
 export interface ReanimatedPath {
