@@ -13,6 +13,5 @@ export const string = (
   if (values.length > strings.length) {
     result.push(values[values.length - 1]);
   }
-  // @ts-ignore
-  return concat(...result);
+  return concat(...(result as [any, any, ...any[]]));
 };
