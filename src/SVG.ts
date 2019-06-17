@@ -14,7 +14,7 @@ const {
   and,
   cond,
   interpolate,
-  concat: reConcat
+  Extrapolate
 } = Animated;
 
 // const COMMAND = 0;
@@ -30,11 +30,7 @@ const CY = 6;
 type SVGMoveCommand = ["M", number, number];
 type SVGCurveCommand = ["C", number, number, number, number, number, number];
 type SVGNormalizedCommands = [SVGMoveCommand, ...SVGCurveCommand[]];
-
-const concat = (
-  ...args: Array<Animated.Adaptable<string> | Animated.Adaptable<number>>
-): Animated.Node<string> =>
-  reConcat(args[0] as any, args[1] as any, ...(args.slice(2) as any[]));
+type BezierPoint = "p0x" | "p0y" | "p1x" | "p1y" | "p2x" | "p2y" | "p3x" | "p3y"; 
 
 interface Point {
   x: number;
@@ -47,6 +43,14 @@ interface BezierCubicCurve {
   p1: Point;
   p2: Point;
   p3: Point;
+}
+
+export interface PathInterpolationConfig {
+  inputRange: ReadonlyArray<Animated.Adaptable<number>>;
+  outputRange: ReadonlyArray<ReanimatedPath | string>;
+  extrapolate?: Extrapolate;
+  extrapolateLeft?: Extrapolate;
+  extrapolateRight?: Extrapolate;
 }
 
 export interface ReanimatedPath {
@@ -144,62 +148,38 @@ export const getPointAtLength = (
   };
 };
 
-interface PathInterpolationConfig {
-  inputRange: ReadonlyArray<Animated.Adaptable<number>>;
-  outputRange: ReadonlyArray<ReanimatedPath | string>;
-}
-
 export const interpolatePath = (
   value: Animated.Adaptable<number>,
-  config: PathInterpolationConfig
+  { inputRange, outputRange, ...config }: PathInterpolationConfig
 ): Animated.Node<string> => {
-  const { inputRange } = config;
-  const paths = config.outputRange.map(path =>
+  const paths = outputRange.map(path =>
     typeof path === "string" ? parsePath(path) : path
   );
   const path = paths[0];
   const commands = path.segments.map((_, index) => {
-    const mx = interpolate(value, {
+    const interpolatePoint = (point: BezierPoint) => interpolate(value, {
       inputRange,
-      outputRange: paths.map(p => p.p0x[index])
+      outputRange: paths.map(p => p[point][index]),
+      ...config
     });
-    const my = interpolate(value, {
-      inputRange,
-      outputRange: paths.map(p => p.p0y[index])
-    });
+    
+    const mx = interpolatePoint("p0x");
+    const my = interpolatePoint("p0y");
 
-    const p1x = interpolate(value, {
-      inputRange,
-      outputRange: paths.map(p => p.p1x[index])
-    });
-    const p1y = interpolate(value, {
-      inputRange,
-      outputRange: paths.map(p => p.p1y[index])
-    });
+    const p1x = interpolatePoint("p1x");
+    const p1y = interpolatePoint("p1y");
 
-    const p2x = interpolate(value, {
-      inputRange,
-      outputRange: paths.map(p => p.p2x[index])
-    });
-    const p2y = interpolate(value, {
-      inputRange,
-      outputRange: paths.map(p => p.p2y[index])
-    });
+    const p2x = interpolatePoint("p2x");
+    const p2y = interpolatePoint("p2y");
 
-    const p3x = interpolate(value, {
-      inputRange,
-      outputRange: paths.map(p => p.p3x[index])
-    });
-    const p3y = interpolate(value, {
-      inputRange,
-      outputRange: paths.map(p => p.p3y[index])
-    });
+    const p3x = interpolatePoint("p3x");
+    const p3y = interpolatePoint("p3y");
 
     return string`${
       index === 0 ? string`M${mx},${my} ` : ""
     }C${p1x},${p1y} ${p2x},${p2y} ${p3x},${p3y}`;
   });
-  return concat(...commands);
+  return string`${commands}`;
 };
 
 export const bInterpolatePath = (
