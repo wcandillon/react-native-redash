@@ -7,15 +7,7 @@ import { string } from "./String";
 import { cubicBezier } from "./Math";
 import cubicBezierLength from "./CubicBezierLength";
 
-const {
-  Value,
-  lessOrEq,
-  greaterOrEq,
-  and,
-  cond,
-  interpolate,
-  Extrapolate
-} = Animated;
+const { Value, lessOrEq, greaterOrEq, and, cond, interpolate } = Animated;
 
 // const COMMAND = 0;
 const MX = 1;
@@ -30,7 +22,15 @@ const CY = 6;
 type SVGMoveCommand = ["M", number, number];
 type SVGCurveCommand = ["C", number, number, number, number, number, number];
 type SVGNormalizedCommands = [SVGMoveCommand, ...SVGCurveCommand[]];
-type BezierPoint = "p0x" | "p0y" | "p1x" | "p1y" | "p2x" | "p2y" | "p3x" | "p3y"; 
+type BezierPoint =
+  | "p0x"
+  | "p0y"
+  | "p1x"
+  | "p1y"
+  | "p2x"
+  | "p2y"
+  | "p3x"
+  | "p3y";
 
 interface Point {
   x: number;
@@ -46,7 +46,10 @@ interface BezierCubicCurve {
 }
 
 type InterpolationConfig = Parameters<typeof interpolate>[1];
-export type PathInterpolationConfig = { outputRange: ReadonlyArray<ReanimatedPath | string> } & Exclude<InterpolationConfig, "outputRange">;
+export interface PathInterpolationConfig
+  extends Omit<InterpolationConfig, "outputRange"> {
+  outputRange: ReadonlyArray<ReanimatedPath | string>;
+}
 
 export interface ReanimatedPath {
   totalLength: number;
@@ -152,12 +155,13 @@ export const interpolatePath = (
   );
   const path = paths[0];
   const commands = path.segments.map((_, index) => {
-    const interpolatePoint = (point: BezierPoint) => interpolate(value, {
-      inputRange,
-      outputRange: paths.map(p => p[point][index]),
-      ...config
-    });
-    
+    const interpolatePoint = (point: BezierPoint) =>
+      interpolate(value, {
+        inputRange,
+        outputRange: paths.map(p => p[point][index]),
+        ...config
+      });
+
     const mx = interpolatePoint("p0x");
     const my = interpolatePoint("p0y");
 
