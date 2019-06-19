@@ -101,6 +101,11 @@ return (
   );
 ```
 
+### `getLengthAtX(path: ReanimatedPath, x: Node): Node`
+
+Convenience function for bezier curves where there is really only ever one "y" value associated with one "x" value.
+This function works by finding the roots of the cubic bezier curve so beware that it might be too slow to not drop frames.
+
 ## Math
 
 ### `toRad(node)`
@@ -165,6 +170,15 @@ Returns the angle in the plane (in radians) between the positive x-axis and the 
 atan2(y: Node, x Node) => Node
 ```
 
+### `acos(node)`
+
+Returns a arc-cosine of the value in radians of the given node.
+We provide this function in case you are using a version of reanimated that doesn't ship `acos`.
+
+```js
+acos(y: Node, x Node) => Node
+```
+
 ### `cubicBezier(t, p0, p1, p2, p3)`
 
 Returns the coordinate of a cubic bezier curve.
@@ -186,15 +200,23 @@ return <AnimatedPath {...{d}} />;
 
 ## Array
 
-### `find(nodes, index, notFound)`
+### `get(nodes, index, notFound)`
 
 Returns the node from the list of nodes at the specified index. If not, it returns the notFound node.
 
 ```js
-find(values: Node[], index: Node, notFound: Node) => Node
+get(values: Node[], index: Node, notFound: Node) => Node
 ```
 
-### `contains(nodes, index, notFound)`
+### `find(nodes, index, notFound)`
+
+Iterates over the node list, returning the first element predicate returns true for. The predicate is invoked with the value argument.
+
+```js
+find(values: Node[], predicate: (Node) => Node, notFound: Node) => Node
+```
+
+### `contains(nodes, index)`
 
 Returns 1 if the node value is contained in the array of nodes, 0 otherwise.
 
