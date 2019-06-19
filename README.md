@@ -164,7 +164,7 @@ atan(rad: Node) => Node
 
 ### `atan2(node)`
 
-Returns the angle in the plane (in radians) between the positive x-axis and the ray from (0,0) to the point (x,y), `atan2(y,x)`. Beware that this function is not as precise at `Math.atan2()`.
+Returns the angle in the plane (in radians) between the positive x-axis and the ray from (0,0) to the point (x,y), `atan2(y,x)`.
 
 ```js
 atan2(y: Node, x Node) => Node
@@ -177,6 +177,15 @@ We provide this function in case you are using a version of reanimated that does
 
 ```js
 acos(y: Node, x Node) => Node
+```
+
+### `asin(node)`
+
+Returns a arc-sinus of the value in radians of the given node.
+We provide this function in case you are using a version of reanimated that doesn't ship `cos`.
+
+```js
+asin(y: Node, x Node) => Node
 ```
 
 ### `cubicBezier(t, p0, p1, p2, p3)`
