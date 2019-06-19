@@ -165,6 +165,15 @@ Returns the angle in the plane (in radians) between the positive x-axis and the 
 atan2(y: Node, x Node) => Node
 ```
 
+### `acos(node)`
+
+Returns a arc-cosine of the value in radians of the given node.
+We provide this function in case you are using a version of reanimated that doesn't ship `acos`.
+
+```js
+acos(y: Node, x Node) => Node
+```
+
 ### `cubicBezier(t, p0, p1, p2, p3)`
 
 Returns the coordinate of a cubic bezier curve.
