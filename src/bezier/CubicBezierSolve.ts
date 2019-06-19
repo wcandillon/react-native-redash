@@ -30,7 +30,7 @@ const isRootValidForCubicBezier = (root: Animated.Node<number>) =>
 const approximately = (
   a: Animated.Adaptable<number>,
   b: Animated.Adaptable<number>
-) => lessThan(abs(sub(a, b)), 0.001);
+) => lessThan(abs(sub(a, b)), 0.0001);
 
 const cuberoot = (v: Animated.Adaptable<number>) =>
   cond(
