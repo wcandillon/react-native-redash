@@ -181,11 +181,11 @@ acos(y: Node, x Node) => Node
 
 ### `asin(node)`
 
-Returns a arc-cosine of the value in radians of the given node.
-We provide this function in case you are using a version of reanimated that doesn't ship `acos`.
+Returns a arc-sinus of the value in radians of the given node.
+We provide this function in case you are using a version of reanimated that doesn't ship `cos`.
 
 ```js
-acos(y: Node, x Node) => Node
+asin(y: Node, x Node) => Node
 ```
 
 ### `cubicBezier(t, p0, p1, p2, p3)`

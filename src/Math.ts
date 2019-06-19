@@ -14,7 +14,6 @@ const {
   sub,
   min: min2,
   max: max2,
-  greaterOrEq,
   greaterThan,
   pow
 } = Animated;
