@@ -2,7 +2,7 @@ import Animated from "react-native-reanimated";
 
 const { Value, cond, eq, or } = Animated;
 
-export const find = (
+export const get = (
   array: Animated.Adaptable<number>[],
   index: Animated.Adaptable<number>,
   notFound: Animated.Node<any> = new Value()
@@ -11,5 +11,14 @@ export const find = (
 export const contains = (
   values: Animated.Node<number>[],
   value: Animated.Node<number>
-): Animated.Node<number> =>
-  values.reduce((acc, v) => or(acc, eq(value, v)), new Value(0));
+): Animated.Node<0 | 1> =>
+  values.reduce(
+    (acc, v) => or(acc, eq(value, v)),
+    new Value(0)
+  ) as Animated.Node<0 | 1>;
+
+export const find = (
+  values: Animated.Node<number>[],
+  fn: (v: Animated.Node<number>) => Animated.Node<number>,
+  notFound: Animated.Node<any> = new Value()
+) => values.reduce((acc, v) => cond(fn(v), v, acc), notFound);

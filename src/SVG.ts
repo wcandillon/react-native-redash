@@ -2,7 +2,7 @@ import Animated from "react-native-reanimated";
 import parseSVG from "parse-svg-path";
 import absSVG from "abs-svg-path";
 import normalizeSVG from "normalize-svg-path";
-import { find } from "./Array";
+import { get } from "./Array";
 import { string } from "./String";
 import { cubicBezier } from "./Math";
 import cubicBezierLength from "./CubicBezierLength";
@@ -126,18 +126,18 @@ export const getPointAtLength = (
       cond(and(greaterOrEq(length, p.start), lessOrEq(length, p.end)), i, acc),
     notFound
   );
-  const start = find(path.start, index);
-  const end = find(path.end, index);
+  const start = get(path.start, index);
+  const end = get(path.end, index);
 
-  const p0x = find(path.p0x, index);
-  const p1x = find(path.p1x, index);
-  const p2x = find(path.p2x, index);
-  const p3x = find(path.p3x, index);
+  const p0x = get(path.p0x, index);
+  const p1x = get(path.p1x, index);
+  const p2x = get(path.p2x, index);
+  const p3x = get(path.p3x, index);
 
-  const p0y = find(path.p0y, index);
-  const p1y = find(path.p1y, index);
-  const p2y = find(path.p2y, index);
-  const p3y = find(path.p3y, index);
+  const p0y = get(path.p0y, index);
+  const p1y = get(path.p1y, index);
+  const p2y = get(path.p2y, index);
+  const p3y = get(path.p3y, index);
   const t = interpolate(length, {
     inputRange: [start, end],
     outputRange: [0, 1]

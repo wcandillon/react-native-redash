@@ -195,15 +195,23 @@ return <AnimatedPath {...{d}} />;
 
 ## Array
 
-### `find(nodes, index, notFound)`
+### `get(nodes, index, notFound)`
 
 Returns the node from the list of nodes at the specified index. If not, it returns the notFound node.
 
 ```js
-find(values: Node[], index: Node, notFound: Node) => Node
+get(values: Node[], index: Node, notFound: Node) => Node
 ```
 
-### `contains(nodes, index, notFound)`
+### `find(nodes, index, notFound)`
+
+Iterates over the node list, returning the first element predicate returns true for. The predicate is invoked with the value argument.
+
+```js
+find(values: Node[], predicate: (Node) => Node, notFound: Node) => Node
+```
+
+### `contains(nodes, index)`
 
 Returns 1 if the node value is contained in the array of nodes, 0 otherwise.
 
