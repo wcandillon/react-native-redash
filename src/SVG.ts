@@ -5,9 +5,20 @@ import normalizeSVG from "normalize-svg-path";
 import { get } from "./Array";
 import { string } from "./String";
 import { cubicBezier } from "./Math";
-import cubicBezierLength from "./CubicBezierLength";
+import cubicBezierLength from "./bezier/CubicBezierLength";
+import cubicBezierSolve from "./bezier/CubicBezierSolve";
 
-const { Value, lessOrEq, greaterOrEq, and, cond, interpolate } = Animated;
+const {
+  Value,
+  lessOrEq,
+  greaterOrEq,
+  and,
+  cond,
+  interpolate,
+  multiply,
+  lessThan,
+  add
+} = Animated;
 
 // const COMMAND = 0;
 const MX = 1;
@@ -55,7 +66,7 @@ export interface PathInterpolationConfig {
 
 export interface ReanimatedPath {
   totalLength: number;
-  segments: { start: number; end: number }[];
+  segments: { start: number; end: number; p0x: number; p3x: number }[];
   length: number[];
   start: number[];
   end: number[];
@@ -96,7 +107,9 @@ export const parsePath = (d: string): ReanimatedPath => {
     const end = start + part.length;
     return {
       start,
-      end
+      end,
+      p0x: part.p0.x,
+      p3x: part.p3.x
     };
   });
   return {
@@ -118,7 +131,7 @@ export const parsePath = (d: string): ReanimatedPath => {
 
 export const getPointAtLength = (
   path: ReanimatedPath,
-  length: Animated.Node<number>
+  length: Animated.Adaptable<number>
 ): { x: Animated.Node<number>; y: Animated.Node<number> } => {
   const notFound: Animated.Node<number> = new Value(-1);
   const index = path.segments.reduce(
@@ -192,3 +205,28 @@ export const bInterpolatePath = (
     inputRange: [0, 1],
     outputRange: [path1, path2]
   });
+
+export const getLengthAtX = (
+  path: ReanimatedPath,
+  x: Animated.Adaptable<number>
+): Animated.Node<number> => {
+  const notFound: Animated.Node<number> = new Value(-1);
+  const index = path.segments.reduce(
+    (acc, p, i) => cond(and(greaterOrEq(x, p.p0x), lessOrEq(x, p.p3x)), i, acc),
+    notFound
+  );
+  const p0 = get(path.p0x, index);
+  const p1 = get(path.p1x, index);
+  const p2 = get(path.p2x, index);
+  const p3 = get(path.p3x, index);
+  const t = cubicBezierSolve(p0, p1, p2, p3);
+  const length = get(path.length, index);
+  const start = add(
+    ...(path.length.map((l, i) => cond(lessThan(i, index), l, 0)) as [
+      any,
+      any,
+      ...any[]
+    ])
+  );
+  return add(start, multiply(t, length));
+};

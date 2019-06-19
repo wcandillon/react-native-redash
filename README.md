@@ -101,6 +101,10 @@ return (
   );
 ```
 
+### `getLengthAtX(path: ReanimatedPath, x: Node): Node`
+
+Convenience function for bezier curves where there is really only ever one "y" value associated with one "x" value.
+
 ## Math
 
 ### `toRad(node)`
