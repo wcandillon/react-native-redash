@@ -206,6 +206,7 @@ export const bInterpolatePath = (
     outputRange: [path1, path2]
   });
 
+// https://pomax.github.io/bezierinfo/#yforx
 export const getLengthAtX = (
   path: ReanimatedPath,
   x: Animated.Adaptable<number>
