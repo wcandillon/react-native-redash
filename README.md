@@ -104,7 +104,7 @@ return (
 ### `getLengthAtX(path: ReanimatedPath, x: Node): Node`
 
 Convenience function for bezier curves where there is really only ever one "y" value associated with one "x" value.
-This function works by finding the roots of the cubic bezier curve so beware that it might be too slow to not drop frames.
+This function works by finding the roots of the cubic bezier curve so it is a somewhat compute-intensive.
 
 ## Math
 
