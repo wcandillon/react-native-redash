@@ -186,8 +186,4 @@ type NativeEvent = GestureHandlerStateChangeNativeEvent &
     | ForceTouchGestureHandlerEventExtra);
 
 export const gestureEvent = (nativeEvent: Partial<NativeEvent>) =>
-  event([
-    {
-      nativeEvent
-    }
-  ]);
+  event([{ nativeEvent }]);
