@@ -350,7 +350,7 @@ And for an horizontal one.
 <Animated.ScrollView onScroll={onScroll({ x: new Value(0) })} horizontal />
 ```
 
-### `onGestureEvent(nativeEvent)`
+### `gestureEvent(nativeEvent)`
 
 Returns a reanimated event handler for any Gesture handler event handler.
 
@@ -359,9 +359,9 @@ Example usage for a vertical `PanGestureHandler`.
 ```js
 const translationX = new Value(0);
 const state = new Value(State.UNDETERMITED);
-const eventHandler = onGestureEvent({ translationX, state }) 
+const onGestureEvent = gestureEvent({ translationX, state }) 
 return (
-  <PanGestureHandler onGestureEvent={eventHandler} onHandlerStateChange={eventHandler} />
+  <PanGestureHandler onHandlerStateChange={onGestureEvent} {...{onGestureEvent}} />
 );
 ```
 
