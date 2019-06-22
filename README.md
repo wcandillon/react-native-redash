@@ -104,7 +104,7 @@ return (
 ### `getLengthAtX(path: ReanimatedPath, x: Node): Node`
 
 Convenience function for bezier curves where there is really only ever one "y" value associated with one "x" value.
-This function works by finding the roots of the cubic bezier curve so it is a somewhat compute-intensive.
+This function works by finding the roots of the cubic bezier curve so it might be too compute-intensive to calculate for each frame.
 
 ## Math
 
@@ -348,6 +348,21 @@ And for an horizontal one.
 
 ```js
 <Animated.ScrollView onScroll={onScroll({ x: new Value(0) })} horizontal />
+```
+
+### `onGestureEvent(nativeEvent)`
+
+Returns a reanimated event handler for any Gesture handler event handler.
+
+Example usage for a vertical `PanGestureHandler`.
+
+```js
+const translationX = new Value(0);
+const state = new Value(State.UNDETERMITED);
+const eventHandler = onGestureEvent({ translationX, state }) 
+return (
+  <PanGestureHandler onGestureEvent={eventHandler} onHandlerStateChange={eventHandler} />
+);
 ```
 
 ### decay

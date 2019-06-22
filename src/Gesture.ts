@@ -1,5 +1,15 @@
 import Animated from "react-native-reanimated";
-import { State as GestureState } from "react-native-gesture-handler";
+import {
+  State as GestureState,
+  PanGestureHandlerEventExtra,
+  GestureHandlerStateChangeNativeEvent,
+  PinchGestureHandlerEventExtra,
+  RotationGestureHandlerEventExtra,
+  TapGestureHandlerEventExtra,
+  ForceTouchGestureHandlerEventExtra,
+  LongPressGestureHandlerEventExtra,
+  FlingGestureHandlerEventExtra
+} from "react-native-gesture-handler";
 
 import { runDecay, runSpring } from "./AnimationRunners";
 
@@ -162,5 +172,22 @@ export const onScroll = (contentOffset: {
       nativeEvent: {
         contentOffset
       }
+    }
+  ]);
+
+type NativeEvent = GestureHandlerStateChangeNativeEvent &
+  (
+    | PanGestureHandlerEventExtra
+    | TapGestureHandlerEventExtra
+    | LongPressGestureHandlerEventExtra
+    | RotationGestureHandlerEventExtra
+    | FlingGestureHandlerEventExtra
+    | PinchGestureHandlerEventExtra
+    | ForceTouchGestureHandlerEventExtra);
+
+export const onGestureEvent = (nativeEvent: Partial<NativeEvent>) =>
+  event([
+    {
+      nativeEvent
     }
   ]);
