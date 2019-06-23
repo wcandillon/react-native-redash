@@ -154,7 +154,9 @@ clamp(new Value(101), 0, 100); // 100
 
 ### `approximates(node, node, precision = 0.001)`
 
-
+Returns 1 if the difference between the two values is less than precision.
+Otherwise returns 0.
+Default value for the precision is 0.001.
 
 ### `atan(node)`
 
