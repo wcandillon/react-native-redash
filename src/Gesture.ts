@@ -185,5 +185,7 @@ type NativeEvent = GestureHandlerStateChangeNativeEvent &
     | PinchGestureHandlerEventExtra
     | ForceTouchGestureHandlerEventExtra);
 
-export const gestureEvent = (nativeEvent: Partial<NativeEvent>) =>
+type PartialAnimated<T> = { [P in keyof T]?: Animated.Adaptable<T[P]> };
+
+export const gestureEvent = (nativeEvent: PartialAnimated<NativeEvent>) =>
   event([{ nativeEvent }]);
