@@ -1,4 +1,5 @@
 import Animated from "react-native-reanimated";
+import {Platform} from "react-native";
 
 const {
   Value,
@@ -18,7 +19,8 @@ export function runDecay(
   clock: Animated.Clock,
   value: Animated.Adaptable<number>,
   velocity: Animated.Adaptable<number>,
-  rerunDecaying: Animated.Value<number>
+  rerunDecaying: Animated.Value<number>,
+  deceleration?: number
 ) {
   const state = {
     finished: new Value(0),
@@ -28,7 +30,7 @@ export function runDecay(
   };
 
   const config = {
-    deceleration: 0.99
+    deceleration: deceleration || (Platform.OS === "ios" ? 0.998 : 0.985)
   };
 
   return [
