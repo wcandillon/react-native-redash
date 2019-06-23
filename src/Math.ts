@@ -25,9 +25,9 @@ export const max = (...args: Animated.Adaptable<number>[]) =>
   args.reduce((acc, arg) => max2(acc, arg));
 
 export const clamp = (
-  value: Animated.Node<number>,
-  lowerBound: number,
-  upperBound: number
+  value: Animated.Adaptable<number>,
+  lowerBound: Animated.Adaptable<number>,
+  upperBound: Animated.Adaptable<number>
 ): Animated.Node<number> => min2(max2(lowerBound, value), upperBound);
 
 export const approximates = (
