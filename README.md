@@ -152,6 +152,10 @@ clamp(new Value(1), 0, 100); // 1
 clamp(new Value(101), 0, 100); // 100
 ```
 
+### `approximates(node, node, precision = 0.001)`
+
+
+
 ### `atan(node)`
 
 Returns a arc-tangent of the value in radians of the given node.

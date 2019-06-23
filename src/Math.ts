@@ -30,6 +30,12 @@ export const clamp = (
   upperBound: number
 ): Animated.Node<number> => min2(max2(lowerBound, value), upperBound);
 
+export const approximates = (
+  a: Animated.Adaptable<number>,
+  b: Animated.Adaptable<number>,
+  precision: Animated.Adaptable<number> = 0.001
+) => lessThan(abs(sub(a, b)), precision);
+
 export const toRad = (deg: Animated.Adaptable<number>): Animated.Node<number> =>
   multiply(deg, Math.PI / 180);
 
