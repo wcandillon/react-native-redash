@@ -241,6 +241,11 @@ contains(values: Node[], value: Node) => Node
 
 ## Animations
 
+### `useTransition(state, source, destination, duration, easing)`
+
+Returns an animation value that follows a Reanimated transition ([see related issue](https://github.com/kmagiera/react-native-reanimated/issues/321)).
+The value equals `source` at the beginning of the transition and `destination` at the end of the transition.
+
 ### `runTiming(clock, value, config)`
 
 Convenience function to run a timing animation.
