@@ -1,7 +1,7 @@
 import Animated from "react-native-reanimated";
 
 import { find } from "../Array";
-import { acos } from "../Math";
+import { acos, approximates } from "../Math";
 
 const {
   Value,
@@ -10,7 +10,6 @@ const {
   divide,
   add,
   multiply,
-  abs,
   block,
   greaterThan,
   eq,
@@ -27,11 +26,6 @@ const isRootValidForCubicBezier = (root: Animated.Node<number>) =>
   and(greaterThan(root, 0), lessThan(root, 1));
 
 // pomax.github.io/bezierinfo/#extremities
-const approximately = (
-  a: Animated.Adaptable<number>,
-  b: Animated.Adaptable<number>
-) => lessThan(abs(sub(a, b)), 0.0001);
-
 const cuberoot = (v: Animated.Adaptable<number>) =>
   cond(
     lessThan(v, 0),
@@ -80,10 +74,10 @@ const cubicBezierSolve = (
     set(c, pa),
     set(d, add(multiply(-1, pa), multiply(3, pb), multiply(-3, pc), pd)),
     cond(
-      approximately(d, 0),
+      approximates(d, 0),
       cond(
-        approximately(d, 0),
-        cond(not(approximately(b, 0)), set(root1, divide(multiply(-1, c), b)), [
+        approximates(d, 0),
+        cond(not(approximates(b, 0)), set(root1, divide(multiply(-1, c), b)), [
           set(q, sqrt(sub(pow(b, 2), multiply(4, a, c)))),
           set(root1, divide(sub(q, b), multiply(2, a))),
           set(root2, divide(sub(multiply(b, -1), q), multiply(2, a)))

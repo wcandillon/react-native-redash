@@ -1,9 +1,13 @@
-import Animated from "react-native-reanimated";
+import * as React from "react";
+import Animated, { Easing } from "react-native-reanimated";
 
 import { min } from "./Math";
+import { runTiming } from "./AnimationRunners";
 
 const {
+  Clock,
   Value,
+  set,
   add,
   multiply,
   cond,
@@ -11,7 +15,8 @@ const {
   abs,
   sub,
   interpolate,
-  divide
+  divide,
+  useCode
 } = Animated;
 
 export const snapPoint = (
@@ -43,3 +48,41 @@ export const translateZ = (
   perspective: Animated.Adaptable<number>,
   z: Animated.Adaptable<number>
 ) => ({ scale: divide(perspective, sub(perspective, z)) });
+
+export const useTransition = (
+  state: any,
+  src: Animated.Adaptable<number>,
+  dest: Animated.Adaptable<number>,
+  duration: number = 400,
+  easing: Animated.EasingFunction = Easing.linear
+) => {
+  if (!React.useMemo) {
+    throw new Error(
+      "useTransition() is only available in React Native 0.59 or higher."
+    );
+  }
+  if (!useCode) {
+    throw new Error(
+      "useCode() is only available in Reanimated 1.0.0 or higher"
+    );
+  }
+  const { transitionVal, clock } = React.useMemo(
+    () => ({
+      transitionVal: new Value(0),
+      clock: new Clock()
+    }),
+    []
+  );
+  useCode(
+    set(
+      transitionVal,
+      runTiming(clock, src, {
+        toValue: dest,
+        duration,
+        easing
+      })
+    ),
+    [state]
+  );
+  return transitionVal;
+};

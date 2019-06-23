@@ -82,7 +82,7 @@ export const decay = (
 export const spring = (
   translation: Animated.Value<number>,
   state: Animated.Value<GestureState>,
-  snapPoint: number,
+  snapPoint: Animated.Adaptable<number>,
   defaultOffset: number = 0
 ) => {
   const springedValue = new Value(0);
@@ -124,8 +124,8 @@ export const spring = (
 export const limit = (
   value: Animated.Adaptable<number>,
   state: Animated.Adaptable<GestureState>,
-  min: number,
-  max: number
+  min: Animated.Adaptable<number>,
+  max: Animated.Adaptable<number>
 ) => {
   const offset = new Animated.Value(0);
   const offsetValue = add(offset, value);
@@ -185,5 +185,6 @@ type NativeEvent = GestureHandlerStateChangeNativeEvent &
     | PinchGestureHandlerEventExtra
     | ForceTouchGestureHandlerEventExtra);
 
-export const gestureEvent = (nativeEvent: Partial<NativeEvent>) =>
+type Adaptable<T> = { [P in keyof T]: Animated.Adaptable<T[P]> };
+export const gestureEvent = (nativeEvent: Partial<Adaptable<NativeEvent>>) =>
   event([{ nativeEvent }]);
