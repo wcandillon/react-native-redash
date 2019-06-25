@@ -372,7 +372,7 @@ const translationX = new Value(0);
 const state = new Value(State.UNDETERMITED);
 const gestureEvent = onGestureEvent({ translationX, state }) 
 return (
-  <PanGestureHandler {...gestureEvent} />
+  <PanGestureHandler {...onGestureEvent} />
 );
 ```
 
