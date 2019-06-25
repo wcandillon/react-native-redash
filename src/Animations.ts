@@ -59,7 +59,7 @@ export const translateZ = (
 export const transformOrigin = (
   x: Animated.Adaptable<number> = 0,
   y: Animated.Adaptable<number> = 0,
-  transformations: AnimatedTransform[]
+  ...transformations: AnimatedTransform[]
 ): AnimatedTransform[] => [
   { translateX: x },
   { translateY: y },
