@@ -330,6 +330,24 @@ Convert a translateZ transformation into a scale transformation.
 translateZ(perspective: Node, z: Node)
 ```
 
+### `transformOrigin`
+
+Changes the origin of the transformations.
+
+```js
+transformOrigin(x, y, transformations)
+```
+
+Example:
+
+```jsx
+<View
+  style={{
+    transform: transformOrigin(cx, cy, { rotateX })
+  }}
+/>
+```
+
 Example usage with `transform`.
 
 ```js
