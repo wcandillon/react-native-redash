@@ -1,6 +1,7 @@
 import * as React from "react";
 import Animated, { Easing } from "react-native-reanimated";
 
+import { TransformsStyle } from "react-native";
 import { min } from "./Math";
 import { runTiming } from "./AnimationRunners";
 
@@ -18,6 +19,12 @@ const {
   divide,
   useCode
 } = Animated;
+
+type AnimatedTransform = {
+  [P in keyof TransformsStyle["transform"]]: Animated.Adaptable<
+    TransformsStyle["transform"][P]
+  >
+};
 
 export const snapPoint = (
   value: Animated.Adaptable<number>,
@@ -48,6 +55,18 @@ export const translateZ = (
   perspective: Animated.Adaptable<number>,
   z: Animated.Adaptable<number>
 ) => ({ scale: divide(perspective, sub(perspective, z)) });
+
+export const transformOrigin = (
+  x: Animated.Adaptable<number> = 0,
+  y: Animated.Adaptable<number> = 0,
+  transformations: AnimatedTransform[]
+): AnimatedTransform[] => [
+  { translateX: x },
+  { translateY: y },
+  ...transformations,
+  { translateX: multiply(x, -1) },
+  { translateY: multiply(y, -1) }
+];
 
 export const useTransition = (
   state: any,
