@@ -277,7 +277,7 @@ runDecay(clock: Clock, value: Node, velocity: Node, rerunDecaying: Node): Node
 
 Interpolate the node from 0 to 1 without clamping.
 
-### `interpolateColor(node, { inputRange, outputRange }, [colorSpace = "hsv"])`
+### `interpolateColor(node, { inputRange, outputRange }, [colorSpace = "rgb"])`
 
 Interpolate colors based on an animation value and its value range.
 
@@ -306,7 +306,7 @@ interpolateColor(x, [0, 1], [from, to]);
 interpolateColor(x, [0, 1], [from, to], "rgb");
 ```
 
-### `bInterpolateColor(node, color1, color2, [colorSpace = "hsv"])`
+### `bInterpolateColor(node, color1, color2, [colorSpace = "rgb"])`
 
 Interpolate the node from 0 to 1 without clamping.
 
