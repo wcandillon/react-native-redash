@@ -1,5 +1,5 @@
 export { default as ReText } from "./ReText";
-export { default as Interactable } from "./Interactable";
+export * from "./Interactable";
 export * from "./Math";
 export * from "./Colors";
 export * from "./AnimationRunners";
