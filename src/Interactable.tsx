@@ -264,7 +264,7 @@ interface Boundaries {
   bounce?: number;
 }
 
-interface InteractableProps {
+export interface InteractableProps {
   snapPoints: SnapPoint[];
   springPoints?: SpringPoint[];
   gravityPoints?: GravityPoint[];
