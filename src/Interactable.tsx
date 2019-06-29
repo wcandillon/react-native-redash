@@ -286,7 +286,7 @@ export interface InteractableProps {
   boundaries?: Boundaries;
 }
 
-export default class Interactable extends React.PureComponent<
+export class Interactable extends React.PureComponent<
   InteractableProps
 > {
   static defaultProps = {
