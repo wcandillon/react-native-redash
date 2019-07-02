@@ -264,7 +264,7 @@ interface Boundaries {
   bounce?: number;
 }
 
-interface InteractableProps {
+export interface InteractableProps {
   snapPoints: SnapPoint[];
   springPoints?: SpringPoint[];
   gravityPoints?: GravityPoint[];
@@ -286,7 +286,7 @@ interface InteractableProps {
   boundaries?: Boundaries;
 }
 
-export default class Interactable extends React.PureComponent<
+export class Interactable extends React.PureComponent<
   InteractableProps
 > {
   static defaultProps = {
