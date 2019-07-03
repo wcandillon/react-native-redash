@@ -39,7 +39,7 @@
     "semantic-release": "^15.13.3",
     "semantic-release-cli": "^4.1.2"
   },
-  "react-native": "src/index.ts",
+  "react-native": "lib/module/index.js",
   "module": "lib/module/index.js",
   "types": "lib/typescript/index.d.ts",
   "files": [
