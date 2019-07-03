@@ -245,6 +245,7 @@ contains(values: Node[], value: Node) => Node
 
 Returns an animation value that follows a Reanimated transition ([see related issue](https://github.com/kmagiera/react-native-reanimated/issues/321)).
 The value equals `source` at the beginning of the transition and `destination` at the end of the transition.
+This is useful on iOS only because on Android, you can transition on the `transform` property.
 
 ### `runTiming(clock, value, config)`
 
