@@ -83,14 +83,15 @@ export const spring = (
   translation: Animated.Value<number>,
   state: Animated.Value<GestureState>,
   snapPoint: Animated.Adaptable<number>,
-  defaultOffset: number = 0
+  defaultOffset: number = 0,
+  springConfig?: Animated.SpringConfig
 ) => {
   const springedValue = new Value(0);
   const offset = new Value(defaultOffset);
   const clock = new Clock();
   const rerunSpring = new Value(0);
   // http://chenglou.github.io/react-motion/demos/demo5-spring-parameters-chooser/
-  const springConfig = {
+  const config = springConfig || {
     toValue: new Value(0),
     damping: 15,
     mass: 1,
@@ -105,7 +106,7 @@ export const spring = (
       [
         set(
           springedValue,
-          runSpring(clock, add(translation, offset), snapPoint, springConfig)
+          runSpring(clock, add(translation, offset), snapPoint, config)
         )
       ],
       [
