@@ -32,20 +32,20 @@ const {
 
 export const preserveOffset = (
   value: Animated.Adaptable<number>,
-  state: Animated.Adaptable<GestureState>
+  state: Animated.Adaptable<GestureState>,
 ) => {
-  const previous = new Value(0);
-  const offset = new Value(0);
+  const previous = new Value(0)
+  const offset = new Value(0)
 
   return block([
     cond(
-      eq(state, GestureState.BEGAN),
+      eq(state, GestureState.ACTIVE),
+      [set(offset, add(offset, sub(value, previous))), set(previous, value)],
       [set(previous, 0)],
-      [set(offset, add(offset, sub(value, previous))), set(previous, value)]
     ),
-    offset
-  ]);
-};
+    offset,
+  ])
+}
 
 export const decay = (
   value: Animated.Adaptable<number>,
