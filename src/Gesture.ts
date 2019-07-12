@@ -1,6 +1,6 @@
 import Animated from "react-native-reanimated";
 import {
-  State as GestureState,
+  State,
   PanGestureHandlerEventExtra,
   GestureHandlerStateChangeNativeEvent,
   PinchGestureHandlerEventExtra,
@@ -32,16 +32,15 @@ const {
 
 export const preserveOffset = (
   value: Animated.Adaptable<number>,
-  state: Animated.Adaptable<GestureState>
+  state: Animated.Adaptable<State>,
+  offset: Animated.Value<number> = new Value(0)
 ) => {
   const previous = new Value(0);
-  const offset = new Value(0);
-
   return block([
     cond(
-      eq(state, GestureState.BEGAN),
-      [set(previous, 0)],
-      [set(offset, add(offset, sub(value, previous))), set(previous, value)]
+      eq(state, State.ACTIVE),
+      [set(offset, add(offset, sub(value, previous))), set(previous, value)],
+      [set(previous, 0)]
     ),
     offset
   ]);
@@ -49,7 +48,7 @@ export const preserveOffset = (
 
 export const decay = (
   value: Animated.Adaptable<number>,
-  state: Animated.Adaptable<GestureState>,
+  state: Animated.Adaptable<State>,
   velocity: Animated.Adaptable<number>
 ) => {
   const decayedValue = new Value(0);
@@ -59,7 +58,7 @@ export const decay = (
 
   return block([
     cond(
-      eq(state, GestureState.END),
+      eq(state, State.END),
       [
         set(
           decayedValue,
@@ -68,7 +67,7 @@ export const decay = (
       ],
       [
         stopClock(clock),
-        cond(eq(state, GestureState.BEGAN), [
+        cond(eq(state, State.BEGAN), [
           set(rerunDecaying, 0),
           set(offset, sub(decayedValue, value))
         ]),
@@ -81,7 +80,7 @@ export const decay = (
 
 export const spring = (
   translation: Animated.Value<number>,
-  state: Animated.Value<GestureState>,
+  state: Animated.Value<State>,
   snapPoint: Animated.Adaptable<number>,
   defaultOffset: number = 0,
   springConfig?: Animated.SpringConfig
@@ -102,7 +101,7 @@ export const spring = (
   };
   return block([
     cond(
-      eq(state, GestureState.END),
+      eq(state, State.END),
       [
         set(
           springedValue,
@@ -111,7 +110,7 @@ export const spring = (
       ],
       [
         stopClock(clock),
-        cond(eq(state, GestureState.BEGAN), [
+        cond(eq(state, State.BEGAN), [
           set(rerunSpring, 0),
           set(offset, sub(springedValue, translation))
         ]),
@@ -124,7 +123,7 @@ export const spring = (
 
 export const limit = (
   value: Animated.Adaptable<number>,
-  state: Animated.Adaptable<GestureState>,
+  state: Animated.Adaptable<State>,
   min: Animated.Adaptable<number>,
   max: Animated.Adaptable<number>
 ) => {
@@ -132,7 +131,7 @@ export const limit = (
   const offsetValue = add(offset, value);
 
   return block([
-    cond(eq(state, GestureState.BEGAN), [
+    cond(eq(state, State.BEGAN), [
       cond(lessThan(offsetValue, min), set(offset, sub(min, value))),
       cond(greaterThan(offsetValue, max), set(offset, sub(max, value)))
     ]),
@@ -153,7 +152,7 @@ export const preserveMultiplicativeOffset = (
 
   return block([
     cond(
-      eq(state, GestureState.BEGAN),
+      eq(state, State.BEGAN),
       [set(previous, 1)],
       [
         set(offset, multiply(offset, divide(value, previous))),
