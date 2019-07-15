@@ -21,7 +21,7 @@ atan2(y, x);
 
 ### `<ReText>`
 
-Component that display an animation value as text.
+Component that displays an animation value as text.
 
 Example usage:
 
@@ -33,7 +33,7 @@ Example usage:
 
 ### `parsePath(SVGPath: String): ReanimatedPath`
 
-Given an SVG Path, returns an denormalized object of values that can be used for animations on that path.
+Given an SVG Path, returns a denormalized object of values that can be used for animations on that path.
 From the perspective of the user, the returned value should be considered a black box.
 Here is an example below:
 
@@ -108,34 +108,34 @@ This function works by finding the roots of the cubic bezier curve so it might b
 
 ## Math
 
-### `toRad(node)`
+### `toRad(node: Node): Node`
 
-Transforms an angle in degrees in radians.
+Transforms an angle from degrees to radians.
 
 ```js
 (deg: Node) => Node;
 ```
 
-### `toDeg(node)`
+### `toDeg(node: Node): Node`
 
-Transforms an angle in radians in degrees.
+Transforms an angle from radians to degrees.
 
 ```js
 toDeg(rad: Node) => Node
 ```
 
-### `min(...nodes)`
+### `min(...nodes: Node[]): Node`
 
-Takes one or more nodes as an input and returns a minimum of all the node's values.
+Takes one or more nodes as input and returns the minimum of all the node's values.
 This is equivalent to `Animated.min` but with support for more than two parameters.
 
 ```js
 min(...args: Node[]) => Node
 ```
 
-### `max(...nodes)`
+### `max(...nodes: Node[]): Node`
 
-Takes one or more nodes as an input and returns a maximum of all the node's values.
+Takes one or more nodes as input and returns the maximum of all the node's values.
 This is equivalent to `Animated.min` but with support for more than two parameters.
 
 ```js
@@ -152,15 +152,15 @@ clamp(new Value(1), 0, 100); // 1
 clamp(new Value(101), 0, 100); // 100
 ```
 
-### `approximates(node, node, precision = 0.001)`
+### `approximates(value: Node, approximatesTo: Node, precision = 0.001): number`
 
 Returns 1 if the difference between the two values is less than precision.
 Otherwise returns 0.
 Default value for the precision is 0.001.
 
-### `atan(node)`
+### `atan(node: Node): Node`
 
-Returns a arc-tangent of the value in radians of the given node.
+Returns the arc-tangent of the value in radians of the given node.
 We provide this function in case you are using a version of reanimated that doesn't ship `atan`.
 Beware that this function is not as precise at `Math.atan()` nor `Animated.atan()`.
 
@@ -168,7 +168,7 @@ Beware that this function is not as precise at `Math.atan()` nor `Animated.atan(
 atan(rad: Node) => Node
 ```
 
-### `atan2(node)`
+### `atan2(node: Node): Node`
 
 Returns the angle in the plane (in radians) between the positive x-axis and the ray from (0,0) to the point (x,y), `atan2(y,x)`.
 
@@ -176,25 +176,25 @@ Returns the angle in the plane (in radians) between the positive x-axis and the 
 atan2(y: Node, x Node) => Node
 ```
 
-### `acos(node)`
+### `acos(node: Node): Node`
 
-Returns a arc-cosine of the value in radians of the given node.
+Returns the arc-cosine of the value in radians of the given node.
 We provide this function in case you are using a version of reanimated that doesn't ship `acos`.
 
 ```js
 acos(y: Node, x Node) => Node
 ```
 
-### `asin(node)`
+### `asin(node: Node): Node`
 
-Returns a arc-sinus of the value in radians of the given node.
+Returns the arc-sinus of the value in radians of the given node.
 We provide this function in case you are using a version of reanimated that doesn't ship `cos`.
 
 ```js
 asin(y: Node, x Node) => Node
 ```
 
-### `cubicBezier(t, p0, p1, p2, p3)`
+### `cubicBezier(t: Node, p0: Node, p1: Node, p2: Node, p3: Node): Node`
 
 Returns the coordinate of a cubic bezier curve.
 `t` is the length of the curve from 0 to 1. `cubicBezier(0, p0, p1, p2, p3)` equals `p0` and `cubicBezier(1, p0, p1, p2, p3)` equals `p3`.
@@ -215,7 +215,7 @@ return <AnimatedPath {...{d}} />;
 
 ## Array
 
-### `get(nodes, index, notFound)`
+### `get(nodes: Adaptable[], index:Adaptable, notFound: Node): Node`
 
 Returns the node from the list of nodes at the specified index. If not, it returns the notFound node.
 
@@ -223,17 +223,17 @@ Returns the node from the list of nodes at the specified index. If not, it retur
 get(values: Node[], index: Node, notFound: Node) => Node
 ```
 
-### `find(nodes, index, notFound)`
+### `find(nodes: Node[], predicate: (v: Node) => Node, notFound: Node): Node`
 
-Iterates over the node list, returning the first element predicate returns true for. The predicate is invoked with the value argument.
+Iterates over the node's list, returning the first element predicate returns true for. The predicate is invoked with the value argument.
 
 ```js
 find(values: Node[], predicate: (Node) => Node, notFound: Node) => Node
 ```
 
-### `contains(nodes, index)`
+### `contains(nodes: Node[], value: Node) : number`
 
-Returns 1 if the node value is contained in the array of nodes, 0 otherwise.
+Returns 1 if the node's value is contained in the array of nodes, 0 otherwise.
 
 ```js
 contains(values: Node[], value: Node) => Node
@@ -241,13 +241,13 @@ contains(values: Node[], value: Node) => Node
 
 ## Animations
 
-### `useTransition(state, source, destination, duration, easing)`
+### `useTransition(state: any, source: Node, destination: Node, duration: number, easing: EasingFunction): Node`
 
 Returns an animation value that follows a Reanimated transition ([see related issue](https://github.com/kmagiera/react-native-reanimated/issues/321)).
 The value equals `source` at the beginning of the transition and `destination` at the end of the transition.
 This is useful on iOS only because on Android, you can transition on the `transform` property.
 
-### `runTiming(clock, value, config)`
+### `runTiming(clock: Clock, value: Node, config: TimingConfig): Node`
 
 Convenience function to run a timing animation.
 
@@ -266,24 +266,24 @@ const config = {
 runTiming(clock, 0, config);
 ```
 
-### `runDecay(clock, value, velocity, rerunDecaying)`
+### `runDecay(clock: Clock, value: Node, velocity: Node, rerunDecaying: Node, deceleration: number): Node`
 
 Convenience function to run a decay animation.
 
 ```js
-runDecay(clock: Clock, value: Node, velocity: Node, rerunDecaying: Node): Node
+runDecay(clock: Clock, value: Node, velocity: Node, rerunDecaying: Node, deceleration: number): Node
 ```
 
-### `bInterpolate(node, from, to)`
+### `bInterpolate(node: Node, from: Node, to: Node): Node`
 
 Interpolate the node from 0 to 1 without clamping.
 
-### `interpolateColor(node, { inputRange, outputRange }, [colorSpace = "rgb"])`
+### `interpolateColor(node: Node, { inputRange, outputRange }: ColorInterpolationConfig, [colorSpace = "rgb"]): Node`
 
 Interpolate colors based on an animation value and its value range.
 
 ```js
-interpolateColor(value: Node, { inputRange: number[], outputRange: Colors }, colorSpace?: "hsv" | "rgb")
+interpolateColor(value: Node, { inputRange: number[], outputRange: Colors }, colorSpace?: "hsv" | "rgb"): Node
 ```
 
 Example Usage:
@@ -323,7 +323,7 @@ runSpring(clock, x, snapPoint(x, velocityX, snapPoints));
 
 ## Transformations
 
-### `translateZ`
+### `translateZ(prespective, z)`
 
 Convert a translateZ transformation into a scale transformation.
 
@@ -331,12 +331,12 @@ Convert a translateZ transformation into a scale transformation.
 translateZ(perspective: Node, z: Node)
 ```
 
-### `transformOrigin`
+### `transformOrigin(x, y, transformations)`
 
 Changes the origin of the transformations.
 
 ```js
-transformOrigin(x, y, transformations)
+transformOrigin(x: Node, y: Node, transformations: AnimatedTransform): Node[]
 ```
 
 Example:
@@ -360,7 +360,7 @@ transform: [{ perspective }, translateZ(perspective, z)];
 
 ## Gestures
 
-### `onScroll({ x: node, y: node })`
+### `onScroll({ x: Node, y: Node }): EventNode`
 
 Returns a reanimated event handler for the ScrollView.
 
@@ -374,13 +374,13 @@ Example usage for a vertical `ScrollView`.
 <Animated.ScrollView onScroll={onScroll({ y: new Value(0) })} vertical />
 ```
 
-And for an horizontal one.
+And for a horizontal one.
 
 ```js
 <Animated.ScrollView onScroll={onScroll({ x: new Value(0) })} horizontal />
 ```
 
-### `gestureEvent(nativeEvent)`
+### `onGestureEvent(nativeEvent)`
 
 Returns a reanimated event handler for any Gesture handler event handler.
 
@@ -395,7 +395,7 @@ return (
 );
 ```
 
-### decay
+### `decay(value: Node, state: Node, velocity: Node): Node`
 
 Decorates animated value to decay after pan
 
@@ -422,7 +422,7 @@ constructor(props) {
 }
 ```
 
-### preserveOffset
+### `preserveOffset(value: Node, state: Node, offset: Node = 0): Node`
 
 Decorates animated value to save previous offset of pan
 
@@ -447,7 +447,7 @@ constructor(props) {
 }
 ```
 
-### preserveMultiplicativeOffset
+### `preserveMultiplicativeOffset(value: Node, state: Node): Node`
 
 Decorates animated value to save previous offset of pinch
 
@@ -472,7 +472,7 @@ constructor(props) {
 }
 ```
 
-### limit
+### `limit(value: Node, state: Node, min: Node, max: Node): Node`
 
 Decorates animated value to set limits of panning
 
@@ -497,7 +497,7 @@ constructor(props) {
 }
 ```
 
-### spring
+### `spring( translation: Node, state: Node, snapPoint: Node, defaultOffset = 0, springConfig?): Node`
 
 Decorates animated value to spring after pan
 
