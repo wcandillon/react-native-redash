@@ -6,7 +6,11 @@ export const get = (
   array: Animated.Adaptable<number>[],
   index: Animated.Adaptable<number>,
   notFound: Animated.Node<number> = new Value()
-) => array.reduce((acc, v, i) => cond(eq(i, index), v, acc), notFound);
+): Animated.Node<number> =>
+  array.reduce(
+    (acc, v, i) => cond(eq(i, index), v, acc),
+    notFound
+  ) as Animated.Node<number>;
 
 export const contains = (
   values: Animated.Node<number>[],
