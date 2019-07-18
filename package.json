@@ -4,7 +4,7 @@
   "description": "Utility library for React Native Reanimated",
   "main": "lib/module/index.js",
   "scripts": {
-    "lint": "eslint src/**/*",
+    "lint": "eslint --ext .ts,.tsx src",
     "tsc": "tsc --noEmit",
     "test": "npm run lint && npm run",
     "prepare": "bob build",
@@ -31,7 +31,7 @@
     "@types/react": "^16.8.15",
     "@types/react-native": "^0.57.51",
     "eslint": "^5.16.0",
-    "eslint-config-react-native-wcandillon": "2.0.0",
+    "eslint-config-react-native-wcandillon": "2.0.4",
     "react": "^16.8.6",
     "react-native": "^0.59.5",
     "react-native-gesture-handler": "^1.2.1",

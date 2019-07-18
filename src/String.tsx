@@ -13,5 +13,6 @@ export const string = (
   if (values.length > strings.length) {
     result.push(values[values.length - 1]);
   }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return concat(...(result as [any, any, ...any[]]));
 };

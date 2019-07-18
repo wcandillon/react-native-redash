@@ -69,8 +69,8 @@ export const transformOrigin = (
   { translateY: multiply(y, -1) }
 ];
 
-export const useTransition = (
-  state: any,
+export const useTransition = <T>(
+  state: T,
   src: Animated.Adaptable<number>,
   dest: Animated.Adaptable<number>,
   duration: number = 400,

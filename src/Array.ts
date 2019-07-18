@@ -5,7 +5,7 @@ const { Value, cond, eq, or } = Animated;
 export const get = (
   array: Animated.Adaptable<number>[],
   index: Animated.Adaptable<number>,
-  notFound: Animated.Node<any> = new Value()
+  notFound: Animated.Node<number> = new Value()
 ) => array.reduce((acc, v, i) => cond(eq(i, index), v, acc), notFound);
 
 export const contains = (
@@ -20,5 +20,5 @@ export const contains = (
 export const find = (
   values: Animated.Node<number>[],
   fn: (v: Animated.Node<number>) => Animated.Node<number>,
-  notFound: Animated.Node<any> = new Value()
+  notFound: Animated.Node<number> = new Value()
 ) => values.reduce((acc, v) => cond(fn(v), v, acc), notFound);
