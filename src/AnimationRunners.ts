@@ -1,5 +1,5 @@
 import Animated from "react-native-reanimated";
-import {Platform} from "react-native";
+import { Platform } from "react-native";
 
 const {
   Value,

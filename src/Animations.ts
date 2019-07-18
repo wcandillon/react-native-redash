@@ -1,5 +1,6 @@
 import * as React from "react";
 import Animated, { Easing } from "react-native-reanimated";
+import { useMemoOne } from "use-memo-one";
 
 import { TransformsStyle } from "react-native";
 import { min } from "./Math";
@@ -85,7 +86,7 @@ export const useTransition = (
       "useCode() is only available in Reanimated 1.0.0 or higher"
     );
   }
-  const { transitionVal, clock } = React.useMemo(
+  const { transitionVal, clock } = useMemoOne(
     () => ({
       transitionVal: new Value(0),
       clock: new Clock()
