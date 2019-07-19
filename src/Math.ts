@@ -42,10 +42,6 @@ export const toRad = (deg: Animated.Adaptable<number>): Animated.Node<number> =>
 export const toDeg = (rad: Animated.Adaptable<number>): Animated.Node<number> =>
   multiply(rad, 180 / Math.PI);
 
-// https://developer.download.nvidia.com/cg/atan.html
-export const atan = (x: Animated.Adaptable<number>): Animated.Node<number> =>
-  atan2(x, 1);
-
 // https://developer.download.nvidia.com/cg/atan2.html
 export const atan2 = (
   y: Animated.Adaptable<number>,
@@ -77,6 +73,10 @@ export const atan2 = (
     t3
   ]);
 };
+
+// https://developer.download.nvidia.com/cg/atan.html
+export const atan = (x: Animated.Adaptable<number>): Animated.Node<number> =>
+  atan2(x, 1);
 
 // https://developer.download.nvidia.com/cg/acos.html
 export const acos = (x1: Animated.Adaptable<number>) => {

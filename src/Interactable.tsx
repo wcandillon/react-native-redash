@@ -1,4 +1,4 @@
-/* eslint-disable react/sort-comp */
+/* eslint-disable react/sort-comp, @typescript-eslint/no-explicit-any */
 import React from "react";
 import Animated from "react-native-reanimated";
 import { PanGestureHandler, State } from "react-native-gesture-handler";
@@ -286,9 +286,7 @@ export interface InteractableProps {
   boundaries?: Boundaries;
 }
 
-export class Interactable extends React.PureComponent<
-  InteractableProps
-> {
+export class Interactable extends React.PureComponent<InteractableProps> {
   static defaultProps = {
     dragToss: 0.1,
     dragEnabled: true,

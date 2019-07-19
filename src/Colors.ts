@@ -22,9 +22,9 @@ interface RGBColor {
 }
 
 function match(
-  condsAndResPairs: Animated.Adaptable<number>[],
+  condsAndResPairs: readonly Animated.Adaptable<number>[],
   offset = 0
-): any {
+): Animated.Adaptable<number> | undefined | Animated.Node<number> {
   if (condsAndResPairs.length - offset === 1) {
     return condsAndResPairs[offset];
   }
@@ -84,7 +84,7 @@ const rgbToHsv = (c: RGBColor) => {
 
   const ma = Math.max(r, g, b);
   const mi = Math.min(r, g, b);
-  let h: number = 0;
+  let h = 0;
   const v = ma;
 
   const d = ma - mi;

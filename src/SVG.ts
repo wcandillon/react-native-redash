@@ -57,8 +57,8 @@ interface BezierCubicCurve {
 }
 
 export interface PathInterpolationConfig {
-  inputRange: ReadonlyArray<Animated.Adaptable<number>>;
-  outputRange: ReadonlyArray<ReanimatedPath | string>;
+  inputRange: readonly Animated.Adaptable<number>[];
+  outputRange: readonly (ReanimatedPath | string)[];
   extrapolate?: Animated.Extrapolate;
   extrapolateLeft?: Animated.Extrapolate;
   extrapolateRight?: Animated.Extrapolate;
@@ -222,6 +222,7 @@ export const getLengthAtX = (
   const p3 = get(path.p3x, index);
   const t = cubicBezierSolve(p0, p1, p2, p3);
   const length = get(path.length, index);
+  /* eslint-disable @typescript-eslint/no-explicit-any */
   const start = add(
     ...(path.length.map((l, i) => cond(lessThan(i, index), l, 0)) as [
       any,
@@ -229,5 +230,6 @@ export const getLengthAtX = (
       ...any[]
     ])
   );
+  /* eslint-enable @typescript-eslint/no-explicit-any */
   return add(start, multiply(t, length));
 };
