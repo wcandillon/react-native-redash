@@ -1,5 +1,5 @@
 import Animated from "react-native-reanimated";
-import {Platform} from "react-native";
+import { Platform } from "react-native";
 
 const {
   Value,
@@ -77,6 +77,7 @@ export function runSpring(
       set(state.time, 0),
       set(state.position, value),
       set(state.velocity, 0),
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       set(config.toValue as any, dest),
       startClock(clock)
     ]),
@@ -88,7 +89,7 @@ export function runSpring(
 
 export function runTiming(
   clock: Animated.Clock,
-  value: Animated.Adaptable<any>,
+  value: Animated.Adaptable<number>,
   config: Animated.TimingConfig
 ) {
   const state = {
