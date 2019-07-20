@@ -266,6 +266,17 @@ const config = {
 runTiming(clock, 0, config);
 ```
 
+### `runLoop(duration: Node, easing: EasingFunction)`
+
+Returns an animated node that goes from `0` to `1` during the time set by `duration` and automatically back from `1` to `0` and so forth. 
+
+Example usage:
+
+```js
+const progress = new Value(0);
+set(progress, runLoop(400, Easing.linear);
+```
+
 ### `runDecay(clock: Clock, value: Node, velocity: Node, rerunDecaying: Node, deceleration: number): Node`
 
 Convenience function to run a decay animation.
