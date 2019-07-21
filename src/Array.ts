@@ -12,9 +12,9 @@ export const get = (
     notFound
   ) as Animated.Node<number>;
 
-export const contains = (
-  values: Animated.Adaptable<number>[],
-  value: Animated.Adaptable<number>
+export const contains = <T>(
+  values: Animated.Adaptable<T>[],
+  value: Animated.Adaptable<T>
 ): Animated.Node<0 | 1> =>
   values.reduce(
     (acc, v) => or(acc, eq(value, v)),
