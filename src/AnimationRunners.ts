@@ -115,11 +115,11 @@ export function runTiming(
   ]);
 }
 
-export const runLoop = (
+const runLoop = (
   clock: Animated.Clock,
   duration: Animated.Adaptable<number>,
   easing: Animated.EasingFunction,
-  boomrang: boolean = false
+  boomerang: boolean = false
 ) => {
   const state = {
     finished: new Value(0),
@@ -133,10 +133,6 @@ export const runLoop = (
     easing
   };
 
-  const resetBlock = boomrang
-    ? [set(config.toValue, cond(config.toValue, 0, 1))]
-    : [set(state.position, 0)];
-
   return block([
     cond(not(clockRunning(clock)), startClock(clock)),
     timing(clock, state, config),
@@ -144,7 +140,9 @@ export const runLoop = (
       set(state.finished, 0),
       set(state.time, 0),
       set(state.frameTime, 0),
-      ...resetBlock
+      boomerang
+        ? set(config.toValue, cond(config.toValue, 0, 1))
+        : set(state.position, 0)
     ]),
     state.position
   ]);
