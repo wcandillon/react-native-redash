@@ -12,7 +12,8 @@ const {
   set,
   startClock,
   clockRunning,
-  onChange
+  onChange,
+  not
 } = Animated;
 
 export function runDecay(
@@ -113,3 +114,36 @@ export function runTiming(
     state.position
   ]);
 }
+
+export const runLoop = (
+  clock: Animated.Clock,
+  duration: Animated.Adaptable<number>,
+  easing: Animated.EasingFunction,
+  boomerang: boolean = false
+) => {
+  const state = {
+    finished: new Value(0),
+    position: new Value(0),
+    time: new Value(0),
+    frameTime: new Value(0)
+  };
+  const config = {
+    toValue: new Value(1),
+    duration,
+    easing
+  };
+
+  return block([
+    cond(not(clockRunning(clock)), startClock(clock)),
+    timing(clock, state, config),
+    cond(state.finished, [
+      set(state.finished, 0),
+      set(state.time, 0),
+      set(state.frameTime, 0),
+      boomerang
+        ? set(config.toValue, cond(config.toValue, 0, 1))
+        : set(state.position, 0)
+    ]),
+    state.position
+  ]);
+};
