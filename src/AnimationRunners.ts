@@ -14,7 +14,8 @@ const {
   startClock,
   clockRunning,
   onChange,
-  not
+  not,
+  and
 } = Animated;
 
 export function runDecay(
