@@ -2,6 +2,7 @@ import Animated from "react-native-reanimated";
 import { Platform } from "react-native";
 
 const {
+  Clock,
   Value,
   block,
   timing,
@@ -114,6 +115,15 @@ export function runTiming(
     state.position
   ]);
 }
+
+
+export const runDelay = (node: Animated.Node<number>, duration: number) => {
+  const clock = new Clock();
+  return block([
+    runTiming(clock, 0, { toValue: 1, duration, easing: Easing.linear }),
+    cond(not(clockRunning(clock)), node)
+  ]);
+};
 
 export const runLoop = (
   clock: Animated.Clock,
