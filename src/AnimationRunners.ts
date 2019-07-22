@@ -1,4 +1,4 @@
-import Animated from "react-native-reanimated";
+import Animated, { Easing } from "react-native-reanimated";
 import { Platform } from "react-native";
 
 const {
@@ -115,7 +115,6 @@ export function runTiming(
     state.position
   ]);
 }
-
 
 export const runDelay = (node: Animated.Node<number>, duration: number) => {
   const clock = new Clock();
