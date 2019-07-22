@@ -13,8 +13,8 @@ export const get = (
   ) as Animated.Node<number>;
 
 export const contains = (
-  values: Animated.Node<number>[],
-  value: Animated.Node<number>
+  values: Animated.Adaptable<number>[],
+  value: Animated.Adaptable<number>
 ): Animated.Node<0 | 1> =>
   values.reduce(
     (acc, v) => or(acc, eq(value, v)),

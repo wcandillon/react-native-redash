@@ -6,7 +6,7 @@
   "scripts": {
     "lint": "eslint --ext .ts,.tsx src",
     "tsc": "tsc --noEmit",
-    "test": "npm run lint && npm run",
+    "test": "yarn lint && yarn tsc",
     "prepare": "bob build",
     "semantic-release": "semantic-release"
   },
