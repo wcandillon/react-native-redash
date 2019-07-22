@@ -277,6 +277,16 @@ const progress = new Value(0);
 set(progress, runLoop(400, Easing.linear);
 ```
 
+### `runDelay(node: Node, duration: number)`
+
+Evaluate an animation node after a certain amount of time. `duration` is in milliseconds.
+
+Example usage:
+
+```js
+runDelay(set(value, 1), 250)
+```
+
 ### `runDecay(clock: Clock, value: Node, velocity: Node, rerunDecaying: Node, deceleration: number): Node`
 
 Convenience function to run a decay animation.
