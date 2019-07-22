@@ -115,7 +115,7 @@ export function runTiming(
   ]);
 }
 
-const runLoop = (
+export const runLoop = (
   clock: Animated.Clock,
   duration: Animated.Adaptable<number>,
   easing: Animated.EasingFunction,
