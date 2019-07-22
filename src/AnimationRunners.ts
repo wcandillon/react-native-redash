@@ -2,7 +2,6 @@ import Animated from "react-native-reanimated";
 import { Platform } from "react-native";
 
 const {
-  Clock,
   Value,
   block,
   timing,
