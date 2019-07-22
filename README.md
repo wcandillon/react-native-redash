@@ -266,9 +266,9 @@ const config = {
 runTiming(clock, 0, config);
 ```
 
-### `runLoop(duration: Node, easing: EasingFunction)`
+### `runLoop(duration: Node, easing: EasingFunction: boomrang? = false)`
 
-Returns an animated node that goes from `0` to `1` during the time set by `duration` and automatically back from `1` to `0` and so forth. 
+Returns an animated node that goes from `0` to `1` during the time set by `duration` continuously. If the `boomrang` option is set to `true`, the animation goes from `0` to `1` and then from `1` to `0` in the next cycle.
 
 Example usage:
 
