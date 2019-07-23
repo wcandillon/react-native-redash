@@ -14,7 +14,8 @@ const {
   startClock,
   clockRunning,
   onChange,
-  not
+  not,
+  and
 } = Animated;
 
 export function runDecay(
@@ -124,12 +125,23 @@ export const runDelay = (node: Animated.Node<number>, duration: number) => {
   ]);
 };
 
-export const runLoop = (
-  clock: Animated.Clock,
-  duration: Animated.Adaptable<number>,
-  easing: Animated.EasingFunction,
-  boomerang: boolean = false
-) => {
+export interface LoopProps {
+  clock?: Animated.Clock;
+  easing?: Animated.EasingFunction;
+  duration?: number;
+  boomerang?: boolean;
+  autoStart?: boolean;
+}
+
+export const loop = (loopConfig: LoopProps) => {
+  const { clock, easing, duration, boomerang, autoStart } = {
+    clock: new Clock(),
+    easing: Easing.linear,
+    duration: 250,
+    boomerang: false,
+    autoStart: true,
+    ...loopConfig
+  };
   const state = {
     finished: new Value(0),
     position: new Value(0),
@@ -143,7 +155,7 @@ export const runLoop = (
   };
 
   return block([
-    cond(not(clockRunning(clock)), startClock(clock)),
+    cond(and(not(clockRunning(clock)), autoStart ? 1 : 0), startClock(clock)),
     timing(clock, state, config),
     cond(state.finished, [
       set(state.finished, 0),
