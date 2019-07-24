@@ -247,7 +247,7 @@ Returns an animation value that follows a Reanimated transition ([see related is
 The value equals `source` at the beginning of the transition and `destination` at the end of the transition.
 This is useful on iOS only because on Android, you can transition on the `transform` property.
 
-### `timing({ clock?: Clock, from?: Node, to?: Node, duration?: Node, easing?: EasingFunction, autoStart?: boolean }): Node`
+### `timing({ clock?: Clock, from?: Node, to?: Node, duration?: Node, easing?: EasingFunction }): Node`
 
 Convenience function to run a timing animation.
 

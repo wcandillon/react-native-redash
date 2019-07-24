@@ -173,7 +173,7 @@ export const loop = (loopConfig: LoopProps) => {
 
   return block([
     cond(and(not(clockRunning(clock)), autoStart ? 1 : 0), startClock(clock)),
-    timing(clock, state, config),
+    reTiming(clock, state, config),
     cond(state.finished, [
       set(state.finished, 0),
       set(state.time, 0),
