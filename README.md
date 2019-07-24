@@ -247,23 +247,19 @@ Returns an animation value that follows a Reanimated transition ([see related is
 The value equals `source` at the beginning of the transition and `destination` at the end of the transition.
 This is useful on iOS only because on Android, you can transition on the `transform` property.
 
-### `runTiming(clock: Clock, value: Node, config: TimingConfig): Node`
+### `timing({ clock?: Clock, from?: Node, to?: Node, duration?: Node, easing?: EasingFunction, autoStart?: boolean }): Node`
 
 Convenience function to run a timing animation.
-
-```js
-runTiming(clock: Clock, value: Node, config: TimingConfig): Node
-```
 
 Example usage:
 
 ```js
-const config = {
+timing({
   duration: 10 * 1000,
-  toValue: 1,
+  from: 0
+  to: 1,
   easing: Easing.linear,
-};
-runTiming(clock, 0, config);
+});
 ```
 
 ### `loop({ clock: Clock, duration: Node, easing: EasingFunction: boomerang? = false, autoStart? = true })`
@@ -277,14 +273,14 @@ const progress = new Value(0);
 set(progress, runLoop(400, Easing.linear);
 ```
 
-### `runDelay(node: Node, duration: number)`
+### `delay(node: Node, duration: number)`
 
 Evaluate an animation node after a certain amount of time. `duration` is in milliseconds.
 
 Example usage:
 
 ```js
-runDelay(set(value, 1), 250)
+delay(set(value, 1), 250)
 ```
 
 ### `runDecay(clock: Clock, value: Node, velocity: Node, rerunDecaying: Node, deceleration: number): Node`
