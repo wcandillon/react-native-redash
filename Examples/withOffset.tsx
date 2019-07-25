@@ -1,8 +1,8 @@
 import * as React from "react";
-import { Text, View, StyleSheet } from "react-native";
+import { View, StyleSheet } from "react-native";
 import Animated from "react-native-reanimated";
 import { PanGestureHandler } from "react-native-gesture-handler";
-import { preserveOffset } from "react-native-redash";
+import { withOffset } from "react-native-redash";
 
 const { Value, event } = Animated;
 
@@ -20,13 +20,13 @@ export default class App extends React.Component {
         nativeEvent: {
           translationX: dragX,
           translationY: dragY,
-          state: panState,
-        },
-      },
+          state: panState
+        }
+      }
     ]);
 
-    this.X = preserveOffset(dragX, panState);
-    this.Y = preserveOffset(dragY, panState);
+    this.X = withOffset(dragX, panState);
+    this.Y = withOffset(dragY, panState);
   }
 
   render() {
@@ -40,8 +40,8 @@ export default class App extends React.Component {
             style={[
               styles.box,
               {
-                transform: [{ translateX: this.X }, { translateY: this.Y }],
-              },
+                transform: [{ translateX: this.X }, { translateY: this.Y }]
+              }
             ]}
           />
         </PanGestureHandler>
@@ -56,11 +56,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#ecf0f1",
-    padding: 8,
+    padding: 8
   },
   box: {
     width: 40,
     height: 40,
-    backgroundColor: "red",
-  },
+    backgroundColor: "red"
+  }
 });

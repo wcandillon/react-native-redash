@@ -439,12 +439,12 @@ constructor(props) {
 }
 ```
 
-### `preserveOffset(value: Node, state: Node, offset: Node = 0): Node`
+### `withOffset(value: Node, state: Node, offset: Node = 0): Node`
 
 Decorates animated value to save previous offset of pan
 
 - [How it works](https://snack.expo.io/@dsznajder/preserveoffset)
-- [Example usage](./Examples/preserveOffset.tsx)
+- [Example usage](./Examples/withOffset.tsx)
 
 ```js
 constructor(props) {
@@ -460,7 +460,7 @@ constructor(props) {
     },
   ]);
 
-  this.X = preserveOffset(dragX, panState);
+  this.X = withOffset(dragX, panState);
 }
 ```
 

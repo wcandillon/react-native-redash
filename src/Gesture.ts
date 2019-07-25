@@ -30,21 +30,16 @@ const {
   sub
 } = Animated;
 
-export const preserveOffset = (
-  value: Animated.Adaptable<number>,
-  state: Animated.Adaptable<State>,
+export const withOffset = (
+  value: Animated.Value<number>,
+  state: Animated.Value<State>,
   offset: Animated.Value<number> = new Value(0)
-) => {
-  const previous = new Value(0);
-  return block([
-    cond(
-      eq(state, State.ACTIVE),
-      [set(offset, add(offset, sub(value, previous))), set(previous, value)],
-      [set(previous, 0)]
-    ),
-    offset
-  ]);
-};
+) =>
+  cond(
+    eq(state, State.END),
+    [set(offset, add(offset, value)), offset],
+    add(offset, value)
+  );
 
 export const decay = (
   value: Animated.Adaptable<number>,
