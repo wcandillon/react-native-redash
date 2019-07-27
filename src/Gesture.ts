@@ -22,8 +22,6 @@ const {
   cond,
   divide,
   eq,
-  greaterThan,
-  lessThan,
   multiply,
   set,
   stopClock,
