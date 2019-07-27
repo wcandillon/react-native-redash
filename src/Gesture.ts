@@ -90,28 +90,6 @@ export const spring = (
   ]);
 };
 
-export const limit = (
-  value: Animated.Adaptable<number>,
-  state: Animated.Adaptable<State>,
-  min: Animated.Adaptable<number>,
-  max: Animated.Adaptable<number>
-) => {
-  const offset = new Animated.Value(0);
-  const offsetValue = add(offset, value);
-
-  return block([
-    cond(eq(state, State.BEGAN), [
-      cond(lessThan(offsetValue, min), set(offset, sub(min, value))),
-      cond(greaterThan(offsetValue, max), set(offset, sub(max, value)))
-    ]),
-    cond(
-      lessThan(offsetValue, min),
-      min,
-      cond(greaterThan(offsetValue, max), max, offsetValue)
-    )
-  ]);
-};
-
 export const preserveMultiplicativeOffset = (
   value: Animated.Adaptable<number>,
   state: Animated.Adaptable<number>

@@ -480,28 +480,6 @@ constructor(props) {
 }
 ```
 
-### `limit(value: Node, state: Node, min: Node, max: Node): Node`
-
-Decorates animated value to set limits of panning
-
-```js
-constructor(props) {
-  const dragX = new Value(0);
-  const panState = new Value(0);
-
-  this.handlePan = event([
-    {
-      nativeEvent: {
-        translationX: dragX,
-        state: panState,
-      },
-    },
-  ]);
-
-  this.X = limit(dragX, panState, -100, 100);
-}
-```
-
 ### `spring( translation: Node, state: Node, snapPoint: Node, defaultOffset = 0, springConfig?): Node`
 
 Decorates animated value to spring after pan
