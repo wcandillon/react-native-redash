@@ -1,5 +1,4 @@
 import Animated, { Easing } from "react-native-reanimated";
-import { Platform } from "react-native";
 
 const {
   Clock,
