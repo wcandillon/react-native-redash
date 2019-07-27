@@ -39,7 +39,7 @@ export const withOffset = (
     add(offset, value)
   );
 
-export const widthDecay = (
+export const withDecay = (
   value: Animated.Node<number>,
   velocity: Animated.Node<number>,
   state: Animated.Value<State>
