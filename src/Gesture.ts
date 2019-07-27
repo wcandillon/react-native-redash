@@ -29,7 +29,7 @@ const {
 } = Animated;
 
 export const withOffset = (
-  value: Animated.Value<number>,
+  value: Animated.Node<number>,
   state: Animated.Value<State>,
   offset: Animated.Value<number> = new Value(0)
 ) =>
