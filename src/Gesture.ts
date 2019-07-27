@@ -11,7 +11,7 @@ import {
   FlingGestureHandlerEventExtra
 } from "react-native-gesture-handler";
 
-import { runDecay, runSpring } from "./AnimationRunners";
+import { decay, runSpring } from "./AnimationRunners";
 
 const {
   Clock,
@@ -41,37 +41,11 @@ export const withOffset = (
     add(offset, value)
   );
 
-export const decay = (
-  value: Animated.Adaptable<number>,
-  state: Animated.Adaptable<State>,
-  velocity: Animated.Adaptable<number>
-) => {
-  const decayedValue = new Value(0);
-  const offset = new Value(0);
-  const clock = new Clock();
-  const rerunDecaying = new Value(0);
-
-  return block([
-    cond(
-      eq(state, State.END),
-      [
-        set(
-          decayedValue,
-          runDecay(clock, add(value, offset), velocity, rerunDecaying)
-        )
-      ],
-      [
-        stopClock(clock),
-        cond(eq(state, State.BEGAN), [
-          set(rerunDecaying, 0),
-          set(offset, sub(decayedValue, value))
-        ]),
-        set(decayedValue, add(value, offset))
-      ]
-    ),
-    decayedValue
-  ]);
-};
+export const widthDecay = (
+  value: Animated.Node<number>,
+  velocity: Animated.Node<number>,
+  state: Animated.Value<State>
+) => cond(eq(state, State.END), decay({ value, velocity }), value);
 
 export const spring = (
   translation: Animated.Value<number>,

@@ -8,7 +8,7 @@ const {
   timing: reTiming,
   spring,
   cond,
-  decay,
+  decay: reDecay,
   stopClock,
   set,
   startClock,
@@ -17,13 +17,20 @@ const {
   and
 } = Animated;
 
-export function runDecay(
-  clock: Animated.Clock,
-  value: Animated.Adaptable<number>,
-  velocity: Animated.Adaptable<number>,
-  rerunDecaying: Animated.Value<number>,
-  deceleration?: number
-) {
+interface DecayProps {
+  clock?: Animated.Clock;
+  value: Animated.Adaptable<number>;
+  velocity: Animated.Adaptable<number>;
+  deceleration?: Animated.Adaptable<number>;
+}
+
+export const decay = (decayConfig: DecayProps) => {
+  const { clock, value, velocity, deceleration } = {
+    clock: new Clock(),
+    deceleration: 0.998,
+    ...decayConfig
+  };
+
   const state = {
     finished: new Value(0),
     velocity: new Value(0),
@@ -31,26 +38,21 @@ export function runDecay(
     time: new Value(0)
   };
 
-  const config = {
-    deceleration: deceleration || (Platform.OS === "ios" ? 0.998 : 0.985)
-  };
+  const config = { deceleration };
 
   return [
     cond(clockRunning(clock), 0, [
-      cond(rerunDecaying, 0, [
-        set(rerunDecaying, 1),
-        set(state.finished, 0),
-        set(state.velocity, velocity),
-        set(state.position, value),
-        set(state.time, 0),
-        startClock(clock)
-      ])
+      set(state.finished, 0),
+      set(state.velocity, velocity),
+      set(state.position, value),
+      set(state.time, 0),
+      startClock(clock)
     ]),
-    decay(clock, state, config),
+    reDecay(clock, state, config),
     cond(state.finished, stopClock(clock)),
     state.position
   ];
-}
+};
 
 export function runSpring(
   clock: Animated.Clock,

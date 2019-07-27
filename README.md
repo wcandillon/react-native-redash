@@ -283,12 +283,12 @@ Example usage:
 delay(set(value, 1), 250)
 ```
 
-### `runDecay(clock: Clock, value: Node, velocity: Node, rerunDecaying: Node, deceleration: number): Node`
+### `decay({ clock: Clock, value: Node, velocity: Node, deceleration: number} ): Node`
 
 Convenience function to run a decay animation.
 
 ```js
-runDecay(clock: Clock, value: Node, velocity: Node, rerunDecaying: Node, deceleration: number): Node
+decay({ clock: Clock, value: Node, velocity: Node, deceleration: number} ): Node
 ```
 
 ### `bInterpolate(node: Node, from: Node, to: Node): Node`
@@ -412,12 +412,9 @@ return (
 );
 ```
 
-### `decay(value: Node, state: Node, velocity: Node): Node`
+### `withDecay(value: Node, state: Node, velocity: Node): Node`
 
 Decorates animated value to decay after pan
-
-- [How it works](https://snack.expo.io/@dsznajder/decay)
-- [Example usage](./Examples/decay.tsx)
 
 ```js
 constructor(props) {
@@ -435,16 +432,13 @@ constructor(props) {
     },
   ]);
 
-  this.X = decay(dragX, panState, velocityX);
+  this.X = withDecay(dragX, panState, velocityX);
 }
 ```
 
 ### `withOffset(value: Node, state: Node, offset: Node = 0): Node`
 
 Decorates animated value to save previous offset of pan
-
-- [How it works](https://snack.expo.io/@dsznajder/preserveoffset)
-- [Example usage](./Examples/withOffset.tsx)
 
 ```js
 constructor(props) {
@@ -468,9 +462,6 @@ constructor(props) {
 
 Decorates animated value to save previous offset of pinch
 
-- [How it works](https://snack.expo.io/@dsznajder/preserveMultiplicativeOffset)
-- [Example usage](./Examples/preserveMultiplicativeOffset.tsx)
-
 ```js
 constructor(props) {
   const scale = new Value(1);
@@ -492,9 +483,6 @@ constructor(props) {
 ### `limit(value: Node, state: Node, min: Node, max: Node): Node`
 
 Decorates animated value to set limits of panning
-
-- [How it works](https://snack.expo.io/@dsznajder/limit)
-- [Example usage](./Examples/limit.tsx)
 
 ```js
 constructor(props) {
