@@ -45,12 +45,20 @@ export const withOffset = (
     add(offset, value)
   );
 
-export const withDecay = (
-  value: Animated.Adaptable<number>,
-  velocity: Animated.Adaptable<number>,
-  state: Animated.Value<State>,
-  deceleration: number = 0.998
-) => {
+interface WithDecayProps {
+  value: Animated.Adaptable<number>;
+  velocity: Animated.Adaptable<number>;
+  state: Animated.Value<State>;
+  offset?: Animated.Value<number>;
+  deceleration?: number;
+}
+
+export const withDecay = (config: WithDecayProps) => {
+  const { value, velocity, state, offset, deceleration } = {
+    offset: new Value(0),
+    deceleration: 0.998,
+    ...config
+  };
   const clock = new Clock();
   const decayState = {
     finished: new Value(0),
@@ -59,7 +67,6 @@ export const withDecay = (
     time: new Value(0)
   };
 
-  const offset = new Value(0);
   const isDecayInterrupted = and(eq(state, State.BEGAN), clockRunning(clock));
   const finishDecay = [set(offset, decayState.position), stopClock(clock)];
 
