@@ -39,7 +39,7 @@ export const decay = (decayConfig: DecayProps) => {
 
   const config = { deceleration };
 
-  return [
+  return block([
     cond(clockRunning(clock), 0, [
       set(state.finished, 0),
       set(state.velocity, velocity),
@@ -50,7 +50,7 @@ export const decay = (decayConfig: DecayProps) => {
     reDecay(clock, state, config),
     cond(state.finished, stopClock(clock)),
     state.position
-  ];
+  ]);
 };
 
 export function runSpring(
