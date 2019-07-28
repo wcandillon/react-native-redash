@@ -11,7 +11,7 @@ import {
   FlingGestureHandlerEventExtra
 } from "react-native-gesture-handler";
 
-import { decay, runSpring } from "./AnimationRunners";
+import { runSpring } from "./AnimationRunners";
 
 const {
   Clock,
@@ -25,7 +25,13 @@ const {
   multiply,
   set,
   stopClock,
-  sub
+  sub,
+  and,
+  not,
+  clockRunning,
+  startClock,
+  neq,
+  decay: reDecay
 } = Animated;
 
 export const withOffset = (
@@ -40,10 +46,41 @@ export const withOffset = (
   );
 
 export const withDecay = (
-  value: Animated.Node<number>,
-  velocity: Animated.Node<number>,
-  state: Animated.Value<State>
-) => cond(eq(state, State.END), decay({ value, velocity }), value);
+  value: Animated.Adaptable<number>,
+  velocity: Animated.Adaptable<number>,
+  state: Animated.Value<State>,
+  deceleration: number = 0.998
+) => {
+  const clock = new Clock();
+  const decayState = {
+    finished: new Value(0),
+    velocity: new Value(0),
+    position: new Value(0),
+    time: new Value(0)
+  };
+
+  const offset = new Value(0);
+  const isDecayInterrupted = and(eq(state, State.BEGAN), clockRunning(clock));
+  const finishDecay = [set(offset, decayState.position), stopClock(clock)];
+
+  return block([
+    cond(isDecayInterrupted, finishDecay),
+    cond(neq(state, State.END), [
+      set(decayState.finished, 0),
+      set(decayState.position, add(offset, value))
+    ]),
+    cond(eq(state, State.END), [
+      cond(and(not(clockRunning(clock)), not(decayState.finished)), [
+        set(decayState.velocity, velocity),
+        set(decayState.time, 0),
+        startClock(clock)
+      ]),
+      reDecay(clock, decayState, { deceleration }),
+      cond(decayState.finished, finishDecay)
+    ]),
+    decayState.position
+  ]);
+};
 
 export const spring = (
   translation: Animated.Value<number>,
