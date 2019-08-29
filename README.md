@@ -83,8 +83,8 @@ return (
         {() =>
           set(
             progress,
-            runTiming(clock, progress, {
-              toValue: 1,
+            timing(clock, progress, {
+              to: 1,
               duration: 2000,
               easing: Easing.linear
             })
@@ -291,6 +291,14 @@ Convenience function to run a decay animation.
 decay({ clock: Clock, value: Node, velocity: Node, deceleration: number} ): Node
 ```
 
+### `spring({ clock: Clock, value: Node, velocity: Node, deceleration: number} ): Node`
+
+Convenience function to run a spring animation.
+
+```js
+decay({ clock: Clock, value: Node, velocity: Node, config: SpringConfig }): Node
+```
+
 ### `bInterpolate(node: Node, from: Node, to: Node): Node`
 
 Interpolate the node from 0 to 1 without clamping.
@@ -331,12 +339,6 @@ Interpolate the node from 0 to 1 without clamping.
 ### `snapPoint(point, velocity, points)`
 
 Select a point based on a node value and its velocity.
-Example usage:
-
-```js
-const snapPoints = [-width, 0, width];
-runSpring(clock, x, snapPoint(x, velocityX, snapPoints));
-```
 
 ## Transformations
 
@@ -412,28 +414,31 @@ return (
 );
 ```
 
-### `withDecay(value: Node, state: Node, velocity: Node): Node`
+### `withSpring({ value: Node, velocity: Node, state: Value, offset: Node, config, snapPoints: Node[], onSnap: (value) => void }): Node`
 
-Decorates animated value to decay after pan
+Decorates animated value to spring when the gesture ends.
 
 ```js
-constructor(props) {
-  const dragX = new Value(0);
-  const panState = new Value(0);
-  const velocityX = new Value(0);
+const translateX = withSpring({
+  value: translationX,
+  velocity: velocityX,
+  state,
+  snapPoints,
+  onSnap
+});
+```
 
-  this.handlePan = event([
-    {
-      nativeEvent: {
-        translationX: dragX,
-        state: panState,
-        velocityX,
-      },
-    },
-  ]);
+### `withDecay({ value: Node, velocity: Node, state: Value, offset: Node, deceleration }): Node`
 
-  this.X = withDecay(dragX, panState, velocityX);
-}
+Decorates animated value to decay when the gesture ends.
+
+```js
+const translateX = withDecay({
+  value: translationX,
+  velocity: velocityX,
+  state: gestureState,
+  offset: offsetX
+});
 ```
 
 ### `withOffset(value: Node, state: Node, offset: Node = 0): Node`
