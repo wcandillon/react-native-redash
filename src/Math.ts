@@ -18,7 +18,7 @@ const {
   pow
 } = Animated;
 
-export const bin = (value: boolean): 0 | 1 => padding ? 1 | 0;
+export const bin = (value: boolean): 0 | 1 => (value ? 1 : 0);
 
 export const min = (...args: Animated.Adaptable<number>[]) =>
   args.reduce((acc, arg) => min2(acc, arg));

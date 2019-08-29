@@ -11,7 +11,7 @@ import {
   FlingGestureHandlerEventExtra
 } from "react-native-gesture-handler";
 
-import { runSpring } from "./AnimationRunners";
+import { snapPoint } from "./Animations";
 
 const {
   Clock,
@@ -25,13 +25,14 @@ const {
   multiply,
   set,
   stopClock,
-  sub,
   and,
   not,
   clockRunning,
   startClock,
   neq,
-  decay: reDecay
+  call,
+  decay: reDecay,
+  spring: reSpring
 } = Animated;
 
 export const withOffset = (
@@ -45,7 +46,82 @@ export const withOffset = (
     add(offset, value)
   );
 
-interface WithDecayProps {
+interface SpringConfig extends Animated.SpringConfig {
+  toValue: Animated.Value<number>;
+}
+
+export interface WithSpringParams {
+  value: Animated.Adaptable<number>;
+  velocity: Animated.Adaptable<number>;
+  state: Animated.Value<State>;
+  snapPoints: number[];
+  offset?: Animated.Value<number>;
+  config?: SpringConfig;
+  onSnap?: (value: readonly number[]) => void;
+}
+
+export const withSpring = (props: WithSpringParams) => {
+  const {
+    value,
+    velocity,
+    state,
+    snapPoints,
+    offset,
+    config: springConfig,
+    onSnap
+  } = {
+    offset: new Value(0),
+    ...props
+  };
+  const clock = new Clock();
+  const springState: Animated.SpringState = {
+    finished: new Value(0),
+    velocity: new Value(0),
+    position: new Value(0),
+    time: new Value(0)
+  };
+
+  const config: SpringConfig = {
+    toValue: new Value(0),
+    damping: 6,
+    mass: 1,
+    stiffness: 64,
+    overshootClamping: false,
+    restSpeedThreshold: 0.01,
+    restDisplacementThreshold: 0.01,
+    ...springConfig
+  };
+
+  const isSpringInterrupted = and(eq(state, State.BEGAN), clockRunning(clock));
+  const finishSpring = [set(offset, springState.position), stopClock(clock)];
+  const snap = onSnap
+    ? [cond(clockRunning(clock), call([springState.position], onSnap))]
+    : [];
+
+  return block([
+    cond(isSpringInterrupted, finishSpring),
+    cond(neq(state, State.END), [
+      set(springState.finished, 0),
+      set(springState.position, add(offset, value))
+    ]),
+    cond(eq(state, State.END), [
+      cond(and(not(clockRunning(clock)), not(springState.finished)), [
+        set(springState.velocity, velocity),
+        set(springState.time, 0),
+        set(
+          config.toValue,
+          snapPoint(springState.position, velocity, snapPoints)
+        ),
+        startClock(clock)
+      ]),
+      reSpring(clock, springState, config),
+      cond(springState.finished, [...snap, ...finishSpring])
+    ]),
+    springState.position
+  ]);
+};
+
+interface WithDecayParams {
   value: Animated.Adaptable<number>;
   velocity: Animated.Adaptable<number>;
   state: Animated.Value<State>;
@@ -53,7 +129,7 @@ interface WithDecayProps {
   deceleration?: number;
 }
 
-export const withDecay = (config: WithDecayProps) => {
+export const withDecay = (config: WithDecayParams) => {
   const { value, velocity, state, offset, deceleration } = {
     offset: new Value(0),
     deceleration: 0.998,
@@ -86,49 +162,6 @@ export const withDecay = (config: WithDecayProps) => {
       cond(decayState.finished, finishDecay)
     ]),
     decayState.position
-  ]);
-};
-
-export const spring = (
-  translation: Animated.Value<number>,
-  state: Animated.Value<State>,
-  snapPoint: Animated.Adaptable<number>,
-  defaultOffset: number = 0,
-  springConfig?: Animated.SpringConfig
-) => {
-  const springedValue = new Value(0);
-  const offset = new Value(defaultOffset);
-  const clock = new Clock();
-  const rerunSpring = new Value(0);
-  // http://chenglou.github.io/react-motion/demos/demo5-spring-parameters-chooser/
-  const config = springConfig || {
-    toValue: new Value(0),
-    damping: 15,
-    mass: 1,
-    stiffness: 150,
-    overshootClamping: false,
-    restSpeedThreshold: 0.001,
-    restDisplacementThreshold: 0.001
-  };
-  return block([
-    cond(
-      eq(state, State.END),
-      [
-        set(
-          springedValue,
-          runSpring(clock, add(translation, offset), snapPoint, config)
-        )
-      ],
-      [
-        stopClock(clock),
-        cond(eq(state, State.BEGAN), [
-          set(rerunSpring, 0),
-          set(offset, sub(springedValue, translation))
-        ]),
-        set(springedValue, add(translation, offset))
-      ]
-    ),
-    springedValue
   ]);
 };
 

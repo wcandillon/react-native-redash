@@ -4,93 +4,67 @@ const {
   Clock,
   Value,
   block,
-  timing: reTiming,
-  spring,
   cond,
-  decay: reDecay,
   stopClock,
   set,
   startClock,
   clockRunning,
   not,
-  and
+  and,
+  timing: reTiming,
+  decay: reDecay,
+  spring: reSpring
 } = Animated;
 
-interface DecayProps {
-  clock?: Animated.Clock;
-  value: Animated.Adaptable<number>;
-  velocity: Animated.Adaptable<number>;
-  deceleration?: Animated.Adaptable<number>;
+interface AnimateProps<S, C> {
+  clock: Animated.Clock;
+  fn: (
+    clock: Animated.Clock,
+    state: S,
+    config: C
+  ) => Animated.Adaptable<number>;
+  state: S;
+  config: C;
+  node: Animated.Adaptable<number>;
 }
 
-export const decay = (decayConfig: DecayProps) => {
-  const { clock, value, velocity, deceleration } = {
-    clock: new Clock(),
-    deceleration: 0.998,
-    ...decayConfig
-  };
+interface TimingAnimation {
+  state: Animated.TimingState;
+  config: Animated.TimingConfig;
+}
 
-  const state = {
-    finished: new Value(0),
-    velocity: new Value(0),
-    position: new Value(0),
-    time: new Value(0)
-  };
+interface SpringAnimation {
+  state: Animated.SpringState;
+  config: Animated.SpringConfig;
+}
 
-  const config = { deceleration };
+interface DecayAnimation {
+  state: Animated.DecayState;
+  config: Animated.DecayConfig;
+}
 
-  return block([
-    cond(clockRunning(clock), 0, [
+type Animation = SpringAnimation | DecayAnimation | TimingAnimation;
+
+const animate = <T extends Animation>({
+  fn,
+  clock,
+  state,
+  config,
+  node
+}: AnimateProps<T["state"], T["config"]>) =>
+  block([
+    cond(not(clockRunning(clock)), [
       set(state.finished, 0),
-      set(state.velocity, velocity),
-      set(state.position, value),
       set(state.time, 0),
+      set(state.position, node),
       startClock(clock)
     ]),
-    reDecay(clock, state, config),
+    fn(clock, state, config),
     cond(state.finished, stopClock(clock)),
     state.position
   ]);
-};
 
-export function runSpring(
-  clock: Animated.Clock,
-  value: Animated.Adaptable<number>,
-  dest: Animated.Adaptable<number>,
-  config: Animated.SpringConfig = {
-    toValue: new Value(0),
-    damping: 7,
-    mass: 1,
-    stiffness: 121.6,
-    overshootClamping: false,
-    restSpeedThreshold: 0.001,
-    restDisplacementThreshold: 0.001
-  }
-) {
-  const state = {
-    finished: new Value(0),
-    velocity: new Value(0),
-    position: new Value(0),
-    time: new Value(0)
-  };
-
-  return block([
-    cond(clockRunning(clock), 0, [
-      set(state.finished, 0),
-      set(state.time, 0),
-      set(state.position, value),
-      set(state.velocity, 0),
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      set(config.toValue as any, dest),
-      startClock(clock)
-    ]),
-    spring(clock, state, config),
-    cond(state.finished, stopClock(clock)),
-    state.position
-  ]);
-}
-
-export interface TimingProps {
+export interface TimingParams {
   clock?: Animated.Clock;
   from?: Animated.Adaptable<number>;
   to?: Animated.Adaptable<number>;
@@ -98,14 +72,14 @@ export interface TimingProps {
   easing?: Animated.EasingFunction;
 }
 
-export const timing = (timingConfig: TimingProps) => {
+export const timing = (params: TimingParams) => {
   const { clock, easing, duration, from, to: toValue } = {
     clock: new Clock(),
     easing: Easing.linear,
     duration: 250,
     from: 0,
     to: 1,
-    ...timingConfig
+    ...params
   };
 
   const state: Animated.TimingState = {
@@ -115,24 +89,85 @@ export const timing = (timingConfig: TimingProps) => {
     frameTime: new Value(0)
   };
 
-  const config = {
+  const config: Animated.TimingConfig = {
     toValue,
     duration,
     easing
   };
 
-  return block([
-    cond(not(clockRunning(clock)), [
-      set(state.finished, 0),
-      set(state.time, 0),
-      set(state.position, from),
-      set(state.frameTime, 0),
-      startClock(clock)
-    ]),
-    reTiming(clock, state, config),
-    cond(state.finished, stopClock(clock)),
-    state.position
-  ]);
+  return animate<TimingAnimation>({
+    clock,
+    fn: reTiming,
+    state,
+    config,
+    node: from
+  });
+};
+
+export interface DecayParams {
+  clock?: Animated.Clock;
+  node?: Animated.Adaptable<number>;
+  velocity?: Animated.Value<number>;
+  deceleration?: Animated.Adaptable<number>;
+}
+
+export const decay = (params: DecayParams) => {
+  const { clock, node, velocity, deceleration } = {
+    clock: new Clock(),
+    velocity: new Value(0),
+    deceleration: 0.998,
+    node: 0,
+    ...params
+  };
+
+  const state: Animated.DecayState = {
+    finished: new Value(0),
+    position: new Value(0),
+    time: new Value(0),
+    velocity
+  };
+
+  const config: Animated.DecayConfig = {
+    deceleration
+  };
+
+  return animate<DecayAnimation>({ clock, fn: reDecay, state, config, node });
+};
+
+export interface SpringParams {
+  clock?: Animated.Clock;
+  node?: Animated.Adaptable<number>;
+  velocity?: Animated.Value<number>;
+  config?: Animated.SpringConfig;
+}
+
+export const spring = (params: SpringParams) => {
+  const { clock, node, velocity, config: springConfig } = {
+    clock: new Clock(),
+    velocity: new Value(0),
+    node: 0,
+    ...params
+  };
+
+  const state: Animated.SpringState = {
+    finished: new Value(0),
+    position: new Value(0),
+    time: new Value(0),
+    velocity
+  };
+
+  const config: Animated.SpringConfig = {
+    toValue: new Value(0),
+    damping: 6,
+    mass: 1,
+    stiffness: 64,
+    overshootClamping: false,
+    restSpeedThreshold: 0.01,
+    restDisplacementThreshold: 0.01,
+    ...springConfig
+  };
+
+  return animate<SpringAnimation>({ clock, fn: reSpring, state, config, node });
 };
 
 export const delay = (node: Animated.Node<number>, duration: number) => {
