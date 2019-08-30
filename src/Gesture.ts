@@ -46,9 +46,8 @@ export const withOffset = (
     add(offset, value)
   );
 
-interface SpringConfig extends Animated.SpringConfig {
-  toValue: Animated.Value<number>;
-}
+type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
+type SpringConfig = Omit<Animated.SpringConfig, "toValue">;
 
 export interface WithSpringParams {
   value: Animated.Adaptable<number>;
