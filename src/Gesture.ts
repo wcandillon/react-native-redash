@@ -11,6 +11,7 @@ import {
   FlingGestureHandlerEventExtra
 } from "react-native-gesture-handler";
 
+import { clamp } from "./Math";
 import { snapPoint } from "./Animations";
 
 const {
@@ -46,6 +47,10 @@ export const withOffset = (
     add(offset, value)
   );
 
+interface PrivateSpringConfig extends Animated.SpringConfig {
+  toValue: Animated.Value<number>;
+}
+
 type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 type SpringConfig = Omit<Animated.SpringConfig, "toValue">;
 
@@ -80,7 +85,7 @@ export const withSpring = (props: WithSpringParams) => {
     time: new Value(0)
   };
 
-  const config: SpringConfig = {
+  const config: PrivateSpringConfig = {
     toValue: new Value(0),
     damping: 6,
     mass: 1,
@@ -163,6 +168,13 @@ export const withDecay = (config: WithDecayParams) => {
     decayState.position
   ]);
 };
+
+export const withClamp = (
+  value: Animated.Node<number>,
+  state: Animated.Value<State>,
+  min: Animated.Adaptable<number>,
+  max: Animated.Adaptable<number>
+) => cond(eq(state, State.ACTIVE), clamp(value, min, max), value);
 
 export const preserveMultiplicativeOffset = (
   value: Animated.Adaptable<number>,
