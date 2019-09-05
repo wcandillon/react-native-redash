@@ -4,10 +4,9 @@ import { useMemoOne } from "use-memo-one";
 
 import { TransformsStyle } from "react-native";
 import { min } from "./Math";
-import { runTiming } from "./AnimationRunners";
+import { timing } from "./AnimationRunners";
 
 const {
-  Clock,
   Value,
   set,
   add,
@@ -86,18 +85,18 @@ export const useTransition = <T>(
       "useCode() is only available in Reanimated 1.0.0 or higher"
     );
   }
-  const { transitionVal, clock } = useMemoOne(
+  const { transitionVal } = useMemoOne(
     () => ({
-      transitionVal: new Value(0),
-      clock: new Clock()
+      transitionVal: new Value(0)
     }),
     []
   );
   useCode(
     set(
       transitionVal,
-      runTiming(clock, src, {
-        toValue: dest,
+      timing({
+        from: src,
+        to: dest,
         duration,
         easing
       })

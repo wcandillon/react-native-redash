@@ -11,7 +11,8 @@ import {
   FlingGestureHandlerEventExtra
 } from "react-native-gesture-handler";
 
-import { runDecay, runSpring } from "./AnimationRunners";
+import { clamp } from "./Math";
+import { snapPoint } from "./Animations";
 
 const {
   Clock,
@@ -22,126 +23,163 @@ const {
   cond,
   divide,
   eq,
-  greaterThan,
-  lessThan,
   multiply,
   set,
   stopClock,
-  sub
+  and,
+  not,
+  clockRunning,
+  startClock,
+  neq,
+  call,
+  decay: reDecay,
+  spring: reSpring
 } = Animated;
 
-export const preserveOffset = (
-  value: Animated.Adaptable<number>,
-  state: Animated.Adaptable<State>,
-  offset: Animated.Value<number> = new Value(0)
-) => {
-  const previous = new Value(0);
-  return block([
-    cond(
-      eq(state, State.ACTIVE),
-      [set(offset, add(offset, sub(value, previous))), set(previous, value)],
-      [set(previous, 0)]
-    ),
-    offset
-  ]);
-};
-
-export const decay = (
-  value: Animated.Adaptable<number>,
-  state: Animated.Adaptable<State>,
-  velocity: Animated.Adaptable<number>
-) => {
-  const decayedValue = new Value(0);
-  const offset = new Value(0);
-  const clock = new Clock();
-  const rerunDecaying = new Value(0);
-
-  return block([
-    cond(
-      eq(state, State.END),
-      [
-        set(
-          decayedValue,
-          runDecay(clock, add(value, offset), velocity, rerunDecaying)
-        )
-      ],
-      [
-        stopClock(clock),
-        cond(eq(state, State.BEGAN), [
-          set(rerunDecaying, 0),
-          set(offset, sub(decayedValue, value))
-        ]),
-        set(decayedValue, add(value, offset))
-      ]
-    ),
-    decayedValue
-  ]);
-};
-
-export const spring = (
-  translation: Animated.Value<number>,
+export const withOffset = (
+  value: Animated.Node<number>,
   state: Animated.Value<State>,
-  snapPoint: Animated.Adaptable<number>,
-  defaultOffset: number = 0,
-  springConfig?: Animated.SpringConfig
-) => {
-  const springedValue = new Value(0);
-  const offset = new Value(defaultOffset);
-  const clock = new Clock();
-  const rerunSpring = new Value(0);
-  // http://chenglou.github.io/react-motion/demos/demo5-spring-parameters-chooser/
-  const config = springConfig || {
-    toValue: new Value(0),
-    damping: 15,
-    mass: 1,
-    stiffness: 150,
-    overshootClamping: false,
-    restSpeedThreshold: 0.001,
-    restDisplacementThreshold: 0.001
+  offset: Animated.Value<number> = new Value(0)
+) =>
+  cond(
+    eq(state, State.END),
+    [set(offset, add(offset, value)), offset],
+    add(offset, value)
+  );
+
+interface PrivateSpringConfig extends Animated.SpringConfig {
+  toValue: Animated.Value<number>;
+}
+
+type SpringConfig = Omit<Animated.SpringConfig, "toValue">;
+
+export interface WithSpringParams {
+  value: Animated.Adaptable<number>;
+  velocity: Animated.Adaptable<number>;
+  state: Animated.Value<State>;
+  snapPoints: Animated.Adaptable<number>[];
+  offset?: Animated.Value<number>;
+  config?: SpringConfig;
+  onSnap?: (value: readonly number[]) => void;
+}
+
+export const withSpring = (props: WithSpringParams) => {
+  const {
+    value,
+    velocity,
+    state,
+    snapPoints,
+    offset,
+    config: springConfig,
+    onSnap
+  } = {
+    offset: new Value(0),
+    ...props
   };
+  const clock = new Clock();
+  const springState: Animated.SpringState = {
+    finished: new Value(0),
+    velocity: new Value(0),
+    position: new Value(0),
+    time: new Value(0)
+  };
+
+  const config: PrivateSpringConfig = {
+    toValue: new Value(0),
+    damping: 6,
+    mass: 1,
+    stiffness: 64,
+    overshootClamping: false,
+    restSpeedThreshold: 0.01,
+    restDisplacementThreshold: 0.01,
+    ...springConfig
+  };
+
+  const gestureAndAnimationIsOver = new Value(1);
+  const isSpringInterrupted = and(eq(state, State.BEGAN), clockRunning(clock));
+  const finishSpring = [
+    set(offset, springState.position),
+    stopClock(clock),
+    set(gestureAndAnimationIsOver, 1)
+  ];
+  const snap = onSnap
+    ? [cond(clockRunning(clock), call([springState.position], onSnap))]
+    : [];
   return block([
-    cond(
-      eq(state, State.END),
-      [
+    cond(isSpringInterrupted, finishSpring),
+    cond(gestureAndAnimationIsOver, set(springState.position, offset)),
+    cond(neq(state, State.END), [
+      set(gestureAndAnimationIsOver, 0),
+      set(springState.finished, 0),
+      set(springState.position, add(offset, value))
+    ]),
+    cond(and(eq(state, State.END), not(gestureAndAnimationIsOver)), [
+      cond(and(not(clockRunning(clock)), not(springState.finished)), [
+        set(springState.velocity, velocity),
+        set(springState.time, 0),
         set(
-          springedValue,
-          runSpring(clock, add(translation, offset), snapPoint, config)
-        )
-      ],
-      [
-        stopClock(clock),
-        cond(eq(state, State.BEGAN), [
-          set(rerunSpring, 0),
-          set(offset, sub(springedValue, translation))
-        ]),
-        set(springedValue, add(translation, offset))
-      ]
-    ),
-    springedValue
+          config.toValue,
+          snapPoint(springState.position, velocity, snapPoints)
+        ),
+        startClock(clock)
+      ]),
+      reSpring(clock, springState, config),
+      cond(springState.finished, [...snap, ...finishSpring])
+    ]),
+    springState.position
   ]);
 };
 
-export const limit = (
-  value: Animated.Adaptable<number>,
-  state: Animated.Adaptable<State>,
+interface WithDecayParams {
+  value: Animated.Adaptable<number>;
+  velocity: Animated.Adaptable<number>;
+  state: Animated.Value<State>;
+  offset?: Animated.Value<number>;
+  deceleration?: number;
+}
+
+export const withDecay = (config: WithDecayParams) => {
+  const { value, velocity, state, offset, deceleration } = {
+    offset: new Value(0),
+    deceleration: 0.998,
+    ...config
+  };
+  const clock = new Clock();
+  const decayState = {
+    finished: new Value(0),
+    velocity: new Value(0),
+    position: new Value(0),
+    time: new Value(0)
+  };
+
+  const isDecayInterrupted = and(eq(state, State.BEGAN), clockRunning(clock));
+  const finishDecay = [set(offset, decayState.position), stopClock(clock)];
+
+  return block([
+    cond(isDecayInterrupted, finishDecay),
+    cond(neq(state, State.END), [
+      set(decayState.finished, 0),
+      set(decayState.position, add(offset, value))
+    ]),
+    cond(eq(state, State.END), [
+      cond(and(not(clockRunning(clock)), not(decayState.finished)), [
+        set(decayState.velocity, velocity),
+        set(decayState.time, 0),
+        startClock(clock)
+      ]),
+      reDecay(clock, decayState, { deceleration }),
+      cond(decayState.finished, finishDecay)
+    ]),
+    decayState.position
+  ]);
+};
+
+export const withClamp = (
+  value: Animated.Node<number>,
+  state: Animated.Value<State>,
   min: Animated.Adaptable<number>,
   max: Animated.Adaptable<number>
-) => {
-  const offset = new Animated.Value(0);
-  const offsetValue = add(offset, value);
-
-  return block([
-    cond(eq(state, State.BEGAN), [
-      cond(lessThan(offsetValue, min), set(offset, sub(min, value))),
-      cond(greaterThan(offsetValue, max), set(offset, sub(max, value)))
-    ]),
-    cond(
-      lessThan(offsetValue, min),
-      min,
-      cond(greaterThan(offsetValue, max), max, offsetValue)
-    )
-  ]);
-};
+) => cond(eq(state, State.ACTIVE), clamp(value, min, max), value);
 
 export const preserveMultiplicativeOffset = (
   value: Animated.Adaptable<number>,

@@ -83,8 +83,8 @@ return (
         {() =>
           set(
             progress,
-            runTiming(clock, progress, {
-              toValue: 1,
+            timing(clock, progress, {
+              to: 1,
               duration: 2000,
               easing: Easing.linear
             })
@@ -247,23 +247,19 @@ Returns an animation value that follows a Reanimated transition ([see related is
 The value equals `source` at the beginning of the transition and `destination` at the end of the transition.
 This is useful on iOS only because on Android, you can transition on the `transform` property.
 
-### `runTiming(clock: Clock, value: Node, config: TimingConfig): Node`
+### `timing({ clock?: Clock, from?: Node, to?: Node, duration?: Node, easing?: EasingFunction }): Node`
 
 Convenience function to run a timing animation.
-
-```js
-runTiming(clock: Clock, value: Node, config: TimingConfig): Node
-```
 
 Example usage:
 
 ```js
-const config = {
+timing({
   duration: 10 * 1000,
-  toValue: 1,
+  from: 0
+  to: 1,
   easing: Easing.linear,
-};
-runTiming(clock, 0, config);
+});
 ```
 
 ### `loop({ clock: Clock, duration: Node, easing: EasingFunction: boomerang? = false, autoStart? = true })`
@@ -277,22 +273,30 @@ const progress = new Value(0);
 set(progress, runLoop(400, Easing.linear);
 ```
 
-### `runDelay(node: Node, duration: number)`
+### `delay(node: Node, duration: number)`
 
 Evaluate an animation node after a certain amount of time. `duration` is in milliseconds.
 
 Example usage:
 
 ```js
-runDelay(set(value, 1), 250)
+delay(set(value, 1), 250)
 ```
 
-### `runDecay(clock: Clock, value: Node, velocity: Node, rerunDecaying: Node, deceleration: number): Node`
+### `decay({ clock: Clock, value: Node, velocity: Node, deceleration: number} ): Node`
 
 Convenience function to run a decay animation.
 
 ```js
-runDecay(clock: Clock, value: Node, velocity: Node, rerunDecaying: Node, deceleration: number): Node
+decay({ clock: Clock, value: Node, velocity: Node, deceleration: number} ): Node
+```
+
+### `spring({ clock: Clock, value: Node, velocity: Node, deceleration: number} ): Node`
+
+Convenience function to run a spring animation.
+
+```js
+decay({ clock: Clock, value: Node, velocity: Node, config: SpringConfig }): Node
 ```
 
 ### `bInterpolate(node: Node, from: Node, to: Node): Node`
@@ -335,12 +339,6 @@ Interpolate the node from 0 to 1 without clamping.
 ### `snapPoint(point, velocity, points)`
 
 Select a point based on a node value and its velocity.
-Example usage:
-
-```js
-const snapPoints = [-width, 0, width];
-runSpring(clock, x, snapPoint(x, velocityX, snapPoints));
-```
 
 ## Transformations
 
@@ -416,40 +414,37 @@ return (
 );
 ```
 
-### `decay(value: Node, state: Node, velocity: Node): Node`
+### `withSpring({ value: Node, velocity: Node, state: Value, offset: Node, config, snapPoints: Node[], onSnap: (value) => void }): Node`
 
-Decorates animated value to decay after pan
-
-- [How it works](https://snack.expo.io/@dsznajder/decay)
-- [Example usage](./Examples/decay.tsx)
+Decorates animated value to spring when the gesture ends.
 
 ```js
-constructor(props) {
-  const dragX = new Value(0);
-  const panState = new Value(0);
-  const velocityX = new Value(0);
-
-  this.handlePan = event([
-    {
-      nativeEvent: {
-        translationX: dragX,
-        state: panState,
-        velocityX,
-      },
-    },
-  ]);
-
-  this.X = decay(dragX, panState, velocityX);
-}
+const translateX = withSpring({
+  value: translationX,
+  velocity: velocityX,
+  state,
+  snapPoints,
+  onSnap
+});
 ```
 
-### `preserveOffset(value: Node, state: Node, offset: Node = 0): Node`
+### `withDecay({ value: Node, velocity: Node, state: Value, offset: Node, deceleration }): Node`
+
+Decorates animated value to decay when the gesture ends.
+
+```js
+const translateX = withDecay({
+  value: translationX,
+  velocity: velocityX,
+  state: gestureState,
+  offset: offsetX
+});
+```
+
+### `withOffset(value: Node, state: Node, offset: Node = 0): Node`
 
 Decorates animated value to save previous offset of pan
 
-- [How it works](https://snack.expo.io/@dsznajder/preserveoffset)
-- [Example usage](./Examples/preserveOffset.tsx)
-
 ```js
 constructor(props) {
   const dragX = new Value(0);
@@ -464,16 +459,13 @@ constructor(props) {
     },
   ]);
 
-  this.X = preserveOffset(dragX, panState);
+  this.X = withOffset(dragX, panState);
 }
 ```
 
 ### `preserveMultiplicativeOffset(value: Node, state: Node): Node`
 
 Decorates animated value to save previous offset of pinch
-
-- [How it works](https://snack.expo.io/@dsznajder/preserveMultiplicativeOffset)
-- [Example usage](./Examples/preserveMultiplicativeOffset.tsx)
 
 ```js
 constructor(props) {
@@ -490,31 +482,6 @@ constructor(props) {
   ]);
 
   this.X = preserveMultiplicativeOffset(scale, scaleState);
-}
-```
-
-### `limit(value: Node, state: Node, min: Node, max: Node): Node`
-
-Decorates animated value to set limits of panning
-
-- [How it works](https://snack.expo.io/@dsznajder/limit)
-- [Example usage](./Examples/limit.tsx)
-
-```js
-constructor(props) {
-  const dragX = new Value(0);
-  const panState = new Value(0);
-
-  this.handlePan = event([
-    {
-      nativeEvent: {
-        translationX: dragX,
-        state: panState,
-      },
-    },
-  ]);
-
-  this.X = limit(dragX, panState, -100, 100);
 }
 ```
 
