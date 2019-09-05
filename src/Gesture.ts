@@ -57,7 +57,7 @@ export interface WithSpringParams {
   value: Animated.Adaptable<number>;
   velocity: Animated.Adaptable<number>;
   state: Animated.Value<State>;
-  snapPoints: number[];
+  snapPoints: Animated.Adaptable<number>[];
   offset?: Animated.Value<number>;
   config?: SpringConfig;
   onSnap?: (value: readonly number[]) => void;
