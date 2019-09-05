@@ -95,19 +95,25 @@ export const withSpring = (props: WithSpringParams) => {
     ...springConfig
   };
 
+  const gestureAndAnimationIsOver = new Value(1);
   const isSpringInterrupted = and(eq(state, State.BEGAN), clockRunning(clock));
-  const finishSpring = [set(offset, springState.position), stopClock(clock)];
+  const finishSpring = [
+    set(offset, springState.position),
+    stopClock(clock),
+    set(gestureAndAnimationIsOver, 1)
+  ];
   const snap = onSnap
     ? [cond(clockRunning(clock), call([springState.position], onSnap))]
     : [];
-
   return block([
     cond(isSpringInterrupted, finishSpring),
+    cond(gestureAndAnimationIsOver, set(springState.position, offset)),
     cond(neq(state, State.END), [
+      set(gestureAndAnimationIsOver, 0),
       set(springState.finished, 0),
       set(springState.position, add(offset, value))
     ]),
-    cond(eq(state, State.END), [
+    cond(and(eq(state, State.END), not(gestureAndAnimationIsOver)), [
       cond(and(not(clockRunning(clock)), not(springState.finished)), [
         set(springState.velocity, velocity),
         set(springState.time, 0),

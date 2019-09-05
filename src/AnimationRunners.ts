@@ -16,7 +16,7 @@ const {
   spring: reSpring
 } = Animated;
 
-interface AnimateProps<S, C> {
+interface AnimateParams<S, C> {
   clock: Animated.Clock;
   fn: (
     clock: Animated.Clock,
@@ -25,7 +25,7 @@ interface AnimateProps<S, C> {
   ) => Animated.Adaptable<number>;
   state: S;
   config: C;
-  node: Animated.Adaptable<number>;
+  from: Animated.Adaptable<number>;
 }
 
 interface TimingAnimation {
@@ -45,18 +45,21 @@ interface DecayAnimation {
 
 type Animation = SpringAnimation | DecayAnimation | TimingAnimation;
 
+const onInit = (clock: Animated.Clock, sequence: Animated.Adaptable<number>) =>
+  cond(not(clockRunning(clock)), sequence);
+
 const animate = <T extends Animation>({
   fn,
   clock,
   state,
   config,
-  node
-}: AnimateProps<T["state"], T["config"]>) =>
+  from
+}: AnimateParams<T["state"], T["config"]>) =>
   block([
-    cond(not(clockRunning(clock)), [
+    onInit(clock, [
       set(state.finished, 0),
       set(state.time, 0),
-      set(state.position, node),
+      set(state.position, from),
       startClock(clock)
     ]),
     fn(clock, state, config),
@@ -73,7 +76,7 @@ export interface TimingParams {
 }
 
 export const timing = (params: TimingParams) => {
-  const { clock, easing, duration, from, to: toValue } = {
+  const { clock, easing, duration, from, to } = {
     clock: new Clock(),
     easing: Easing.linear,
     duration: 250,
@@ -89,34 +92,37 @@ export const timing = (params: TimingParams) => {
     frameTime: new Value(0)
   };
 
-  const config: Animated.TimingConfig = {
-    toValue,
+  const config = {
+    toValue: new Value(0),
     duration,
     easing
   };
 
-  return animate<TimingAnimation>({
-    clock,
-    fn: reTiming,
-    state,
-    config,
-    node: from
-  });
+  return block([
+    onInit(clock, [set(config.toValue, to), set(state.frameTime, 0)]),
+    animate<TimingAnimation>({
+      clock,
+      fn: reTiming,
+      state,
+      config,
+      from
+    })
+  ]);
 };
 
 export interface DecayParams {
   clock?: Animated.Clock;
-  node?: Animated.Adaptable<number>;
+  from?: Animated.Adaptable<number>;
   velocity?: Animated.Value<number>;
   deceleration?: Animated.Adaptable<number>;
 }
 
 export const decay = (params: DecayParams) => {
-  const { clock, node, velocity, deceleration } = {
+  const { clock, from, velocity, deceleration } = {
     clock: new Clock(),
     velocity: new Value(0),
     deceleration: 0.998,
-    node: 0,
+    from: 0,
     ...params
   };
 
@@ -124,28 +130,40 @@ export const decay = (params: DecayParams) => {
     finished: new Value(0),
     position: new Value(0),
     time: new Value(0),
-    velocity
+    velocity: new Value(0)
   };
 
   const config: Animated.DecayConfig = {
     deceleration
   };
 
-  return animate<DecayAnimation>({ clock, fn: reDecay, state, config, node });
+  return block([
+    onInit(clock, [set(state.velocity, velocity)]),
+    animate<DecayAnimation>({
+      clock,
+      fn: reDecay,
+      state,
+      config,
+      from
+    })
+  ]);
 };
+
+export type SpringConfig = Omit<Animated.SpringConfig, "toValue">;
 
 export interface SpringParams {
   clock?: Animated.Clock;
-  node?: Animated.Adaptable<number>;
+  from?: Animated.Adaptable<number>;
+  to: Animated.Adaptable<number>;
   velocity?: Animated.Value<number>;
-  config?: Animated.SpringConfig;
+  config?: SpringConfig;
 }
 
 export const spring = (params: SpringParams) => {
-  const { clock, node, velocity, config: springConfig } = {
+  const { clock, from, velocity, config: springConfig, to } = {
     clock: new Clock(),
     velocity: new Value(0),
-    node: 0,
+    from: 0,
     ...params
   };
 
@@ -153,10 +171,10 @@ export const spring = (params: SpringParams) => {
     finished: new Value(0),
     position: new Value(0),
     time: new Value(0),
-    velocity
+    velocity: new Value(0)
   };
 
-  const config: Animated.SpringConfig = {
+  const config = {
     toValue: new Value(0),
     damping: 6,
     mass: 1,
@@ -167,7 +185,16 @@ export const spring = (params: SpringParams) => {
     ...springConfig
   };
 
-  return animate<SpringAnimation>({ clock, fn: reSpring, state, config, node });
+  return block([
+    onInit(clock, [set(config.toValue, to), set(state.velocity, velocity)]),
+    animate<SpringAnimation>({
+      clock,
+      fn: reSpring,
+      state,
+      config,
+      from
+    })
+  ]);
 };
 
 export const delay = (node: Animated.Node<number>, duration: number) => {
