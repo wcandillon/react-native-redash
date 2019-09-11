@@ -174,13 +174,6 @@ export const withDecay = (config: WithDecayParams) => {
   ]);
 };
 
-export const withClamp = (
-  value: Animated.Node<number>,
-  state: Animated.Value<State>,
-  min: Animated.Adaptable<number>,
-  max: Animated.Adaptable<number>
-) => cond(eq(state, State.ACTIVE), clamp(value, min, max), value);
-
 export const preserveMultiplicativeOffset = (
   value: Animated.Adaptable<number>,
   state: Animated.Adaptable<number>
@@ -232,5 +225,60 @@ export const onGestureEvent = (
   return {
     onHandlerStateChange: gestureEvent,
     onGestureEvent: gestureEvent
+  };
+};
+
+export const panGestureHandler = () => {
+  const translationX = new Value(0);
+  const velocityX = new Value(0);
+  const translationY = new Value(0);
+  const velocityY = new Value(0);
+  const state = new Value(State.UNDETERMINED);
+  const gestureHandler = onGestureEvent({
+    translationX,
+    velocityX,
+    state
+  });
+  return {
+    translationX,
+    velocityX,
+    translationY,
+    velocityY,
+    state,
+    gestureHandler
+  };
+};
+
+export const horizontalPanGestureHandler = () => {
+  const translationX = new Value(0);
+  const velocityX = new Value(0);
+  const state = new Value(State.UNDETERMINED);
+  const gestureHandler = onGestureEvent({
+    translationX,
+    velocityX,
+    state
+  });
+  return {
+    translationX,
+    state,
+    velocityX,
+    gestureHandler
+  };
+};
+
+export const verticalPanGestureHandler = () => {
+  const translationY = new Value(0);
+  const velocityY = new Value(0);
+  const state = new Value(State.UNDETERMINED);
+  const gestureHandler = onGestureEvent({
+    translationY,
+    velocityY,
+    state
+  });
+  return {
+    translationY,
+    state,
+    velocityY,
+    gestureHandler
   };
 };
