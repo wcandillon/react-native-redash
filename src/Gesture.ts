@@ -11,7 +11,6 @@ import {
   FlingGestureHandlerEventExtra
 } from "react-native-gesture-handler";
 
-import { clamp } from "./Math";
 import { snapPoint } from "./Animations";
 
 const {

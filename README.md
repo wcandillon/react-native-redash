@@ -414,6 +414,59 @@ return (
 );
 ```
 
+### `panGestureHandler()`
+
+```tsx
+const {
+  gestureEvent,
+  state
+  translationX,
+  velocityX,
+  translationY,
+  velocityY
+} = panGestureHandler();
+return (
+  <PanGestureHandler {...gestureEvent} />
+);
+```
+
+### `horizontalPanGestureHandler()`
+
+```tsx
+const {
+  gestureEvent,
+  state
+  translationX,
+  velocityX,
+} = horizontalPanGestureHandler();
+return (
+  <PanGestureHandler {...gestureEvent} />
+);
+```
+
+### `verticalPanGestureHandler()`
+
+```tsx
+const {
+  gestureEvent,
+  state
+  translationY,
+  velocityY,
+} = verticalPanGestureHandler();
+return (
+  <PanGestureHandler {...gestureEvent} />
+);
+```
+
+### `panGestureHandler()`
+
+```tsx
+const {gestureEvent, translationX, translationY} = panGestureHandler();
+return (
+  <PanGestureHandler {...gestureEvent} />
+);
+```
+
 ### `withSpring({ value: Node, velocity: Node, state: Value, offset: Node, config, snapPoints: Node[], onSnap: (value) => void }): Node`
 
 Decorates animated value to spring when the gesture ends.
