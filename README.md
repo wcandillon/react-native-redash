@@ -26,7 +26,7 @@ Component that displays an animation value as text.
 Example usage:
 
 ```js
-<ReText text={new Value("hello world!")} style={{ color: "blue" }} />
+<ReText text={new Value("hello world!")} textColor={"blue"} />
 ```
 
 ## SVG
