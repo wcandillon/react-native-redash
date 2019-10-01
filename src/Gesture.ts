@@ -1,14 +1,14 @@
 import Animated from "react-native-reanimated";
 import {
-  State,
-  PanGestureHandlerEventExtra,
+  FlingGestureHandlerEventExtra,
+  ForceTouchGestureHandlerEventExtra,
   GestureHandlerStateChangeNativeEvent,
+  LongPressGestureHandlerEventExtra,
+  PanGestureHandlerEventExtra,
   PinchGestureHandlerEventExtra,
   RotationGestureHandlerEventExtra,
-  TapGestureHandlerEventExtra,
-  ForceTouchGestureHandlerEventExtra,
-  LongPressGestureHandlerEventExtra,
-  FlingGestureHandlerEventExtra
+  State,
+  TapGestureHandlerEventExtra
 } from "react-native-gesture-handler";
 
 import { snapPoint } from "./Animations";
