@@ -22,9 +22,9 @@ interface RGBColor {
 }
 
 function match(
-  condsAndResPairs: readonly Animated.Adaptable<number>[],
+  condsAndResPairs: readonly Animated.Node<number>[],
   offset = 0
-): Animated.Adaptable<number> | undefined | Animated.Node<number> {
+): undefined | Animated.Node<number> {
   if (condsAndResPairs.length - offset === 1) {
     return condsAndResPairs[offset];
   }
@@ -42,7 +42,7 @@ function colorHSV(
   h: Animated.Adaptable<number> /* 0 - 360 */,
   s: Animated.Adaptable<number> /* 0 - 1 */,
   v: Animated.Adaptable<number> /* 0 - 1 */
-) {
+): Animated.Node<number> {
   // Converts color from HSV format into RGB
   // Formula explained here: https://www.rapidtables.com/convert/color/hsv-to-rgb.html
   const c = multiply(v, s);
@@ -74,7 +74,7 @@ function colorHSV(
     lessThan(h, 300),
     colorRGB(x, 0, c),
     colorRGB(c, 0, x) /* else */
-  ]);
+  ]) as Animated.Node<number>;
 }
 
 const rgbToHsv = (c: RGBColor) => {
@@ -113,7 +113,7 @@ const interpolateColorsHSV = (
   animationValue: Animated.Adaptable<number>,
   inputRange: number[],
   colors: RGBColor[]
-) => {
+): Animated.Node<number> => {
   const colorsAsHSV = colors.map(c => rgbToHsv(c));
   const h = interpolate(animationValue, {
     inputRange,
@@ -171,7 +171,7 @@ export const interpolateColor = (
   value: Animated.Adaptable<number>,
   config: ColorInterpolationConfig,
   colorSpace: "hsv" | "rgb" = "rgb"
-) => {
+): Animated.Node<number> => {
   const { inputRange, outputRange } = config;
   if (colorSpace === "hsv")
     return interpolateColorsHSV(value, inputRange, outputRange);
