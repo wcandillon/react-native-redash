@@ -231,7 +231,7 @@ export const panGestureHandler = () => {
   const x = new Value(0);
   const translationX = new Value(0);
   const velocityX = new Value(0);
-   const y = new Value(0);
+  const y = new Value(0);
   const translationY = new Value(0);
   const velocityY = new Value(0);
   const state = new Value(State.UNDETERMINED);
@@ -242,7 +242,7 @@ export const panGestureHandler = () => {
     y,
     translationY,
     velocityY,
-    state,
+    state
   });
   return {
     x,
