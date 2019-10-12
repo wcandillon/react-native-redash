@@ -5,17 +5,18 @@ const { concat } = Animated;
 export type Concatable =
   | Animated.Adaptable<string>
   | Animated.Adaptable<number>;
-export const string = (strings: readonly string[], ...values: Concatable[]) => {
+
+export const string = (
+  strings: readonly string[],
+  ...values: readonly Concatable[]
+) => {
   if (values.length === 0) {
     return concat(strings[0]);
   }
-  const initialValue: Concatable[] = [];
-  const result: Concatable[] = strings.reduce(
-    (acc, str, idx) => [...acc, str, values[idx]],
-    initialValue
+  const result = values.reduce<Concatable[]>(
+    (acc, v, idx) => [...acc, strings[idx], v],
+    []
   );
-  if (values.length > strings.length) {
-    result.push(values[values.length - 1]);
-  }
+  result.push(strings[strings.length - 1]);
   return concat(...result);
 };
