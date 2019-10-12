@@ -6,7 +6,10 @@ export type Concatable =
   | Animated.Adaptable<string>
   | Animated.Adaptable<number>;
 
-export const string = (strings: string[], ...values: Concatable[]) => {
+export const string = (
+  strings: readonly string[],
+  ...values: readonly Concatable[]
+) => {
   if (values.length === 0) {
     return concat(strings[0]);
   }
