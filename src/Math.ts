@@ -38,7 +38,7 @@ export const approximates = (
   precision: Animated.Adaptable<number> = 0.001
 ) => lessThan(abs(sub(a, b)), precision);
 
-export const isBetween = (
+export const between = (
   value: Animated.Node<number>,
   lowerBound: Animated.Adaptable<number>,
   upperBound: Animated.Adaptable<number>,
