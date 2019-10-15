@@ -38,6 +38,19 @@ export const approximates = (
   precision: Animated.Adaptable<number> = 0.001
 ) => lessThan(abs(sub(a, b)), precision);
 
+export const isBetween = (
+  value: Animated.Node<number>,
+  lowerBound: Animated.Adaptable<number>,
+  upperBound: Animated.Adaptable<number>,
+  inclusive: boolean = true
+) => {
+  if (inclusive) {
+    return and(greaterOrEq(value, lowerBound), lessOrEq(value, upperBound));
+  }
+  return and(greaterThan(value, lowerBound), lessThan(value, upperBound));
+};
+
+
 export const toRad = (deg: Animated.Adaptable<number>): Animated.Node<number> =>
   multiply(deg, Math.PI / 180);
 
