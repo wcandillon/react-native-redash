@@ -17,7 +17,10 @@ const {
   sub,
   interpolate,
   divide,
-  useCode
+  useCode,
+  not,
+  defined,
+  neq
 } = Animated;
 
 type AnimatedTransform = {
@@ -68,7 +71,7 @@ export const transformOrigin = (
   { translateY: multiply(y, -1) }
 ];
 
-export const useTransition = <T>(
+export const useTransition = <T extends unknown>(
   state: T,
   src: Animated.Adaptable<number>,
   dest: Animated.Adaptable<number>,
@@ -80,28 +83,37 @@ export const useTransition = <T>(
       "useTransition() is only available in React Native 0.59 or higher."
     );
   }
-  if (!useCode) {
-    throw new Error(
-      "useCode() is only available in Reanimated 1.0.0 or higher"
-    );
-  }
   const { transitionVal } = useMemoOne(
     () => ({
-      transitionVal: new Value(0)
+      transitionVal: new Value() as Animated.Value<number>
     }),
     []
   );
   useCode(
-    set(
-      transitionVal,
-      timing({
-        from: src,
-        to: dest,
-        duration,
-        easing
-      })
+    cond(
+      not(defined(transitionVal)),
+      set(transitionVal, src),
+      cond(
+        neq(transitionVal, src),
+        set(
+          transitionVal,
+          timing({
+            from: dest,
+            to: src,
+            duration,
+            easing
+          })
+        )
+      )
     ),
     [state]
   );
   return transitionVal;
 };
+
+export const useToggle = (
+  toggle: boolean,
+  duration: number = 400,
+  easing: Animated.EasingFunction = Easing.linear
+) =>
+  useTransition(toggle, toggle ? 1 : 0, not(toggle ? 1 : 0), duration, easing);
