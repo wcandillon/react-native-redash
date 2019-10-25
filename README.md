@@ -250,6 +250,15 @@ The value equals `source` at the beginning of the transition and `destination` a
 
 Returns an animation value that follows a component boolean state.
 
+### `useSpringTransition(state: any, source: Node, destination: Node, velocity: AnimatedValue<number>, config: SpringConfig): Node`
+
+Returns a spring animation value that follows a component state.
+The value equals `source` at the beginning of the transition and `destination` at the end of the transition.
+
+### `useSpringToggle(toggle: boolean, velocity: AnimatedValue<number>, config: SpringConfig): Node`
+
+Returns a spring animation value that follows a component boolean state.
+
 ### `timing({ clock?: Clock, from?: Node, to?: Node, duration?: Node, easing?: EasingFunction }): Node`
 
 Convenience function to run a timing animation.

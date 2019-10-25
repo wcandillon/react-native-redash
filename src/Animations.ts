@@ -4,7 +4,7 @@ import { useMemoOne } from "use-memo-one";
 
 import { TransformsStyle } from "react-native";
 import { min } from "./Math";
-import { timing } from "./AnimationRunners";
+import { timing, spring, SpringConfig } from "./AnimationRunners";
 
 const {
   Value,
@@ -117,3 +117,51 @@ export const useToggle = (
   easing: Animated.EasingFunction = Easing.linear
 ) =>
   useTransition(toggle, toggle ? 1 : 0, not(toggle ? 1 : 0), duration, easing);
+
+export const useSpringTransition = <T extends unknown>(
+  state: T,
+  src: Animated.Adaptable<number>,
+  dest: Animated.Adaptable<number>,
+  velocity: Animated.Value<number> | undefined = undefined,
+  config: SpringConfig | undefined = undefined
+) => {
+  const { transitionVal } = useMemoOne(
+    () => ({
+      transitionVal: new Value() as Animated.Value<number>
+    }),
+    []
+  );
+  useCode(
+    cond(
+      not(defined(transitionVal)),
+      set(transitionVal, src),
+      cond(
+        neq(transitionVal, src),
+        set(
+          transitionVal,
+          spring({
+            from: dest,
+            to: src,
+            velocity,
+            config
+          })
+        )
+      )
+    ),
+    [state]
+  );
+  return transitionVal;
+};
+
+export const useSpringToggle = (
+  toggle: boolean,
+  velocity: Animated.Value<number> | undefined = undefined,
+  config: SpringConfig | undefined = undefined
+) =>
+  useSpringTransition(
+    toggle,
+    toggle ? 1 : 0,
+    not(toggle ? 1 : 0),
+    velocity,
+    config
+  );
