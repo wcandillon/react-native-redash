@@ -150,7 +150,7 @@ export const decay = (params: DecayParams) => {
   ]);
 };
 
-export type SpringConfig = Omit<Animated.SpringConfig, "toValue">;
+export type SpringConfig = Partial<Omit<Animated.SpringConfig, "toValue">>;
 
 export interface SpringParams {
   clock?: Animated.Clock;
