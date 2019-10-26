@@ -152,6 +152,10 @@ clamp(new Value(1), 0, 100); // 1
 clamp(new Value(101), 0, 100); // 100
 ```
 
+###  between = (node: Node, lowerBound: Adaptable, upperBound: Adaptable, inclusive: boolean)
+
+Returns true if `node` is within `lowerBound` and `upperBound`.
+
 ### `approximates(value: Node, approximatesTo: Node, precision = 0.001): number`
 
 Returns 1 if the difference between the two values is less than precision.
@@ -372,7 +376,7 @@ Interpolate the node from 0 to 1 without clamping.
 
 Select a point based on a node value and its velocity.
 
-### `isMoving(point, minPositionDelta = 1e-3, emptyFrameThreshold = 5)`
+### `moving(point, minPositionDelta = 1e-3, emptyFrameThreshold = 5)`
 
 Returns true when the animation node stopped updating within `emptyFrameThreshold` frames.
 This function can be useful to detect if an animation is over.

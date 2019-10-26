@@ -15,7 +15,10 @@ const {
   min: min2,
   max: max2,
   greaterThan,
-  pow
+  pow,
+  and,
+  greaterOrEq,
+  lessOrEq
 } = Animated;
 
 export const bin = (value: boolean): 0 | 1 => (value ? 1 : 0);
@@ -31,6 +34,18 @@ export const clamp = (
   lowerBound: Animated.Adaptable<number>,
   upperBound: Animated.Adaptable<number>
 ): Animated.Node<number> => min2(max2(lowerBound, value), upperBound);
+
+export const between = (
+  value: Animated.Node<number>,
+  lowerBound: Animated.Adaptable<number>,
+  upperBound: Animated.Adaptable<number>,
+  inclusive: boolean = true
+) => {
+  if (inclusive) {
+    return and(greaterOrEq(value, lowerBound), lessOrEq(value, upperBound));
+  }
+  return and(greaterThan(value, lowerBound), lessThan(value, upperBound));
+};
 
 export const approximates = (
   a: Animated.Adaptable<number>,

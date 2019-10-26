@@ -32,7 +32,7 @@ type AnimatedTransform = {
   >
 };
 
-export const isMoving = (
+export const moving = (
   position: Animated.Node<number>,
   minPositionDelta: number = 1e-3,
   emptyFrameThreshold: number = 5
