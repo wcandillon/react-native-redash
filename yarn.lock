@@ -2682,6 +2682,7 @@ eslint-config-prettier@^4.3.0:
 eslint-config-react-native-wcandillon@2.0.4:
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/eslint-config-react-native-wcandillon/-/eslint-config-react-native-wcandillon-2.0.4.tgz#78736e4eb6b7dcc6372150fc68c5314c1b2f7df4"
+  integrity sha512-70pBYsms7cR8mIdpxPVDDXv2xOuIO+i2mftmnx32upGVGQ7KicFyR0jDA0nCjxNnvVJlbgyBZeSdkeiWuCcgeQ==
   dependencies:
     "@typescript-eslint/eslint-plugin" "1.11.0"
     "@typescript-eslint/parser" "1.11.0"

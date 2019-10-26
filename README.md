@@ -53,21 +53,21 @@ const path = parsePath(d);
 const { y, x } = getPointAtLength(path, length);
 ```
 
-### `interpolatePath(value: Node, { inputRange, outputRange  }): path`
+### `interpolatePath(value: Node, { inputRange, outputRange }): path`
 
 Interpolate from one SVG point to the other, this function assumes that each path has the same number of points.
 
 ```tsx
-  const phone1 = "M 18 149C 18 149 25 149 25 149 25 14...";
-  const d = interpolatePath(slider, {
-    inputRange: [0, width, width * 2],
-    outputRange: [phone1, phone2, phone3]
-  });
-  return (
-      <Svg style={styles.svg} viewBox="0 0 100 300">
-        <AnimatedPath fill="black" {...{ d }} />
-      </Svg>
-  );
+const phone1 = "M 18 149C 18 149 25 149 25 149 25 14...";
+const d = interpolatePath(slider, {
+  inputRange: [0, width, width * 2],
+  outputRange: [phone1, phone2, phone3]
+});
+return (
+  <Svg style={styles.svg} viewBox="0 0 100 300">
+    <AnimatedPath fill="black" {...{ d }} />
+  </Svg>
+);
 ```
 
 ### `bInterpolatePath(progress, path1, path2): path`
@@ -78,27 +78,27 @@ Interpolate from one SVG point to the other, this function assumes that each pat
 const rhino = "M 217.765 29.683 C 225.855 29.683 ";
 const elephant = "M 223.174 43.413 ...";
 return (
-    <>
-      <Animated.Code>
-        {() =>
-          set(
-            progress,
-            timing(clock, progress, {
-              to: 1,
-              duration: 2000,
-              easing: Easing.linear
-            })
-          )
-        }
-      </Animated.Code>
-      <Svg style={styles.container} viewBox="0 0 409 280">
-        <AnimatedPath
-          d={bInterpolatePath(progress, rhino, elephant)}
-          fill="#7d8f9b"
-        />
-      </Svg>
-    </>
-  );
+  <>
+    <Animated.Code>
+      {() =>
+        set(
+          progress,
+          timing(clock, progress, {
+            to: 1,
+            duration: 2000,
+            easing: Easing.linear
+          })
+        )
+      }
+    </Animated.Code>
+    <Svg style={styles.container} viewBox="0 0 409 280">
+      <AnimatedPath
+        d={bInterpolatePath(progress, rhino, elephant)}
+        fill="#7d8f9b"
+      />
+    </Svg>
+  </>
+);
 ```
 
 ### `getLengthAtX(path: ReanimatedPath, x: Node): Node`
@@ -210,7 +210,7 @@ Tagged template for animated string values.
 ```tsx
 const { x, y } = { x: new Value(0), y: new Value(0) };
 const d = string`M0,0 ${x},${y}`;
-return <AnimatedPath {...{d}} />;
+return <AnimatedPath {...{ d }} />;
 ```
 
 ## Array
@@ -283,7 +283,7 @@ Evaluate an animation node after a certain amount of time. `duration` is in mill
 Example usage:
 
 ```js
-delay(set(value, 1), 250)
+delay(set(value, 1), 250);
 ```
 
 ### `decay({ clock: Clock, value: Node, velocity: Node, deceleration: number} ): Node`
@@ -298,8 +298,37 @@ decay({ clock: Clock, value: Node, velocity: Node, deceleration: number} ): Node
 
 Convenience function to run a spring animation.
 
-```js
-decay({ clock: Clock, value: Node, velocity: Node, config: SpringConfig }): Node
+```tsx
+spring({ clock?: Clock, from?: Node, velocity?: number, config?: SpringConfig, to?: Node }): Node
+```
+
+### `toggle({ toggleState: Value, clock?: Clock, from?: Node, to?: Node, duration?: Node, easing?: EasingFunction }): Node`
+
+Convenience function to imperatively toggle animation.
+
+Example usage:
+
+```tsx
+const toggleState = new Value(State.END);
+
+const handleToggleButtonPress = (shouldOpen: boolean) => {
+  shouldOpen ? toggleState.setValue(1) : toggleState.setValue(0);
+};
+
+useCode(
+  block([
+    toggle({
+      clock: Clock,
+      value: Node,
+      toggleState: Value(State.END),
+      easing: EasingFunction,
+      duration: number,
+      from: Node,
+      to: Node
+    })
+  ]),
+  []
+);
 ```
 
 ### `bInterpolate(node: Node, from: Node, to: Node): Node`
@@ -320,12 +349,12 @@ Example Usage:
 const from = {
   r: 197,
   g: 43,
-  b: 39,
+  b: 39
 };
 const to = {
   r: 225,
   g: 176,
-  b: 68,
+  b: 68
 };
 
 // Interpolate in default color space (HSV)
@@ -416,10 +445,8 @@ Example usage for a vertical `PanGestureHandler`.
 ```js
 const translationX = new Value(0);
 const state = new Value(State.UNDETERMINED);
-const gestureEvent = onGestureEvent({ translationX, state }) 
-return (
-  <PanGestureHandler {...gestureEvent} />
-);
+const gestureEvent = onGestureEvent({ translationX, state });
+return <PanGestureHandler {...gestureEvent} />;
 ```
 
 ### `panGestureHandler()`
@@ -469,10 +496,8 @@ return (
 ### `panGestureHandler()`
 
 ```tsx
-const {gestureEvent, translationX, translationY} = panGestureHandler();
-return (
-  <PanGestureHandler {...gestureEvent} />
-);
+const { gestureEvent, translationX, translationY } = panGestureHandler();
+return <PanGestureHandler {...gestureEvent} />;
 ```
 
 ### `withSpring({ value: Node, velocity: Node, state: Value, offset: Node, config, snapPoints: Node[], onSnap: (value) => void }): Node`
@@ -549,7 +574,6 @@ constructor(props) {
 ### `spring( translation: Node, state: Node, snapPoint: Node, defaultOffset = 0, springConfig?): Node`
 
 Decorates animated value to spring after pan
-
 
 ```js
 constructor(props) {
