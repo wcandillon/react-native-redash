@@ -20,13 +20,33 @@ const {
   useCode,
   not,
   defined,
-  neq
+  neq,
+  diff,
+  lessThan,
+  greaterThan
 } = Animated;
 
 type AnimatedTransform = {
   [P in keyof TransformsStyle["transform"]]: Animated.Adaptable<
     TransformsStyle["transform"][P]
   >
+};
+
+export const isMoving = (
+  position: Animated.Node<number>,
+  minPositionDelta: number = 1e-3,
+  emptyFrameThreshold: number = 5
+) => {
+  const delta = diff(position);
+  const noMovementFrames = new Value(0);
+  return cond(
+    lessThan(abs(delta), minPositionDelta),
+    [
+      set(noMovementFrames, add(noMovementFrames, 1)),
+      not(greaterThan(noMovementFrames, emptyFrameThreshold))
+    ],
+    [set(noMovementFrames, 0), 1]
+  );
 };
 
 export const snapPoint = (
