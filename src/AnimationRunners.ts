@@ -198,7 +198,7 @@ export const spring = (params: SpringParams) => {
   ]);
 };
 
-export const delay = (node: Animated.Node<number>, duration: number) => {
+export const delay = (node: Animated.Node<number> | Animated.Node<number>[], duration: number) => {
   const clock = new Clock();
   return block([
     timing({ clock, from: 0, to: 1, duration }),
