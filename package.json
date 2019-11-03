@@ -25,8 +25,7 @@
     "react": "*",
     "react-native": "*",
     "react-native-gesture-handler": "*",
-    "react-native-reanimated": "*",
-    "use-memo-one": "*"
+    "react-native-reanimated": "*"
   },
   "devDependencies": {
     "@react-native-community/bob": "0.7.0",

@@ -19,8 +19,7 @@
     "react-native-gesture-handler": "1.5.0",
     "react-native-reanimated": "1.4.0",
     "react-native-safe-area-context": "0.5.0",
-    "react-native-screens": "2.0.0-alpha.7",
-    "use-memo-one": "1.1.1"
+    "react-native-screens": "2.0.0-alpha.7"
   },
   "devDependencies": {
     "@babel/core": "7.6.4",
