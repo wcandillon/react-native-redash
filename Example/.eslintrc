@@ -8,11 +8,7 @@
     "react": {
       "version": "detect"
     },
-    "import/resolver": {
-      "node": {
-        "extensions": [".tsx", ".android.tsx", ".ios.tsx", ".native.js"]
-      }
-    }
+    "import/core-modules": ["react-native-redash"]
   },
   "rules": {
     "jest/no-duplicate-hooks": "off",

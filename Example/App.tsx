@@ -1,18 +1,27 @@
 import * as React from 'react'
 import { NavigationNativeContainer } from '@react-navigation/native'
-import { createDrawerNavigator } from '@react-navigation/drawer'
+import { createStackNavigator } from '@react-navigation/stack'
+import { enableScreens } from 'react-native-screens'
 
-import Gestures from './src/Gestures'
+import Home from './src/Home'
+import { withOffset, withDecay, withSpring, preserveMultiplicativeOffset, PanGestureHelpers } from './src/Gestures'
 
-const Drawer = createDrawerNavigator()
+enableScreens();
+
+const Stack = createStackNavigator()
 
 const App = () => {
   return (
     <NavigationNativeContainer>
-      <Drawer.Navigator>
-        <Drawer.Screen name="Gestures" component={Gestures} />
-        {/* <Drawer.Screen name="Article" component={Article} /> */}
-      </Drawer.Navigator>
+      <Stack.Navigator initialRouteName="Home">
+        <Stack.Screen name="Home" component={Home} />
+        <Stack.Screen name="withOffset" component={withOffset} />
+        <Stack.Screen name="withDecay" component={withDecay} />
+        <Stack.Screen name="withSpring" component={withSpring} />
+        <Stack.Screen name="preserveMultiplicativeOffset" component={preserveMultiplicativeOffset} />
+        <Stack.Screen name="PanGestureHelpers" component={PanGestureHelpers} />
+
+      </Stack.Navigator>
     </NavigationNativeContainer>
   )
 }

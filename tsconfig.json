@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
     "allowSyntheticDefaultImports": true,
     "alwaysStrict": true,
     "forceConsistentCasingInFileNames": true,
@@ -18,8 +19,11 @@
     "strictNullChecks": true,
     "strictPropertyInitialization": true,
     "target": "es2017",
-    "types": ["react", "react-native"]
+    "types": ["react", "react-native"],
+    "paths": {
+      "react-native-redash": ["./src/index"]
+    }
   },
   "files": ["src/index.d.ts"],
-  "include": ["src/index.ts"]
+  "include": ["src/index"]
 }
