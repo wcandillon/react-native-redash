@@ -257,7 +257,7 @@ const [toggle, state] = useValues([0, State.UNDETERMINED], []);
 is a shortcut for
 
 ```
-const [toggle state] = useMemo(() => [new Value(0), new Value(State.UNDETERMINED)], []);
+const [toggle state] = useMemoOne(() => [new Value(0), new Value(State.UNDETERMINED)], []);
 ```
 
 
