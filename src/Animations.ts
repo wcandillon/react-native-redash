@@ -110,7 +110,7 @@ export const useTransition = <T extends unknown>(
     []
   );
   useCode(
-    cond(
+    () => cond(
       not(defined(transitionVal)),
       set(transitionVal, src),
       cond(
