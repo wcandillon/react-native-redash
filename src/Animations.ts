@@ -137,3 +137,10 @@ export const useToggle = (
   easing: Animated.EasingFunction = Easing.linear
 ) =>
   useTransition(toggle, toggle ? 1 : 0, not(toggle ? 1 : 0), duration, easing);
+
+export const useValues = <V extends string | number | boolean>(
+  values: V[],
+  deps: readonly unknown[]
+) => {
+  return useMemoOne(() => values.map(v => new Value(v)), deps);
+};
