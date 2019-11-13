@@ -110,22 +110,23 @@ export const useTransition = <T extends unknown>(
     []
   );
   useCode(
-    () => cond(
-      not(defined(transitionVal)),
-      set(transitionVal, src),
+    () =>
       cond(
-        neq(transitionVal, src),
-        set(
-          transitionVal,
-          timing({
-            from: dest,
-            to: src,
-            duration,
-            easing
-          })
+        not(defined(transitionVal)),
+        set(transitionVal, src),
+        cond(
+          neq(transitionVal, src),
+          set(
+            transitionVal,
+            timing({
+              from: dest,
+              to: src,
+              duration,
+              easing
+            })
+          )
         )
-      )
-    ),
+      ),
     [state]
   );
   return transitionVal;
