@@ -263,7 +263,7 @@ Example usage:
 ```js
 timing({
   duration: 10 * 1000,
-  from: 0
+  from: 0,
   to: 1,
   easing: Easing.linear,
 });
