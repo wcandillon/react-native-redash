@@ -17,13 +17,36 @@ const {
   sub,
   interpolate,
   divide,
-  useCode
+  useCode,
+  not,
+  defined,
+  neq,
+  diff,
+  lessThan,
+  greaterThan
 } = Animated;
 
 type AnimatedTransform = {
   [P in keyof TransformsStyle["transform"]]: Animated.Adaptable<
     TransformsStyle["transform"][P]
   >
+};
+
+export const moving = (
+  position: Animated.Node<number>,
+  minPositionDelta: number = 1e-3,
+  emptyFrameThreshold: number = 5
+) => {
+  const delta = diff(position);
+  const noMovementFrames = new Value(0);
+  return cond(
+    lessThan(abs(delta), minPositionDelta),
+    [
+      set(noMovementFrames, add(noMovementFrames, 1)),
+      not(greaterThan(noMovementFrames, emptyFrameThreshold))
+    ],
+    [set(noMovementFrames, 0), 1]
+  );
 };
 
 export const snapPoint = (
@@ -68,7 +91,7 @@ export const transformOrigin = (
   { translateY: multiply(y, -1) }
 ];
 
-export const useTransition = <T>(
+export const useTransition = <T extends unknown>(
   state: T,
   src: Animated.Adaptable<number>,
   dest: Animated.Adaptable<number>,
@@ -80,28 +103,57 @@ export const useTransition = <T>(
       "useTransition() is only available in React Native 0.59 or higher."
     );
   }
-  if (!useCode) {
-    throw new Error(
-      "useCode() is only available in Reanimated 1.0.0 or higher"
-    );
-  }
   const { transitionVal } = useMemoOne(
     () => ({
-      transitionVal: new Value(0)
+      transitionVal: new Value() as Animated.Value<number>
     }),
     []
   );
   useCode(
-    set(
-      transitionVal,
-      timing({
-        from: src,
-        to: dest,
-        duration,
-        easing
-      })
+    () => cond(
+      not(defined(transitionVal)),
+      set(transitionVal, src),
+      cond(
+        neq(transitionVal, src),
+        set(
+          transitionVal,
+          timing({
+            from: dest,
+            to: src,
+            duration,
+            easing
+          })
+        )
+      )
     ),
     [state]
   );
   return transitionVal;
 };
+
+export const useToggle = (
+  toggle: boolean,
+  duration: number = 400,
+  easing: Animated.EasingFunction = Easing.linear
+) =>
+  useTransition(toggle, toggle ? 1 : 0, not(toggle ? 1 : 0), duration, easing);
+
+type Dependencies = readonly unknown[];
+type Atomic = string | number | boolean;
+
+export const useValues = <V extends Atomic>(
+  values: V[],
+  deps: Dependencies
+): Animated.Value<V>[] => useMemoOne(() => values.map(v => new Value(v)), deps);
+
+export const useNamedValues = <V extends Atomic, K extends string>(
+  values: Record<K, V>,
+  deps: Dependencies
+): Record<K, Animated.Value<V>> =>
+  useMemoOne(() => {
+    const result: Record<string, Animated.Value<V>> = {};
+    Object.keys(values).forEach(key => {
+      result[key as K] = new Value(values[key as K]);
+    });
+    return result;
+  }, deps);
