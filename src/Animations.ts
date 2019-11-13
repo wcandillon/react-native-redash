@@ -137,3 +137,23 @@ export const useToggle = (
   easing: Animated.EasingFunction = Easing.linear
 ) =>
   useTransition(toggle, toggle ? 1 : 0, not(toggle ? 1 : 0), duration, easing);
+
+type Dependencies = readonly unknown[];
+type Atomic = string | number | boolean;
+
+export const useValues = <V extends Atomic>(
+  values: V[],
+  deps: Dependencies
+): Animated.Value<V>[] => useMemoOne(() => values.map(v => new Value(v)), deps);
+
+export const useNamedValues = <V extends Atomic, K extends string>(
+  values: Record<K, V>,
+  deps: Dependencies
+): Record<K, Animated.Value<V>> =>
+  useMemoOne(() => {
+    const result: Record<string, Animated.Value<V>> = {};
+    Object.keys(values).forEach(key => {
+      result[key as K] = new Value(values[key as K]);
+    });
+    return result;
+  }, deps);

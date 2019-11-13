@@ -245,6 +245,22 @@ contains(values: Node[], value: Node) => Node
 
 ## Animations
 
+### `useValues(...Default Values[], deps)`
+
+Create animation values which lifecycle is granted by `deps`.
+For instance the code snippet below:
+
+```
+const [toggle, state] = useValues([0, State.UNDETERMINED], []);
+```
+
+is a shortcut for
+
+```
+const [toggle state] = useMemoOne(() => [new Value(0), new Value(State.UNDETERMINED)], []);
+```
+
+
 ### `useTransition(state: any, source: Node, destination: Node, duration: number, easing: EasingFunction): Node`
 
 Returns an animation value that follows a component state.
