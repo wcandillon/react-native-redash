@@ -1,11 +1,11 @@
 import Animated, { Easing } from "react-native-reanimated";
+import { SpringConfig } from "./Animations";
 
 const {
   Clock,
   Value,
   block,
   cond,
-  eq,
   stopClock,
   set,
   startClock,
@@ -150,8 +150,6 @@ export const decay = (params: DecayParams) => {
   ]);
 };
 
-export type SpringConfig = Partial<Omit<Animated.SpringConfig, "toValue">>;
-
 export interface SpringParams {
   clock?: Animated.Clock;
   from?: Animated.Adaptable<number>;
@@ -248,54 +246,4 @@ export const loop = (loopConfig: LoopProps) => {
     ]),
     state.position
   ]);
-};
-
-export const toggle = (params: {
-  clock?: Animated.Clock;
-  toggleState: Animated.Value<number>;
-  duration?: number;
-  from: Animated.Adaptable<number>;
-  to: Animated.Adaptable<number>;
-  easing?: Animated.EasingFunction;
-  value: Animated.Value<number>;
-}) => {
-  const { toggleState, easing, duration, value, to, from, clock } = {
-    clock: new Clock(),
-    duration: 250,
-    easing: Easing.linear,
-    from: new Value(0),
-    toggleState: new Value(-1),
-    to: new Value(1),
-    value: new Value(0),
-    ...params
-  };
-
-  return [
-    cond(eq(toggleState, 1), [
-      set(
-        value,
-        timing({
-          clock,
-          duration,
-          easing,
-          from: value,
-          to
-        })
-      ),
-      cond(not(clockRunning(clock)), [set(toggleState, -1)])
-    ]),
-    cond(eq(toggleState, 0), [
-      set(
-        value,
-        timing({
-          clock,
-          duration,
-          easing,
-          from: value,
-          to: from
-        })
-      ),
-      cond(not(clockRunning(clock)), [set(toggleState, -1)])
-    ])
-  ];
 };
