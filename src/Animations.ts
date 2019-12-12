@@ -1,10 +1,7 @@
-import * as React from "react";
-import Animated, { Easing } from "react-native-reanimated";
+import Animated from "react-native-reanimated";
 import { useMemoOne } from "use-memo-one";
 
-import { TransformsStyle } from "react-native";
 import { min } from "./Math";
-import { timing } from "./AnimationRunners";
 
 const {
   Value,
@@ -16,26 +13,19 @@ const {
   abs,
   sub,
   interpolate,
-  divide,
-  useCode,
   not,
-  defined,
-  neq,
   diff,
   lessThan,
   greaterThan
 } = Animated;
 
-type AnimatedTransform = {
-  [P in keyof TransformsStyle["transform"]]: Animated.Adaptable<
-    TransformsStyle["transform"][P]
-  >
-};
+export type SpringConfig = Partial<Omit<Animated.SpringConfig, "toValue">>;
+export type TimingConfig = Partial<Omit<Animated.TimingConfig, "toValue">>;
 
 export const moving = (
   position: Animated.Node<number>,
-  minPositionDelta: number = 1e-3,
-  emptyFrameThreshold: number = 5
+  minPositionDelta = 1e-3,
+  emptyFrameThreshold = 5
 ) => {
   const delta = diff(position);
   const noMovementFrames = new Value(0);
@@ -73,70 +63,6 @@ export const bInterpolate = (
     inputRange: [0, 1],
     outputRange: [origin, destination]
   });
-
-export const translateZ = (
-  perspective: Animated.Adaptable<number>,
-  z: Animated.Adaptable<number>
-) => ({ scale: divide(perspective, sub(perspective, z)) });
-
-export const transformOrigin = (
-  x: Animated.Adaptable<number> = 0,
-  y: Animated.Adaptable<number> = 0,
-  ...transformations: AnimatedTransform[]
-): AnimatedTransform[] => [
-  { translateX: x },
-  { translateY: y },
-  ...transformations,
-  { translateX: multiply(x, -1) },
-  { translateY: multiply(y, -1) }
-];
-
-export const useTransition = <T extends unknown>(
-  state: T,
-  src: Animated.Adaptable<number>,
-  dest: Animated.Adaptable<number>,
-  duration: number = 400,
-  easing: Animated.EasingFunction = Easing.linear
-) => {
-  if (!React.useMemo) {
-    throw new Error(
-      "useTransition() is only available in React Native 0.59 or higher."
-    );
-  }
-  const { transitionVal } = useMemoOne(
-    () => ({
-      transitionVal: new Value() as Animated.Value<number>
-    }),
-    []
-  );
-  useCode(
-    cond(
-      not(defined(transitionVal)),
-      set(transitionVal, src),
-      cond(
-        neq(transitionVal, src),
-        set(
-          transitionVal,
-          timing({
-            from: dest,
-            to: src,
-            duration,
-            easing
-          })
-        )
-      )
-    ),
-    [state]
-  );
-  return transitionVal;
-};
-
-export const useToggle = (
-  toggle: boolean,
-  duration: number = 400,
-  easing: Animated.EasingFunction = Easing.linear
-) =>
-  useTransition(toggle, toggle ? 1 : 0, not(toggle ? 1 : 0), duration, easing);
 
 type Dependencies = readonly unknown[];
 type Atomic = string | number | boolean;

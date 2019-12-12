@@ -243,6 +243,28 @@ Returns 1 if the node's value is contained in the array of nodes, 0 otherwise.
 contains(values: Node[], value: Node) => Node
 ```
 
+## Transitions
+
+Transitions are essential to the user experience.
+Redash offers four utility functions for transitions which are broke down in the table below.
+If you want to build a transition based on a React state change use `useTimingTransition()` or ``.
+Are you transitioning a React state change or an animation value change?
+And would you like to transition to use a timing a or a spring function?
+
+|        | State (JS Thread)      | Value (UI Thread)        |
+| ------ |:----------------------:| ------------------------:|
+| Timing | useTimingTransition()  | withTimingTransition()   |
+| Spring | useSpringTransition()  | withSpringTransition()   |
+
+### Example
+
+```tsx
+const Toggle = () => {
+  const [open, setOpen] = useState(false);
+  const transition = useTimingTransition(open, { duration: 400 });
+}
+```
+
 ## Animations
 
 ### `useValues(...Default Values[], deps)`
@@ -259,16 +281,6 @@ is a shortcut for
 ```
 const [toggle state] = useMemoOne(() => [new Value(0), new Value(State.UNDETERMINED)], []);
 ```
-
-
-### `useTransition(state: any, source: Node, destination: Node, duration: number, easing: EasingFunction): Node`
-
-Returns an animation value that follows a component state.
-The value equals `source` at the beginning of the transition and `destination` at the end of the transition.
-
-### `useToggle(toggle: boolean, duration: number, easing: EasingFunction): Node`
-
-Returns an animation value that follows a component boolean state.
 
 ### `timing({ clock?: Clock, from?: Node, to?: Node, duration?: Node, easing?: EasingFunction }): Node`
 
@@ -320,35 +332,6 @@ Convenience function to run a spring animation.
 
 ```tsx
 spring({ clock?: Clock, from?: Node, velocity?: number, config?: SpringConfig, to?: Node }): Node
-```
-
-### `toggle({ toggleState: Value, clock?: Clock, from?: Node, to?: Node, duration?: Node, easing?: EasingFunction }): Node`
-
-Convenience function to imperatively toggle animation.
-
-Example usage:
-
-```tsx
-const toggleState = new Value(State.END);
-
-const handleToggleButtonPress = (shouldOpen: boolean) => {
-  shouldOpen ? toggleState.setValue(1) : toggleState.setValue(0);
-};
-
-useCode(
-  block([
-    toggle({
-      clock: Clock,
-      value: Node,
-      toggleState: Value(State.END),
-      easing: EasingFunction,
-      duration: number,
-      from: Node,
-      to: Node
-    })
-  ]),
-  []
-);
 ```
 
 ### `bInterpolate(node: Node, from: Node, to: Node): Node`

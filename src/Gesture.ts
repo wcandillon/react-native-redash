@@ -213,7 +213,8 @@ type NativeEvent = GestureHandlerStateChangeNativeEvent &
     | RotationGestureHandlerEventExtra
     | FlingGestureHandlerEventExtra
     | PinchGestureHandlerEventExtra
-    | ForceTouchGestureHandlerEventExtra);
+    | ForceTouchGestureHandlerEventExtra
+  );
 
 type Adaptable<T> = { [P in keyof T]: Animated.Adaptable<T[P]> };
 
