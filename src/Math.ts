@@ -39,7 +39,7 @@ export const between = (
   value: Animated.Node<number>,
   lowerBound: Animated.Adaptable<number>,
   upperBound: Animated.Adaptable<number>,
-  inclusive: boolean = true
+  inclusive = true
 ) => {
   if (inclusive) {
     return and(greaterOrEq(value, lowerBound), lessOrEq(value, upperBound));

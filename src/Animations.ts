@@ -24,8 +24,8 @@ export type TimingConfig = Partial<Omit<Animated.TimingConfig, "toValue">>;
 
 export const moving = (
   position: Animated.Node<number>,
-  minPositionDelta: number = 1e-3,
-  emptyFrameThreshold: number = 5
+  minPositionDelta = 1e-3,
+  emptyFrameThreshold = 5
 ) => {
   const delta = diff(position);
   const noMovementFrames = new Value(0);

@@ -6,7 +6,7 @@ const { divide, sub, multiply } = Animated;
 type AnimatedTransform = {
   [P in keyof TransformsStyle["transform"]]: Animated.Adaptable<
     TransformsStyle["transform"][P]
-  >
+  >;
 };
 
 export const translateZ = (

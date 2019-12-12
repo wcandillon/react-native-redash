@@ -747,12 +747,7 @@ function B(xs: CtrlPoint, ys: CtrlPoint, t: number) {
   return Math.sqrt(combined);
 }
 
-const getArcLength = (
-  xs: CtrlPoint,
-  ys: CtrlPoint,
-  t: number = 1,
-  n: number = 20
-) => {
+const getArcLength = (xs: CtrlPoint, ys: CtrlPoint, t = 1, n = 20) => {
   if (xs.length >= tValues.length) {
     throw new Error("too high n bezier");
   }

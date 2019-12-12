@@ -3,7 +3,7 @@ import { State } from "react-native-gesture-handler";
 import { useMemoOne } from "use-memo-one";
 
 import { bin } from "./Math";
-import { TimingConfig, SpringConfig } from "./Animations";
+import { SpringConfig, TimingConfig } from "./Animations";
 
 const {
   Value,
@@ -94,7 +94,7 @@ export const useTimingTransition = (
   config: TimingConfig = {}
 ) => {
   const value = useMemoOne(() => new Value(0), []);
-  useCode(set(value, bin(state)), [state]);
+  useCode(() => set(value, bin(state)), [state]);
   const transition = useMemoOne(() => withTimingTransition(value, config), []);
   return transition;
 };
@@ -104,7 +104,7 @@ export const useSpringTransition = (
   config: SpringConfig = {}
 ) => {
   const value = useMemoOne(() => new Value(0), []);
-  useCode(set(value, bin(state)), [state]);
+  useCode(() => set(value, bin(state)), [state]);
   const transition = useMemoOne(() => withSpringTransition(value, config), []);
   return transition;
 };
