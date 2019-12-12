@@ -366,27 +366,37 @@ interpolateColor(value: Node, { inputRange: number[], outputRange: Colors }, col
 Example Usage:
 
 ```js
-const from = {
-  r: 197,
-  g: 43,
-  b: 39
-};
-const to = {
-  r: 225,
-  g: 176,
-  b: 68
-};
+const from = { r: 197, g: 43, b: 39 };
+const to = { r: 225, g: 176, b: 68 };
 
-// Interpolate in default color space (HSV)
-interpolateColor(x, [0, 1], [from, to]);
+// Interpolate in RGB color space (default)
+interpolateColor(node, {
+  inputRange: [0, 100],
+  outputRange: [from, to]
+});
 
-// Interpolate in RGB color space
-interpolateColor(x, [0, 1], [from, to], "rgb");
+// Interpolate in HSV color space
+interpolateColor(
+  clampedScroll,
+  {
+    inputRange: [0, 1],
+    outputRange: [from, to]
+  },
+  "hsv"
+);
 ```
 
 ### `bInterpolateColor(node, color1, color2, [colorSpace = "rgb"])`
 
 Interpolate the node from 0 to 1 without clamping.
+
+```js
+const from = { r: 197, g: 43, b: 39 };
+const to = { r: 225, g: 176, b: 68 };
+
+bInterpolateColor(node, from, to);
+```
+
 
 ### `snapPoint(point, velocity, points)`
 
