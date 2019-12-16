@@ -247,9 +247,8 @@ contains(values: Node[], value: Node) => Node
 
 Transitions are essential to the user experience.
 Redash offers four utility functions for transitions which are broke down in the table below.
-If you want to build a transition based on a React state change use `useTimingTransition()` or ``.
-Are you transitioning a React state change or an animation value change?
-And would you like to transition to use a timing a or a spring function?
+If you want to build a transition based on a React state change use `useTimingTransition()` or `useSpringTransition()`.
+To transition an animation value change, use `withTimingTransition()` or `withSpringTransition()`.
 
 |        | State (JS Thread)      | Value (UI Thread)        |
 | ------ |:----------------------:| ------------------------:|
