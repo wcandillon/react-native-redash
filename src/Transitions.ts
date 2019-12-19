@@ -94,10 +94,8 @@ export const withTimingTransition = withTransition;
 export const useTransition = (state: boolean, config: TimingConfig = {}) => {
   const value = useMemoOne(() => new Value(0), []);
   useCode(() => set(value, bin(state)), [state, value]);
-  const transition = useMemoOne(() => withTransition(value, config), [
-    config,
-    value
-  ]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const transition = useMemoOne(() => withTransition(value, config), [value]);
   return transition;
 };
 
@@ -107,8 +105,8 @@ export const useSpringTransition = (
 ) => {
   const value = useMemoOne(() => new Value(0), []);
   useCode(() => set(value, bin(state)), [state, value]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const transition = useMemoOne(() => withSpringTransition(value, config), [
-    config,
     value
   ]);
   return transition;
