@@ -70,7 +70,9 @@ type Atomic = string | number | boolean;
 export const useValues = <V extends Atomic>(
   values: V[],
   deps: Dependencies
-): Animated.Value<V>[] => useMemoOne(() => values.map(v => new Value(v)), deps);
+): Animated.Value<V>[] =>
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useMemoOne(() => values.map(v => new Value(v)), deps);
 
 export const useNamedValues = <V extends Atomic, K extends string>(
   values: Record<K, V>,
@@ -82,4 +84,5 @@ export const useNamedValues = <V extends Atomic, K extends string>(
       result[key as K] = new Value(values[key as K]);
     });
     return result;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps);

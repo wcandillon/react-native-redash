@@ -94,8 +94,11 @@ export const useTimingTransition = (
   config: TimingConfig = {}
 ) => {
   const value = useMemoOne(() => new Value(0), []);
-  useCode(() => set(value, bin(state)), [state]);
-  const transition = useMemoOne(() => withTimingTransition(value, config), []);
+  useCode(() => set(value, bin(state)), [state, value]);
+  const transition = useMemoOne(() => withTimingTransition(value, config), [
+    config,
+    value
+  ]);
   return transition;
 };
 
@@ -104,7 +107,10 @@ export const useSpringTransition = (
   config: SpringConfig = {}
 ) => {
   const value = useMemoOne(() => new Value(0), []);
-  useCode(() => set(value, bin(state)), [state]);
-  const transition = useMemoOne(() => withSpringTransition(value, config), []);
+  useCode(() => set(value, bin(state)), [state, value]);
+  const transition = useMemoOne(() => withSpringTransition(value, config), [
+    config,
+    value
+  ]);
   return transition;
 };
