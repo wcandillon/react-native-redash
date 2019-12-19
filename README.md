@@ -252,7 +252,7 @@ To transition an animation value change, use `withTimingTransition()` or `withSp
 
 |        | State (JS Thread)      | Value (UI Thread)        |
 | ------ |:----------------------:| ------------------------:|
-| Timing | useTimingTransition()  | withTimingTransition()   |
+| Timing | useTransition()        | withTransition()         |
 | Spring | useSpringTransition()  | withSpringTransition()   |
 
 ### Example
