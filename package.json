@@ -31,7 +31,7 @@
     "@types/react": "*",
     "@types/react-native": "^0.60.25",
     "eslint": "^6.7.2",
-    "eslint-config-react-native-wcandillon": "2.3.0",
+    "eslint-config-react-native-wcandillon": "2.3.1",
     "react": "^16.8.6",
     "react-native": "^0.61.0",
     "react-native-gesture-handler": "~1.5.0",

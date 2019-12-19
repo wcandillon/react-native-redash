@@ -19,7 +19,7 @@ const {
   useCode
 } = Animated;
 
-export const withTimingTransition = (
+export const withTransition = (
   value: Animated.Value<number>,
   timingConfig: TimingConfig = {},
   gestureState: Animated.Value<State> = new Value(State.UNDETERMINED)
@@ -89,13 +89,15 @@ export const withSpringTransition = (
   ]);
 };
 
-export const useTimingTransition = (
-  state: boolean,
-  config: TimingConfig = {}
-) => {
+export const withTimingTransition = withTransition;
+
+export const useTransition = (state: boolean, config: TimingConfig = {}) => {
   const value = useMemoOne(() => new Value(0), []);
-  useCode(() => set(value, bin(state)), [state]);
-  const transition = useMemoOne(() => withTimingTransition(value, config), []);
+  useCode(() => set(value, bin(state)), [state, value]);
+  const transition = useMemoOne(() => withTransition(value, config), [
+    config,
+    value
+  ]);
   return transition;
 };
 
@@ -104,7 +106,12 @@ export const useSpringTransition = (
   config: SpringConfig = {}
 ) => {
   const value = useMemoOne(() => new Value(0), []);
-  useCode(() => set(value, bin(state)), [state]);
-  const transition = useMemoOne(() => withSpringTransition(value, config), []);
+  useCode(() => set(value, bin(state)), [state, value]);
+  const transition = useMemoOne(() => withSpringTransition(value, config), [
+    config,
+    value
+  ]);
   return transition;
 };
+
+export const useTimingTransition = useTransition;
