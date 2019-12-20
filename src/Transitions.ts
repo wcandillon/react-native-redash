@@ -91,9 +91,15 @@ export const withSpringTransition = (
 
 export const withTimingTransition = withTransition;
 
-export const useTransition = (state: boolean, config: TimingConfig = {}) => {
+export const useTransition = (
+  state: boolean | number,
+  config: TimingConfig = {}
+) => {
   const value = useMemoOne(() => new Value(0), []);
-  useCode(() => set(value, bin(state)), [state, value]);
+  useCode(() => set(value, typeof state === "boolean" ? bin(state) : state), [
+    state,
+    value
+  ]);
   const transition = useMemoOne(() => withTransition(value, config), [
     config,
     value
@@ -102,11 +108,14 @@ export const useTransition = (state: boolean, config: TimingConfig = {}) => {
 };
 
 export const useSpringTransition = (
-  state: boolean,
+  state: boolean | number,
   config: SpringConfig = {}
 ) => {
   const value = useMemoOne(() => new Value(0), []);
-  useCode(() => set(value, bin(state)), [state, value]);
+  useCode(() => set(value, typeof state === "boolean" ? bin(state) : state), [
+    state,
+    value
+  ]);
   const transition = useMemoOne(() => withSpringTransition(value, config), [
     config,
     value
