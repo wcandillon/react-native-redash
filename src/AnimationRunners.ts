@@ -1,4 +1,5 @@
 import Animated, { Easing } from "react-native-reanimated";
+import { useMemoOne } from "use-memo-one";
 import { SpringConfig } from "./Animations";
 
 const {
@@ -14,7 +15,8 @@ const {
   and,
   timing: reTiming,
   decay: reDecay,
-  spring: reSpring
+  spring: reSpring,
+  useCode
 } = Animated;
 
 interface AnimateParams<S, C> {
@@ -246,4 +248,11 @@ export const loop = (loopConfig: LoopProps) => {
     ]),
     state.position
   ]);
+};
+
+export const useLoop = (loopConfig: LoopProps) => {
+  const progress = useMemoOne(() => new Value(0), []);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useCode(() => block([set(progress, loop(loopConfig))]), []);
+  return progress;
 };
