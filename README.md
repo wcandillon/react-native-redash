@@ -307,6 +307,12 @@ const progress = new Value(0);
 set(progress, loop({ duration: 400, easing: Easing.linear });
 ```
 
+### `useLoop({ clock: Clock, duration: Node, easing: EasingFunction: boomerang? = false, autoStart? = true })`
+
+```js
+const progress = useLoop({ boomerang: true });
+```
+
 ### `delay(node: Node, duration: number)`
 
 Evaluate an animation node after a certain amount of time. `duration` is in milliseconds.
