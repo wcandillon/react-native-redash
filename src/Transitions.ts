@@ -100,10 +100,8 @@ export const useTransition = (
     state,
     value
   ]);
-  const transition = useMemoOne(() => withTransition(value, config), [
-    config,
-    value
-  ]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const transition = useMemoOne(() => withTransition(value, config), [value]);
   return transition;
 };
 
@@ -116,8 +114,8 @@ export const useSpringTransition = (
     state,
     value
   ]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const transition = useMemoOne(() => withSpringTransition(value, config), [
-    config,
     value
   ]);
   return transition;
