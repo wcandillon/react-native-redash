@@ -1,4 +1,5 @@
 import Animated from "react-native-reanimated";
+import Color from "color";
 
 const {
   cond,
@@ -11,7 +12,7 @@ const {
   interpolate,
   divide,
   sub,
-  color,
+  color: reColor,
   Extrapolate
 } = Animated;
 
@@ -22,40 +23,7 @@ interface RGBColor {
   a?: number;
 }
 
-type HEXColor = string;
-
-type Color = RGBColor | HEXColor;
-
-const HEX_REGEX = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})?$/i;
-
-const isHEX = (value: Color): value is HEXColor =>
-  typeof value === "string" && HEX_REGEX.test(value);
-
-const hexToRGB = (value: HEXColor): RGBColor => {
-  const result = HEX_REGEX.exec(value);
-  if (!result) {
-    throw new Error(`invalid hex ${value}`);
-  }
-
-  const [, rHex, gHex, bHex, aHex] = result;
-
-  const r = parseInt(rHex, 16);
-  const g = parseInt(gHex, 16);
-  const b = parseInt(bHex, 16);
-
-  if (aHex) {
-    const a = parseInt(aHex, 16);
-
-    return {
-      r,
-      g,
-      b,
-      a
-    };
-  }
-
-  return { r, g, b };
-};
+type ColorParam = string | RGBColor;
 
 function match(
   condsAndResPairs: readonly Animated.Node<number>[],
@@ -92,7 +60,7 @@ function colorHSV(
     g: Animated.Adaptable<number>,
     b: Animated.Adaptable<number>
   ) =>
-    color(
+    reColor(
       round(multiply(255, add(r, m))),
       round(multiply(255, add(g, m))),
       round(multiply(255, add(b, m)))
@@ -202,12 +170,12 @@ const interpolateColorsRGB = (
       extrapolate: Extrapolate.CLAMP
     })
   );
-  return color(r, g, b, a);
+  return reColor(r, g, b, a);
 };
 
 interface ColorInterpolationConfig {
   inputRange: number[];
-  outputRange: Color[];
+  outputRange: ColorParam[];
 }
 
 export const interpolateColor = (
@@ -216,7 +184,15 @@ export const interpolateColor = (
   colorSpace: "hsv" | "rgb" = "rgb"
 ): Animated.Node<number> => {
   const { inputRange } = config;
-  const outputRange = config.outputRange.map(c => (isHEX(c) ? hexToRGB(c) : c));
+  const outputRange = config.outputRange.map(c => {
+    const color = new Color(c);
+    return {
+      r: color.red(),
+      g: color.green(),
+      b: color.blue(),
+      a: color.alpha()
+    };
+  });
   if (colorSpace === "hsv")
     return interpolateColorsHSV(value, inputRange, outputRange);
   return interpolateColorsRGB(value, inputRange, outputRange);
@@ -224,8 +200,8 @@ export const interpolateColor = (
 
 export const bInterpolateColor = (
   value: Animated.Adaptable<number>,
-  color1: Color,
-  color2: Color,
+  color1: ColorParam,
+  color2: ColorParam,
   colorSpace: "hsv" | "rgb" = "rgb"
 ) =>
   interpolateColor(
