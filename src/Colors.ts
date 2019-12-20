@@ -26,7 +26,7 @@ type HEXColor = string;
 
 type Color = RGBColor | HEXColor;
 
-const HEX_REGEX = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/gi;
+const HEX_REGEX = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})?$/i;
 
 const isHEX = (value: Color): value is HEXColor =>
   typeof value === "string" && HEX_REGEX.test(value);
@@ -37,9 +37,22 @@ const hexToRGB = (value: HEXColor): RGBColor => {
     throw new Error(`invalid hex ${value}`);
   }
 
-  const r = parseInt(result[1], 16);
-  const g = parseInt(result[2], 16);
-  const b = parseInt(result[3], 16);
+  const [, rHex, gHex, bHex, aHex] = result;
+
+  const r = parseInt(rHex, 16);
+  const g = parseInt(gHex, 16);
+  const b = parseInt(bHex, 16);
+
+  if (aHex) {
+    const a = parseInt(aHex, 16);
+
+    return {
+      r,
+      g,
+      b,
+      a
+    };
+  }
 
   return { r, g, b };
 };
@@ -182,7 +195,14 @@ const interpolateColorsRGB = (
       extrapolate: Extrapolate.CLAMP
     })
   );
-  return color(r, g, b);
+  const a = round(
+    interpolate(animationValue, {
+      inputRange,
+      outputRange: colors.map(c => (c.a !== undefined ? c.a : 1)),
+      extrapolate: Extrapolate.CLAMP
+    })
+  );
+  return color(r, g, b, a);
 };
 
 interface ColorInterpolationConfig {
