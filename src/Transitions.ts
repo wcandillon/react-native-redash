@@ -20,7 +20,7 @@ const {
 } = Animated;
 
 export const withTransition = (
-  value: Animated.Value<number>,
+  value: Animated.Node<number>,
   timingConfig: TimingConfig = {},
   gestureState: Animated.Value<State> = new Value(State.UNDETERMINED)
 ) => {
@@ -55,7 +55,7 @@ export const withTransition = (
 };
 
 export const withSpringTransition = (
-  value: Animated.Value<number>,
+  value: Animated.Node<number>,
   springConfig: SpringConfig = {},
   velocity: Animated.Adaptable<number> = 0,
   gestureState: Animated.Value<State> = new Value(State.UNDETERMINED)
@@ -91,20 +91,29 @@ export const withSpringTransition = (
 
 export const withTimingTransition = withTransition;
 
-export const useTransition = (state: boolean, config: TimingConfig = {}) => {
+export const useTransition = (
+  state: boolean | number,
+  config: TimingConfig = {}
+) => {
   const value = useMemoOne(() => new Value(0), []);
-  useCode(() => set(value, bin(state)), [state, value]);
+  useCode(() => set(value, typeof state === "boolean" ? bin(state) : state), [
+    state,
+    value
+  ]);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const transition = useMemoOne(() => withTransition(value, config), [value]);
   return transition;
 };
 
 export const useSpringTransition = (
-  state: boolean,
+  state: boolean | number,
   config: SpringConfig = {}
 ) => {
   const value = useMemoOne(() => new Value(0), []);
-  useCode(() => set(value, bin(state)), [state, value]);
+  useCode(() => set(value, typeof state === "boolean" ? bin(state) : state), [
+    state,
+    value
+  ]);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const transition = useMemoOne(() => withSpringTransition(value, config), [
     value
