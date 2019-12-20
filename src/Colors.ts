@@ -19,7 +19,30 @@ interface RGBColor {
   r: number;
   g: number;
   b: number;
+  a?: number;
 }
+
+type HEXColor = string;
+
+type Color = RGBColor | HEXColor;
+
+const HEX_REGEX = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/gi;
+
+const isHEX = (value: Color): value is HEXColor =>
+  typeof value === "string" && HEX_REGEX.test(value);
+
+const hexToRGB = (value: HEXColor): RGBColor => {
+  const result = HEX_REGEX.exec(value);
+  if (!result) {
+    throw new Error(`invalid hex ${value}`);
+  }
+
+  const r = parseInt(result[1], 16);
+  const g = parseInt(result[2], 16);
+  const b = parseInt(result[3], 16);
+
+  return { r, g, b };
+};
 
 function match(
   condsAndResPairs: readonly Animated.Node<number>[],
@@ -164,7 +187,7 @@ const interpolateColorsRGB = (
 
 interface ColorInterpolationConfig {
   inputRange: number[];
-  outputRange: RGBColor[];
+  outputRange: Color[];
 }
 
 export const interpolateColor = (
@@ -172,7 +195,8 @@ export const interpolateColor = (
   config: ColorInterpolationConfig,
   colorSpace: "hsv" | "rgb" = "rgb"
 ): Animated.Node<number> => {
-  const { inputRange, outputRange } = config;
+  const { inputRange } = config;
+  const outputRange = config.outputRange.map(c => (isHEX(c) ? hexToRGB(c) : c));
   if (colorSpace === "hsv")
     return interpolateColorsHSV(value, inputRange, outputRange);
   return interpolateColorsRGB(value, inputRange, outputRange);
@@ -180,8 +204,8 @@ export const interpolateColor = (
 
 export const bInterpolateColor = (
   value: Animated.Adaptable<number>,
-  color1: RGBColor,
-  color2: RGBColor,
+  color1: Color,
+  color2: Color,
   colorSpace: "hsv" | "rgb" = "rgb"
 ) =>
   interpolateColor(
