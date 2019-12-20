@@ -371,9 +371,6 @@ interpolateColor(
 HEX colors will be automatically converted to RGB:
 
 ```js
-const from = { r: 197, g: 43, b: 39 };
-const to = { r: 225, g: 176, b: 68 };
-
 interpolateColor(node, {
   inputRange: [0, 100],
   outputRange: ["#c52c27", "#e1b044"]
