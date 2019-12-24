@@ -153,7 +153,7 @@ export const cubicBezier = (
   return add(a, b, c, d);
 };
 
-export interface CartesianPoint {
+export interface Point {
   x: Animated.Adaptable<number>;
   y: Animated.Adaptable<number>;
 }
@@ -163,35 +163,26 @@ export interface PolarPoint {
   radius: Animated.Adaptable<number>;
 }
 
-export const canvas2Cartesian = (
-  { x, y }: CartesianPoint,
-  center: CartesianPoint
-): CartesianPoint => {
+export const canvas2Cartesian = ({ x, y }: Point, center: Point): Point => {
   return {
     x: sub(x, center.x),
     y: multiply(sub(y, center.y), -1)
   };
 };
 
-export const cartesian2Canvas = (
-  { x, y }: CartesianPoint,
-  center: CartesianPoint
-): CartesianPoint => ({
+export const cartesian2Canvas = ({ x, y }: Point, center: Point): Point => ({
   x: add(x, center.x),
-  y: multiply(add(y, center.y), -1)
+  y: add(multiply(y, -1), center.y)
 });
 
-export const cartesian2Polar = ({ x, y }: CartesianPoint): PolarPoint => {
+export const cartesian2Polar = ({ x, y }: Point): PolarPoint => {
   return {
     alpha: atan2(y, x),
     radius: sqrt(add(pow(x, 2), pow(y, 2)))
   };
 };
 
-export const polar2Cartesian = ({
-  alpha,
-  radius
-}: PolarPoint): CartesianPoint => ({
+export const polar2Cartesian = ({ alpha, radius }: PolarPoint): Point => ({
   x: multiply(radius, cos(alpha)),
   y: multiply(radius, sin(alpha))
 });
