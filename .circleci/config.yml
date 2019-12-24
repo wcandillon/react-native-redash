@@ -34,10 +34,9 @@ jobs:
           key: v1-dependencies-{{ checksum "package.json" }}
         
       # run tests!
-      - run:
-        - yarn lint
-        - yarn tsc
-        - yarn test
+      - run: yarn lint
+      - run: yarn tsc
+      - run: yarn test
 
       - deploy:
           name: NPM Deployment
