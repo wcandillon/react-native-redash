@@ -249,10 +249,3 @@ export const loop = (loopConfig: LoopProps) => {
     state.position
   ]);
 };
-
-export const useLoop = (loopConfig: LoopProps) => {
-  const progress = useMemoOne(() => new Value(0), []);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useCode(() => block([set(progress, loop(loopConfig))]), []);
-  return progress;
-};
