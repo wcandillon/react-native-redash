@@ -169,7 +169,7 @@ export const canvas2Cartesian = (
 ): CartesianPoint => {
   return {
     x: sub(x, center.x),
-    y: multiply(sub(y, center.y), 1)
+    y: multiply(sub(y, center.y), -1)
   };
 };
 
@@ -178,7 +178,7 @@ export const cartesian2Canvas = (
   center: CartesianPoint
 ): CartesianPoint => ({
   x: add(x, center.x),
-  y: multiply(add(y, center.y), center.y)
+  y: multiply(add(y, center.y), -1)
 });
 
 export const cartesian2Polar = ({ x, y }: CartesianPoint): PolarPoint => {
