@@ -37,6 +37,7 @@
     "@babel/preset-typescript": "^7.7.7",
     "@react-native-community/bob": "^0.4.1",
     "@types/color": "^3.0.0",
+    "@types/jest": "^24.0.24",
     "@types/react": "*",
     "@types/react-native": "^0.60.25",
     "babel-jest": "^24.9.0",

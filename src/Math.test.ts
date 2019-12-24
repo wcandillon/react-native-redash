@@ -1,19 +1,22 @@
-import Animated from "react-native-reanimated";
-
-import { atan2 } from "./Math";
+/* eslint-disable no-underscore-dangle */
+import { atan2, canvas2Cartesian } from "./Math";
 
 jest.mock("react-native-reanimated", () => {
   const getValue = node => {
     if (typeof node === "number") {
       return node;
     }
-    return node.__value;
+    return node[" __value"];
   };
   class AnimatedValue {
-    __value;
+    " __value": number;
 
-    constructor(val) {
-      this.__value = val;
+    constructor(val: number) {
+      this[" __value"] = val;
+    }
+
+    setValue(val: number) {
+      this[" __value"] = val;
     }
   }
   return {
@@ -33,12 +36,15 @@ jest.mock("react-native-reanimated", () => {
     pow: (...a) =>
       new AnimatedValue(
         a.reduce(
-          (b, c, index) => (index > 0 ? Math.pow(getValue(b), getValue(c)) : c),
+          (b, c, index) => (index > 0 ? getValue(b) ** getValue(c) : c),
           0
         )
       ),
     and: (a, b) => new AnimatedValue(getValue(a) && getValue(b)),
-    set: (a, b) => (a.__value = getValue(b)),
+    set: (a, b) => {
+      a.setValue(getValue(b));
+      return a;
+    },
     or: (a, b) => new AnimatedValue(getValue(a) || getValue(b)),
     modulo: (a, b) => new AnimatedValue(getValue(a) % getValue(b)),
     exp: a => new AnimatedValue(Math.exp(getValue(a))),
@@ -67,7 +73,13 @@ jest.mock("react-native-reanimated", () => {
 });
 
 test("atan2", () => {
-  expect(Math.round(atan2(100, 100).__value * 10000)).toBe(
+  expect(Math.round(atan2(100, 100)[" __value"] * 10000)).toBe(
     Math.round(Math.atan2(100, 100) * 10000)
   );
+});
+
+test("canvas2Cartesian", () => {
+  const point = canvas2Cartesian({ x: 500, y: 200 }, { x: 500, y: 200 });
+  expect(point.x[" __value"]).toBe(0);
+  expect(point.y[" __value"]).toBe(0);
 });
