@@ -1,5 +1,4 @@
 import Animated, { Easing } from "react-native-reanimated";
-import { useMemoOne } from "use-memo-one";
 import { SpringConfig } from "./Animations";
 
 const {
@@ -15,8 +14,7 @@ const {
   and,
   timing: reTiming,
   decay: reDecay,
-  spring: reSpring,
-  useCode
+  spring: reSpring
 } = Animated;
 
 interface AnimateParams<S, C> {
