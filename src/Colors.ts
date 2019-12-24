@@ -185,12 +185,12 @@ export const interpolateColor = (
 ): Animated.Node<number> => {
   const { inputRange } = config;
   const outputRange = config.outputRange.map(c => {
-    const color = new Color(c);
+    const outputColor = new Color(c);
     return {
-      r: color.red(),
-      g: color.green(),
-      b: color.blue(),
-      a: color.alpha()
+      r: outputColor.red(),
+      g: outputColor.green(),
+      b: outputColor.blue(),
+      a: outputColor.alpha()
     };
   });
   if (colorSpace === "hsv")
