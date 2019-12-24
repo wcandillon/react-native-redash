@@ -1,4 +1,5 @@
 import Animated from "react-native-reanimated";
+import Color from "color";
 
 const {
   cond,
@@ -19,7 +20,10 @@ interface RGBColor {
   r: number;
   g: number;
   b: number;
+  a?: number;
 }
+
+type ColorParam = string | RGBColor;
 
 function match(
   condsAndResPairs: readonly Animated.Node<number>[],
@@ -159,12 +163,19 @@ const interpolateColorsRGB = (
       extrapolate: Extrapolate.CLAMP
     })
   );
-  return color(r, g, b);
+  const a = round(
+    interpolate(animationValue, {
+      inputRange,
+      outputRange: colors.map(c => (c.a !== undefined ? c.a : 1)),
+      extrapolate: Extrapolate.CLAMP
+    })
+  );
+  return color(r, g, b, a);
 };
 
 interface ColorInterpolationConfig {
   inputRange: number[];
-  outputRange: RGBColor[];
+  outputRange: ColorParam[];
 }
 
 export const interpolateColor = (
@@ -172,7 +183,16 @@ export const interpolateColor = (
   config: ColorInterpolationConfig,
   colorSpace: "hsv" | "rgb" = "rgb"
 ): Animated.Node<number> => {
-  const { inputRange, outputRange } = config;
+  const { inputRange } = config;
+  const outputRange = config.outputRange.map(c => {
+    const outputColor = new Color(c);
+    return {
+      r: outputColor.red(),
+      g: outputColor.green(),
+      b: outputColor.blue(),
+      a: outputColor.alpha()
+    };
+  });
   if (colorSpace === "hsv")
     return interpolateColorsHSV(value, inputRange, outputRange);
   return interpolateColorsRGB(value, inputRange, outputRange);
@@ -180,8 +200,8 @@ export const interpolateColor = (
 
 export const bInterpolateColor = (
   value: Animated.Adaptable<number>,
-  color1: RGBColor,
-  color2: RGBColor,
+  color1: ColorParam,
+  color2: ColorParam,
   colorSpace: "hsv" | "rgb" = "rgb"
 ) =>
   interpolateColor(

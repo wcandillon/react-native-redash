@@ -368,6 +368,21 @@ interpolateColor(
 );
 ```
 
+HEX colors will be automatically converted to RGB:
+
+```js
+interpolateColor(node, {
+  inputRange: [0, 100],
+  outputRange: ["#c52c27", "#e1b044"]
+});
+
+// with alpha
+interpolateColor(node, {
+  inputRange: [0, 100],
+  outputRange: ["#c52c2700", "#c52c27ff"]
+});
+```
+
 ### `bInterpolateColor(node, color1, color2, [colorSpace = "rgb"])`
 
 Interpolate the node from 0 to 1 without clamping.
