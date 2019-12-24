@@ -12,7 +12,7 @@ const {
   interpolate,
   divide,
   sub,
-  color: reColor,
+  color,
   Extrapolate
 } = Animated;
 
@@ -60,7 +60,7 @@ function colorHSV(
     g: Animated.Adaptable<number>,
     b: Animated.Adaptable<number>
   ) =>
-    reColor(
+    color(
       round(multiply(255, add(r, m))),
       round(multiply(255, add(g, m))),
       round(multiply(255, add(b, m)))
@@ -170,7 +170,7 @@ const interpolateColorsRGB = (
       extrapolate: Extrapolate.CLAMP
     })
   );
-  return reColor(r, g, b, a);
+  return color(r, g, b, a);
 };
 
 interface ColorInterpolationConfig {
