@@ -14,26 +14,26 @@ export interface PolarPoint {
   radius: Animated.Adaptable<number>;
 }
 
-export const canvas2Cartesian = ({ x, y }: Point, center: Point): Point => {
+export const canvas2Cartesian = ({ x, y }: Point, center: Point) => {
   return {
     x: sub(x, center.x),
     y: multiply(sub(y, center.y), -1)
   };
 };
 
-export const cartesian2Canvas = ({ x, y }: Point, center: Point): Point => ({
+export const cartesian2Canvas = ({ x, y }: Point, center: Point) => ({
   x: add(x, center.x),
   y: add(multiply(y, -1), center.y)
 });
 
-export const cartesian2Polar = ({ x, y }: Point): PolarPoint => {
+export const cartesian2Polar = ({ x, y }: Point) => {
   return {
     alpha: atan2(y, x),
     radius: sqrt(add(pow(x, 2), pow(y, 2)))
   };
 };
 
-export const polar2Cartesian = ({ alpha, radius }: PolarPoint): Point => ({
+export const polar2Cartesian = ({ alpha, radius }: PolarPoint) => ({
   x: multiply(radius, cos(alpha)),
   y: multiply(radius, sin(alpha))
 });
