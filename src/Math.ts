@@ -18,9 +18,7 @@ const {
   pow,
   and,
   greaterOrEq,
-  lessOrEq,
-  cos,
-  sin
+  lessOrEq
 } = Animated;
 
 export const bin = (value: boolean): 0 | 1 => (value ? 1 : 0);
@@ -152,37 +150,3 @@ export const cubicBezier = (
   const d = multiply(1, pow(term, 0), pow(t, 3), p3);
   return add(a, b, c, d);
 };
-
-export interface Point {
-  x: Animated.Adaptable<number>;
-  y: Animated.Adaptable<number>;
-}
-
-export interface PolarPoint {
-  alpha: Animated.Adaptable<number>;
-  radius: Animated.Adaptable<number>;
-}
-
-export const canvas2Cartesian = ({ x, y }: Point, center: Point): Point => {
-  return {
-    x: sub(x, center.x),
-    y: multiply(sub(y, center.y), -1)
-  };
-};
-
-export const cartesian2Canvas = ({ x, y }: Point, center: Point): Point => ({
-  x: add(x, center.x),
-  y: add(multiply(y, -1), center.y)
-});
-
-export const cartesian2Polar = ({ x, y }: Point): PolarPoint => {
-  return {
-    alpha: atan2(y, x),
-    radius: sqrt(add(pow(x, 2), pow(y, 2)))
-  };
-};
-
-export const polar2Cartesian = ({ alpha, radius }: PolarPoint): Point => ({
-  x: multiply(radius, cos(alpha)),
-  y: multiply(radius, sin(alpha))
-});
