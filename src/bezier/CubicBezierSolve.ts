@@ -1,7 +1,7 @@
 import Animated from "react-native-reanimated";
 
 import { find } from "../Array";
-import { acos, approximates } from "../Math";
+import { approximates } from "../Math";
 
 const {
   Value,
@@ -19,7 +19,8 @@ const {
   set,
   sub,
   cos,
-  not
+  not,
+  acos
 } = Animated;
 
 const isRootValidForCubicBezier = (root: Animated.Node<number>) =>
