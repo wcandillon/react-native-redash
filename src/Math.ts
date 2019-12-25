@@ -91,51 +91,6 @@ export const atan2 = (
   ]);
 };
 
-// https://developer.download.nvidia.com/cg/atan.html
-export const atan = (x: Animated.Adaptable<number>): Animated.Node<number> =>
-  atan2(x, 1);
-
-// https://developer.download.nvidia.com/cg/acos.html
-export const acos = (x1: Animated.Adaptable<number>) => {
-  const negate: Animated.Value<number> = new Value();
-  const x: Animated.Value<number> = new Value();
-  const ret: Animated.Value<number> = new Value();
-  return block([
-    set(negate, lessThan(x, 0)),
-    set(x, abs(x1)),
-    set(ret, -0.0187293),
-    set(ret, multiply(ret, x)),
-    set(ret, add(ret, 0.074261)),
-    set(ret, multiply(ret, x)),
-    set(ret, sub(ret, 0.2121144)),
-    set(ret, multiply(ret, x)),
-    set(ret, add(ret, 1.5707288)),
-    set(ret, sqrt(sub(1, x))),
-    set(ret, sub(ret, multiply(2, negate, ret))),
-    add(multiply(negate, Math.PI), ret)
-  ]);
-};
-
-// https://developer.download.nvidia.com/cg/asin.html
-export const asin = (x1: Animated.Adaptable<number>) => {
-  const negate: Animated.Value<number> = new Value();
-  const x: Animated.Value<number> = new Value();
-  const ret: Animated.Value<number> = new Value();
-  return block([
-    set(negate, lessThan(x, 0)),
-    set(x, abs(x1)),
-    set(ret, -0.0187293),
-    set(ret, multiply(ret, x)),
-    set(ret, add(ret, 0.074261)),
-    set(ret, multiply(ret, x)),
-    set(ret, sub(ret, 0.2121144)),
-    set(ret, multiply(ret, x)),
-    set(ret, add(ret, 1.5707288)),
-    set(ret, sub(Math.PI / 2, multiply(sqrt(sub(1, x)), ret))),
-    sub(ret, multiply(2, negate, ret))
-  ]);
-};
-
 export const cubicBezier = (
   t: Animated.Node<number>,
   p0: Animated.Node<number>,
