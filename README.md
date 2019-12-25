@@ -162,40 +162,12 @@ Returns 1 if the difference between the two values is less than precision.
 Otherwise returns 0.
 Default value for the precision is 0.001.
 
-### `atan(node: Node): Node`
-
-Returns the arc-tangent of the value in radians of the given node.
-We provide this function in case you are using a version of reanimated that doesn't ship `atan`.
-Beware that this function is not as precise at `Math.atan()` nor `Animated.atan()`.
-
-```js
-atan(rad: Node) => Node
-```
-
 ### `atan2(node: Node): Node`
 
 Returns the angle in the plane (in radians) between the positive x-axis and the ray from (0,0) to the point (x,y), `atan2(y,x)`.
 
 ```js
 atan2(y: Node, x Node) => Node
-```
-
-### `acos(node: Node): Node`
-
-Returns the arc-cosine of the value in radians of the given node.
-We provide this function in case you are using a version of reanimated that doesn't ship `acos`.
-
-```js
-acos(y: Node, x Node) => Node
-```
-
-### `asin(node: Node): Node`
-
-Returns the arc-sinus of the value in radians of the given node.
-We provide this function in case you are using a version of reanimated that doesn't ship `cos`.
-
-```js
-asin(y: Node, x Node) => Node
 ```
 
 ### `cubicBezier(t: Node, p0: Node, p1: Node, p2: Node, p3: Node): Node`
