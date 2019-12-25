@@ -20,5 +20,5 @@
     "types": ["react", "react-native"]
   },
   "files": ["src/index.d.ts"],
-  "include": ["src/index.ts"]
+  "include": ["src/index.ts", "node_modules/@types/jest"]
 }
