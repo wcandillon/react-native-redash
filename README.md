@@ -205,6 +205,38 @@ Returns the coordinate of a cubic bezier curve.
 `p0` and `p3` are respectively the starting and ending point of the curve.
 `p1` and `p2` are the control points.
 
+## Coordinates
+
+In order to easily build certain types of animations, it can be extremely useful to switch from one coordinate system to another.
+
+For instance, to convert a `x` and `y` coordinate from the React Native canvas to a polar coordinate system centered at `100, 100`:
+
+```jsx
+const x = 0;
+const y = 100;
+const center = { x: 100, y: 100 };
+const {alpha, radius} = cartesian2Polart(
+  canvas2Cartesian({ x, y }, center)
+);
+// alpha is π, radius: 100
+```
+
+```
+cartesian2Canvas({ x, y }, center)
+```
+
+```
+canvas2Cartesian({ x, y }, center)
+```
+
+```
+cartesianToPolar({ x, y })
+```
+
+```
+polarToCartesian({ x, y })
+```
+
 ## String
 
 ### `string`
