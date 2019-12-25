@@ -4,7 +4,6 @@ const {
   Value,
   block,
   set,
-  sqrt,
   cond,
   add,
   multiply,
