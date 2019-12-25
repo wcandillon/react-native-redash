@@ -108,6 +108,14 @@ This function works by finding the roots of the cubic bezier curve so it might b
 
 ## Math
 
+### `inc(value: Value)`
+
+Increment value by one.
+
+### `dec(value: Value)`
+
+Decrement value by one.
+
 ### `toRad(node: Node): Node`
 
 Transforms an angle from degrees to radians.

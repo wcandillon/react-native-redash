@@ -22,6 +22,10 @@ const {
 
 export const bin = (value: boolean): 0 | 1 => (value ? 1 : 0);
 
+export const inc = (value: Animated.Value<number>) => set(value, add(value, 1));
+
+export const dec = (value: Animated.Value<number>) => set(value, sub(value, 1));
+
 export const min = (...args: Animated.Adaptable<number>[]) =>
   args.reduce((acc, arg) => min2(acc, arg));
 
