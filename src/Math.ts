@@ -72,7 +72,11 @@ const atan2Proc = proc(
     t1: Animated.Value<number>,
     t3: Animated.Value<number>,
     t4: Animated.Value<number>
-  ) =>
+  ) => {  
+    const t0: Animated.Value<number> = new Value();
+    const t1: Animated.Value<number> = new Value();
+    const t3: Animated.Value<number> = new Value();
+    const t4: Animated.Value<number> = new Value();
     block([
       set(t3, abs(x)),
       set(t1, abs(y)),
@@ -92,19 +96,14 @@ const atan2Proc = proc(
       set(t3, cond(lessThan(x, 0), sub(Math.PI, t3), t3)),
       set(t3, cond(lessThan(y, 0), multiply(t3, -1), t3)),
       t3
-    ])
+    ]);
+  }
 );
 
 export const atan2 = (
   y: Animated.Adaptable<number>,
   x: Animated.Adaptable<number>
-): Animated.Node<number> => {
-  const t0: Animated.Value<number> = new Value();
-  const t1: Animated.Value<number> = new Value();
-  const t3: Animated.Value<number> = new Value();
-  const t4: Animated.Value<number> = new Value();
-  return atan2Proc(x, y, t0, t1, t3, t4);
-};
+): Animated.Node<number> => atan2Proc(x, y, t0, t1, t3, t4);
 
 export const cubicBezier = (
   t: Animated.Adaptable<number>,
