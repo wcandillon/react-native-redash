@@ -97,7 +97,7 @@ const atan2Proc = proc(
 
 export const atan2 = (
   y: Animated.Adaptable<number>,
-  x: number
+  x: Animated.Adaptable<number>
 ): Animated.Node<number> => {
   const t0: Animated.Value<number> = new Value();
   const t1: Animated.Value<number> = new Value();
