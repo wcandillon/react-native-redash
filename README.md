@@ -202,11 +202,15 @@ const {alpha, radius} = cartesian2Polart(
 ```
 
 ```
-cartesian2Canvas({ x, y }, center)
+canvas2Cartesian({ x, y }, center)
 ```
 
 ```
-canvas2Cartesian({ x, y }, center)
+canvasToPolar({ alpha, radius }, center)
+```
+
+```
+cartesian2Canvas({ x, y }, center)
 ```
 
 ```
@@ -214,8 +218,13 @@ cartesianToPolar({ x, y })
 ```
 
 ```
-polarToCartesian({ x, y })
+polarToCartesian({ alpha, radius })
 ```
+
+```
+polarToCanvas({ alpha, radius })
+```
+
 
 ## String
 
