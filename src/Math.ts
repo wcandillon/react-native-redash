@@ -17,7 +17,8 @@ const {
   pow,
   and,
   greaterOrEq,
-  lessOrEq
+  lessOrEq,
+  proc
 } = Animated;
 
 export const bin = (value: boolean): 0 | 1 => (value ? 1 : 0);
@@ -62,6 +63,37 @@ export const toRad = (deg: Animated.Adaptable<number>): Animated.Node<number> =>
 export const toDeg = (rad: Animated.Adaptable<number>): Animated.Node<number> =>
   multiply(rad, 180 / Math.PI);
 
+const atan2Proc = proc(
+  (
+    x: Animated.Adaptable<number>,
+    y: Animated.Adaptable<number>,
+    t0: Animated.Value<number>,
+    t1: Animated.Value<number>,
+    t3: Animated.Value<number>,
+    t4: Animated.Value<number>
+  ) =>
+    block([
+      set(t3, abs(x)),
+      set(t1, abs(y)),
+      set(t0, max(t3, t1)),
+      set(t1, min(t3, t1)),
+      set(t3, divide(1, t0)),
+      set(t3, multiply(t1, t3)),
+      set(t4, multiply(t3, t3)),
+      set(t0, -0.01348047),
+      set(t0, add(multiply(t0, t4), 0.057477314)),
+      set(t0, sub(multiply(t0, t4), 0.121239071)),
+      set(t0, add(multiply(t0, t4), 0.195635925)),
+      set(t0, sub(multiply(t0, t4), 0.332994597)),
+      set(t0, add(multiply(t0, t4), 0.99999563)),
+      set(t3, multiply(t0, t3)),
+      set(t3, cond(greaterThan(abs(y), abs(x)), sub(1.570796327, t3), t3)),
+      set(t3, cond(lessThan(x, 0), sub(Math.PI, t3), t3)),
+      set(t3, cond(lessThan(y, 0), multiply(t3, -1), t3)),
+      t3
+    ])
+);
+
 // https://developer.download.nvidia.com/cg/atan2.html
 export const atan2 = (
   y: Animated.Adaptable<number>,
@@ -69,29 +101,9 @@ export const atan2 = (
 ): Animated.Node<number> => {
   const t0: Animated.Value<number> = new Value();
   const t1: Animated.Value<number> = new Value();
-  // const t2: Animated.Value<number> = new Value();
   const t3: Animated.Value<number> = new Value();
   const t4: Animated.Value<number> = new Value();
-  return block([
-    set(t3, abs(x)),
-    set(t1, abs(y)),
-    set(t0, max(t3, t1)),
-    set(t1, min(t3, t1)),
-    set(t3, divide(1, t0)),
-    set(t3, multiply(t1, t3)),
-    set(t4, multiply(t3, t3)),
-    set(t0, -0.01348047),
-    set(t0, add(multiply(t0, t4), 0.057477314)),
-    set(t0, sub(multiply(t0, t4), 0.121239071)),
-    set(t0, add(multiply(t0, t4), 0.195635925)),
-    set(t0, sub(multiply(t0, t4), 0.332994597)),
-    set(t0, add(multiply(t0, t4), 0.99999563)),
-    set(t3, multiply(t0, t3)),
-    set(t3, cond(greaterThan(abs(y), abs(x)), sub(1.570796327, t3), t3)),
-    set(t3, cond(lessThan(x, 0), sub(Math.PI, t3), t3)),
-    set(t3, cond(lessThan(y, 0), multiply(t3, -1), t3)),
-    t3
-  ]);
+  return atan2Proc(x, y, t0, t1, t3, t4);
 };
 
 export const cubicBezier = (
