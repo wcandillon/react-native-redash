@@ -1,8 +1,6 @@
 import Animated from "react-native-reanimated";
 
 const {
-  Value,
-  block,
   set,
   cond,
   add,
@@ -63,48 +61,26 @@ export const toRad = (deg: Animated.Adaptable<number>): Animated.Node<number> =>
 export const toDeg = (rad: Animated.Adaptable<number>): Animated.Node<number> =>
   multiply(rad, 180 / Math.PI);
 
-// https://developer.download.nvidia.com/cg/atan2.html
+// https://en.wikipedia.org/wiki/Atan2
+// https://www.gamedev.net/forums/topic/441464-manually-implementing-atan2-or-atan/
 const atan2Proc = proc(
-  (
-    x: Animated.Adaptable<number>,
-    y: Animated.Adaptable<number>,
-    t0: Animated.Value<number>,
-    t1: Animated.Value<number>,
-    t3: Animated.Value<number>,
-    t4: Animated.Value<number>
-  ) =>
-    block([
-      set(t3, abs(x)),
-      set(t1, abs(y)),
-      set(t0, max(t3, t1)),
-      set(t1, min(t3, t1)),
-      set(t3, divide(1, t0)),
-      set(t3, multiply(t1, t3)),
-      set(t4, multiply(t3, t3)),
-      set(t0, -0.01348047),
-      set(t0, add(multiply(t0, t4), 0.057477314)),
-      set(t0, sub(multiply(t0, t4), 0.121239071)),
-      set(t0, add(multiply(t0, t4), 0.195635925)),
-      set(t0, sub(multiply(t0, t4), 0.332994597)),
-      set(t0, add(multiply(t0, t4), 0.99999563)),
-      set(t3, multiply(t0, t3)),
-      set(t3, cond(greaterThan(abs(y), abs(x)), sub(1.570796327, t3), t3)),
-      set(t3, cond(lessThan(x, 0), sub(Math.PI, t3), t3)),
-      set(t3, cond(lessThan(y, 0), multiply(t3, -1), t3)),
-      t3
-    ])
+  (y: Animated.Adaptable<number>, x: Animated.Adaptable<number>) => {
+    const coeff1 = Math.PI / 4;
+    const coeff2 = 3 * coeff1;
+    const absY = abs(y);
+    const angle = cond(
+      greaterOrEq(x, 0),
+      [sub(coeff1, multiply(coeff1, divide(sub(x, absY), add(x, absY))))],
+      [sub(coeff2, multiply(coeff1, divide(add(x, absY), sub(absY, x))))]
+    );
+    return cond(lessThan(y, 0), multiply(angle, -1), angle);
+  }
 );
 
 export const atan2 = (
   y: Animated.Adaptable<number>,
   x: Animated.Adaptable<number>
-): Animated.Node<number> => {
-  const t0: Animated.Value<number> = new Value();
-  const t1: Animated.Value<number> = new Value();
-  const t3: Animated.Value<number> = new Value();
-  const t4: Animated.Value<number> = new Value();
-  return atan2Proc(x, y, t0, t1, t3, t4);
-};
+): Animated.Node<number> => atan2Proc(y, x);
 
 export const cubicBezier = (
   t: Animated.Adaptable<number>,
