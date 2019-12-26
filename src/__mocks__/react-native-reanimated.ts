@@ -19,6 +19,7 @@ export default {
   Value: AnimatedValue,
   Node: AnimatedValue,
   block: arr => arr[arr.length - 1],
+  proc: cb => cb,
   add: (a, b) => new AnimatedValue(getValue(a) + getValue(b)),
   sub: (a, b) => new AnimatedValue(getValue(a) - getValue(b)),
   divide: (a, b) => new AnimatedValue(getValue(a) / getValue(b)),

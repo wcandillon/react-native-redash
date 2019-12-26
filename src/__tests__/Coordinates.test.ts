@@ -1,7 +1,9 @@
 import {
   canvas2Cartesian,
+  canvas2Polar,
   cartesian2Canvas,
   cartesian2Polar,
+  polar2Canvas,
   polar2Cartesian
 } from "../Coordinates";
 
@@ -49,7 +51,7 @@ test("canvas2Cartesian 3", () => {
   expect(point.y[" __value"]).toBe(300);
 });
 
-test("cartesian2Polar", () => {
+test("cartesian2Polar 1", () => {
   const x = 0;
   const y = 100;
   const center = { x: 100, y: 100 };
@@ -60,6 +62,18 @@ test("cartesian2Polar", () => {
     polar2Cartesian({ alpha, radius }),
     center
   );
+  expect(x1[" __value"]).toBe(0);
+  expect(Math.round(y1[" __value"])).toBe(100);
+});
+
+test("cartesian2Polar 2", () => {
+  const x = 0;
+  const y = 100;
+  const center = { x: 100, y: 100 };
+  const { alpha, radius } = canvas2Polar({ x, y }, center);
+  expect(alpha[" __value"]).toBe(Math.PI);
+  expect(radius[" __value"]).toBe(100);
+  const { x: x1, y: y1 } = polar2Canvas({ alpha, radius });
   expect(x1[" __value"]).toBe(0);
   expect(Math.round(y1[" __value"])).toBe(100);
 });

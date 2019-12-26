@@ -108,6 +108,14 @@ This function works by finding the roots of the cubic bezier curve so it might b
 
 ## Math
 
+### `inc(value: Value)`
+
+Increment value by one.
+
+### `dec(value: Value)`
+
+Decrement value by one.
+
 ### `toRad(node: Node): Node`
 
 Transforms an angle from degrees to radians.
@@ -194,11 +202,15 @@ const {alpha, radius} = cartesian2Polart(
 ```
 
 ```
-cartesian2Canvas({ x, y }, center)
+canvas2Cartesian({ x, y }, center)
 ```
 
 ```
-canvas2Cartesian({ x, y }, center)
+canvasToPolar({ alpha, radius }, center)
+```
+
+```
+cartesian2Canvas({ x, y }, center)
 ```
 
 ```
@@ -206,8 +218,13 @@ cartesianToPolar({ x, y })
 ```
 
 ```
-polarToCartesian({ x, y })
+polarToCartesian({ alpha, radius })
 ```
+
+```
+polarToCanvas({ alpha, radius })
+```
+
 
 ## String
 
