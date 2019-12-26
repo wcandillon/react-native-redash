@@ -65,15 +65,12 @@ export const toDeg = (rad: Animated.Adaptable<number>): Animated.Node<number> =>
 
 // https://developer.download.nvidia.com/cg/atan2.html
 const atan2Proc = proc(
-  (
-    x: Animated.Adaptable<number>,
-    y: Animated.Adaptable<number>,
-    t0: Animated.Value<number>,
-    t1: Animated.Value<number>,
-    t3: Animated.Value<number>,
-    t4: Animated.Value<number>
-  ) =>
-    block([
+  (x: Animated.Adaptable<number>, y: Animated.Adaptable<number>) => {
+    const t0: Animated.Value<number> = new Value();
+    const t1: Animated.Value<number> = new Value();
+    const t3: Animated.Value<number> = new Value();
+    const t4: Animated.Value<number> = new Value();
+    return block([
       set(t3, abs(x)),
       set(t1, abs(y)),
       set(t0, max(t3, t1)),
@@ -92,19 +89,14 @@ const atan2Proc = proc(
       set(t3, cond(lessThan(x, 0), sub(Math.PI, t3), t3)),
       set(t3, cond(lessThan(y, 0), multiply(t3, -1), t3)),
       t3
-    ])
+    ]);
+  }
 );
 
 export const atan2 = (
   y: Animated.Adaptable<number>,
   x: Animated.Adaptable<number>
-): Animated.Node<number> => {
-  const t0: Animated.Value<number> = new Value();
-  const t1: Animated.Value<number> = new Value();
-  const t3: Animated.Value<number> = new Value();
-  const t4: Animated.Value<number> = new Value();
-  return atan2Proc(x, y, t0, t1, t3, t4);
-};
+): Animated.Node<number> => atan2Proc(x, y);
 
 export const cubicBezier = (
   t: Animated.Adaptable<number>,
