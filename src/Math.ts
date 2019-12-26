@@ -63,6 +63,7 @@ export const toDeg = (rad: Animated.Adaptable<number>): Animated.Node<number> =>
 
 // https://en.wikipedia.org/wiki/Atan2
 // https://www.gamedev.net/forums/topic/441464-manually-implementing-atan2-or-atan/
+// https://developer.download.nvidia.com/cg/atan2.html
 const atan2Proc = proc(
   (y: Animated.Adaptable<number>, x: Animated.Adaptable<number>) => {
     const coeff1 = Math.PI / 4;
