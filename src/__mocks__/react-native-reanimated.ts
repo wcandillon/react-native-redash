@@ -2,6 +2,9 @@ const getValue = node => {
   if (typeof node === "number") {
     return node;
   }
+  if (node instanceof Array) {
+    return getValue(node[node.length - 1]);
+  }
   return node[" __value"];
 };
 class AnimatedValue {
