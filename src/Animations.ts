@@ -16,7 +16,8 @@ const {
   not,
   diff,
   lessThan,
-  greaterThan
+  greaterThan,
+  useCode
 } = Animated;
 
 export type SpringConfig = Partial<Omit<Animated.SpringConfig, "toValue">>;
@@ -86,3 +87,9 @@ export const useNamedValues = <V extends Atomic, K extends string>(
     return result;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps);
+
+export const useDiff = (node: Animated.Node<number>, deps: Dependencies) => {
+  const [dDiff] = useValues<number>([0], deps);
+  useCode(() => set(dDiff, diff(node)), [dDiff, node]);
+  return dDiff;
+};

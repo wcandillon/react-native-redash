@@ -1,6 +1,8 @@
 import Animated from "react-native-reanimated";
 import { TransformsStyle } from "react-native";
 
+import { Point } from "./Coordinates";
+
 const { divide, sub, multiply } = Animated;
 
 type AnimatedTransform = {
@@ -14,9 +16,13 @@ export const translateZ = (
   z: Animated.Adaptable<number>
 ) => ({ scale: divide(perspective, sub(perspective, z)) });
 
+export const translate = ({ x: translateX, y: translateY }: Point) => [
+  { translateX },
+  { translateY }
+];
+
 export const transformOrigin = (
-  x: Animated.Adaptable<number> = 0,
-  y: Animated.Adaptable<number> = 0,
+  { x, y }: Point,
   ...transformations: AnimatedTransform[]
 ): AnimatedTransform[] => [
   { translateX: x },
