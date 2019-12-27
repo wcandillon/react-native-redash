@@ -302,6 +302,11 @@ is a shortcut for
 const [toggle state] = useMemoOne(() => [new Value(0), new Value(State.UNDETERMINED)], []);
 ```
 
+### `useDiff(node: Node, deps): Node`
+
+Returns a difference between the node value from the last frame and the current one.
+`useDiff` works for every frame whereas `diff` works on every evaluation.
+
 ### `timing({ clock?: Clock, from?: Node, to?: Node, duration?: Node, easing?: EasingFunction }): Node`
 
 Convenience function to run a timing animation.
