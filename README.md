@@ -330,7 +330,7 @@ Example usage:
 
 ```js
 const progress = new Value(0);
-set(progress, runLoop(400, Easing.linear);
+set(progress, loop({ duration: 400, easing: Easing.linear }));
 ```
 
 ### `delay(node: Node, duration: number)`
