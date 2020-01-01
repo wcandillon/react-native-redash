@@ -1,6 +1,7 @@
 {
   "extends": "react-native-wcandillon",
   "rules": {
+    "no-bitwise": 0,
     "import/extensions": [
       2,
       {
