@@ -330,7 +330,7 @@ Example usage:
 
 ```js
 const progress = new Value(0);
-set(progress, runLoop(400, Easing.linear);
+set(progress, loop({ duration: 400, easing: Easing.linear }));
 ```
 
 ### `delay(node: Node, duration: number)`
@@ -498,15 +498,15 @@ Example usage for a vertical `PanGestureHandler`.
 ```js
 const translationX = new Value(0);
 const state = new Value(State.UNDETERMINED);
-const gestureEvent = onGestureEvent({ translationX, state });
-return <PanGestureHandler {...gestureEvent} />;
+const gestureHandler = onGestureEvent({ translationX, state });
+return <PanGestureHandler {...gestureHandler} />;
 ```
 
 ### `panGestureHandler()`
 
 ```tsx
 const {
-  gestureEvent,
+  gestureHandler,
   state
   translationX,
   velocityX,
@@ -514,7 +514,7 @@ const {
   velocityY
 } = panGestureHandler();
 return (
-  <PanGestureHandler {...gestureEvent} />
+  <PanGestureHandler {...gestureHandler} />
 );
 ```
 
@@ -522,13 +522,13 @@ return (
 
 ```tsx
 const {
-  gestureEvent,
+  gestureHandler,
   state
   translationX,
   velocityX,
 } = horizontalPanGestureHandler();
 return (
-  <PanGestureHandler {...gestureEvent} />
+  <PanGestureHandler {...gestureHandler} />
 );
 ```
 
@@ -536,21 +536,21 @@ return (
 
 ```tsx
 const {
-  gestureEvent,
+  gestureHandler,
   state
   translationY,
   velocityY,
 } = verticalPanGestureHandler();
 return (
-  <PanGestureHandler {...gestureEvent} />
+  <PanGestureHandler {...gestureHandler} />
 );
 ```
 
 ### `panGestureHandler()`
 
 ```tsx
-const { gestureEvent, translationX, translationY } = panGestureHandler();
-return <PanGestureHandler {...gestureEvent} />;
+const { gestureHandler, translationX, translationY } = panGestureHandler();
+return <PanGestureHandler {...gestureHandler} />;
 ```
 
 ### `withSpring({ value: Node, velocity: Node, state: Value, offset: Node, config, snapPoints: Node[], onSnap: (value) => void }): Node`
