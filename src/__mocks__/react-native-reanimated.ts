@@ -1,10 +1,18 @@
-import { Platform, processColor } from "react-native";
+import { Platform } from "react-native";
 import Animated from "react-native-reanimated";
 
 enum Extrapolate {
   EXTEND = "extend",
   CLAMP = "clamp",
   IDENTITY = "identity"
+}
+
+interface InterpolationConfig {
+  inputRange: ReadonlyArray<Animated.Adaptable<number>>;
+  outputRange: ReadonlyArray<Animated.Adaptable<number>>;
+  extrapolate?: Extrapolate;
+  extrapolateLeft?: Extrapolate;
+  extrapolateRight?: Extrapolate;
 }
 
 const getValue = node => {
@@ -86,7 +94,12 @@ export default {
     }
     return new AnimatedValue(color);
   },
-  interpolate: (v, { inputRange: [inS, inE], outputRange: [outS, outE] }) => {
+  interpolate: (
+    v: Animated.Value<number>,
+    { inputRange, outputRange }: InterpolationConfig
+  ) => {
+    const [inS, inE] = [getValue(inputRange[0]), getValue(inputRange[1])];
+    const [outS, outE] = [getValue(outputRange[0]), getValue(outputRange[1])];
     const value = getValue(v);
     const progress = (value - inS) / (inE - inS);
     // logic below was made in order to provide a compatibility witn an Animated API
