@@ -18,10 +18,10 @@ const {
 
 type Color = string | number;
 
-export const opacity = (c: number) => (c & 0xff000000) >> 24;
-export const red = (c: number) => (c & 0x00ff0000) >> 16;
-export const green = (c: number) => (c & 0x0000ff00) >> 8;
-export const blue = (c: number) => c & 0x000000ff;
+export const opacity = (c: number) => ((c >> 24) & 255) / 255;
+export const red = (c: number) => (c >> 16) & 255;
+export const green = (c: number) => (c >> 8) & 255;
+export const blue = (c: number) => c & 255;
 
 function match(
   condsAndResPairs: readonly Animated.Node<number>[],

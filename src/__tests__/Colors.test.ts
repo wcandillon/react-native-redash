@@ -54,8 +54,8 @@ test("red", () => {
 
 test("opacity", () => {
   const round = (v: number) => Math.round(v * 10) / 10;
-  expect(opacity(0xff000000 - 2 ** 32)).toBe(1);
-  expect(opacity(0x00000000 - 2 ** 32)).toBe(0);
+  expect(opacity(0xff000000)).toBe(1);
+  expect(opacity(0x00000000)).toBe(0);
   expect(opacity(processColor("#00ffff"))).toBe(1);
   expect(opacity(processColor("#ffffffff"))).toBe(1);
   expect(round(opacity(processColor("#ffff0000")))).toBe(0);
