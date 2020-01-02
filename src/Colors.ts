@@ -18,10 +18,10 @@ const {
 
 type Color = string | number;
 
-const red = (c: number) => (c & 0xff000000) >> 24;
-const green = (c: number) => (c & 0x00ff0000) >> 16;
-const blue = (c: number) => (c & 0x0000ff00) >> 8;
-const opacity = (c: number) => c & 0x000000ff;
+export const opacity = (c: number) => (c & 0xff000000) >> 24;
+export const red = (c: number) => (c & 0x00ff0000) >> 16;
+export const green = (c: number) => (c & 0x0000ff00) >> 8;
+export const blue = (c: number) => c & 0x000000ff;
 
 function match(
   condsAndResPairs: readonly Animated.Node<number>[],
@@ -185,8 +185,9 @@ export const interpolateColor = (
   const outputRange = config.outputRange.map(c =>
     typeof c === "number" ? c : processColor(c)
   );
-  if (colorSpace === "hsv")
+  if (colorSpace === "hsv") {
     return interpolateColorsHSV(value, inputRange, outputRange);
+  }
   return interpolateColorsRGB(value, inputRange, outputRange);
 };
 

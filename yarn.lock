@@ -4044,10 +4044,10 @@ eslint-config-prettier@^6.7.0:
   dependencies:
     get-stdin "^6.0.0"
 
-eslint-config-react-native-wcandillon@2.3.1:
-  version "2.3.1"
-  resolved "https://registry.yarnpkg.com/eslint-config-react-native-wcandillon/-/eslint-config-react-native-wcandillon-2.3.1.tgz#beddb1bbe6a075dacf2a7546543ce110231b4acf"
-  integrity sha512-R1dLnXLMX19wItGIIs098FuZreKK3FfPElfbWSEx8uMPiovoUzs8942Z5QarpeaSCEH5zPT4k6JRZWz1nXkVlg==
+eslint-config-react-native-wcandillon@2.3.4:
+  version "2.3.4"
+  resolved "https://registry.yarnpkg.com/eslint-config-react-native-wcandillon/-/eslint-config-react-native-wcandillon-2.3.4.tgz#7be32ceda08a471f1a9d537d537236756e731dba"
+  integrity sha512-UopKCN/8eL1T83aO45VFZBxJmEpyd3zbewBaIJgYwei4mS5apVrMmHDm+7miC0ldkPjVRyz1OHYHrKKRD+1+qQ==
   dependencies:
     "@typescript-eslint/eslint-plugin" "2.10.0"
     "@typescript-eslint/parser" "2.10.0"
