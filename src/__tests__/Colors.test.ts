@@ -1,8 +1,8 @@
 import { processColor } from "react-native";
 import Animated from "react-native-reanimated";
-import { blue, green, opacity, red } from "../Colors";
+import { bInterpolateColor, blue, green, opacity, red } from "../Colors";
 
-const { color } = Animated;
+const { color, Value } = Animated;
 jest.mock("react-native-reanimated");
 
 test("white", () => {
@@ -62,4 +62,22 @@ test("opacity", () => {
   expect(round(opacity(processColor("#00ff0000")))).toBe(0);
   expect(round(opacity(processColor("#00ff0080")))).toBe(0.5);
   expect(round(opacity(processColor("rgba(0, 0, 0, 0.5)")))).toBe(0.5);
+});
+
+test("simple interpolation 1", () => {
+  expect(bInterpolateColor(new Value(0), "white", "black")[" __value"]).toBe(
+    processColor("#ffffff")
+  );
+});
+
+test("simple interpolation 2", () => {
+  expect(bInterpolateColor(new Value(1), "white", "black")[" __value"]).toBe(
+    processColor("#000000")
+  );
+});
+
+test("simple interpolation 3", () => {
+  expect(
+    bInterpolateColor(new Value(0.5), 0x00ff00, 0x0000ff)[" __value"]
+  ).toBe(0x008080);
 });

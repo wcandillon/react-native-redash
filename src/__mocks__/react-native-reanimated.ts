@@ -86,5 +86,18 @@ export default {
     }
     return new AnimatedValue(color);
   },
+  interpolate: (v, { inputRange: [inS, inE], outputRange: [outS, outE] }) => {
+    const value = getValue(v);
+    const progress = (value - inS) / (inE - inS);
+    // logic below was made in order to provide a compatibility witn an Animated API
+    const resultForNonZeroRange = outS + progress * (outE - outS);
+    if (inS === inE) {
+      if (value <= inS) {
+        return outS;
+      }
+      return outE;
+    }
+    return resultForNonZeroRange;
+  },
   Extrapolate
 };
