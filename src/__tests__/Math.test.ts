@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 import { atan2 } from "../Math";
 
 jest.mock("react-native-reanimated");

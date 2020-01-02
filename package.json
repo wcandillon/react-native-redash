@@ -27,22 +27,15 @@
     "react-native-reanimated": "*"
   },
   "devDependencies": {
-    "@babel/core": "^7.7.7",
-    "@babel/plugin-proposal-class-properties": "^7.7.4",
-    "@babel/plugin-proposal-nullish-coalescing-operator": "^7.7.4",
-    "@babel/plugin-proposal-optional-chaining": "^7.7.5",
-    "@babel/preset-env": "^7.7.7",
-    "@babel/preset-flow": "^7.7.4",
-    "@babel/preset-react": "^7.7.4",
-    "@babel/preset-typescript": "^7.7.7",
     "@react-native-community/bob": "^0.4.1",
     "@types/color": "^3.0.0",
     "@types/jest": "^24.0.24",
     "@types/react": "*",
     "@types/react-native": "^0.60.25",
     "babel-jest": "^24.9.0",
+    "babel-preset-expo": "^8.0.0",
     "eslint": "^6.7.2",
-    "eslint-config-react-native-wcandillon": "2.3.1",
+    "eslint-config-react-native-wcandillon": "2.3.4",
     "jest": "^24.9.0",
     "react": "^16.8.6",
     "react-native": "^0.61.0",
@@ -69,7 +62,6 @@
   },
   "dependencies": {
     "abs-svg-path": "^0.1.1",
-    "color": "^3.1.2",
     "normalize-svg-path": "^1.0.1",
     "parse-svg-path": "^0.1.2",
     "use-memo-one": "^1.1.1"

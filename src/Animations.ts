@@ -17,7 +17,10 @@ const {
   diff,
   lessThan,
   greaterThan,
-  useCode
+  useCode,
+  divide,
+  modulo,
+  proc
 } = Animated;
 
 export type SpringConfig = Partial<Omit<Animated.SpringConfig, "toValue">>;
@@ -93,3 +96,28 @@ export const useDiff = (node: Animated.Node<number>, deps: Dependencies) => {
   useCode(() => set(dDiff, diff(node)), [dDiff, node]);
   return dDiff;
 };
+
+export const addTo = proc(
+  (value: Animated.Value<number>, node: Animated.Adaptable<number>) =>
+    set(value, add(value, node))
+);
+
+export const subTo = proc(
+  (value: Animated.Value<number>, node: Animated.Adaptable<number>) =>
+    set(value, sub(value, node))
+);
+
+export const multiplyTo = proc(
+  (value: Animated.Value<number>, node: Animated.Adaptable<number>) =>
+    set(value, multiply(value, node))
+);
+
+export const divideTo = proc(
+  (value: Animated.Value<number>, node: Animated.Adaptable<number>) =>
+    set(value, divide(value, node))
+);
+
+export const moduloTo = proc(
+  (value: Animated.Value<number>, node: Animated.Adaptable<number>) =>
+    set(value, modulo(value, node))
+);

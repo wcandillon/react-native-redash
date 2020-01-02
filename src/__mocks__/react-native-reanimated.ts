@@ -1,3 +1,20 @@
+import { Platform } from "react-native";
+import Animated from "react-native-reanimated";
+
+enum Extrapolate {
+  EXTEND = "extend",
+  CLAMP = "clamp",
+  IDENTITY = "identity"
+}
+
+interface InterpolationConfig {
+  inputRange: ReadonlyArray<Animated.Adaptable<number>>;
+  outputRange: ReadonlyArray<Animated.Adaptable<number>>;
+  extrapolate?: Extrapolate;
+  extrapolateLeft?: Extrapolate;
+  extrapolateRight?: Extrapolate;
+}
+
 const getValue = node => {
   if (typeof node === "number") {
     return node;
@@ -7,6 +24,7 @@ const getValue = node => {
   }
   return node[" __value"];
 };
+
 class AnimatedValue {
   " __value": number;
 
@@ -52,10 +70,7 @@ export default {
   abs: a => new AnimatedValue(Math.abs(getValue(a))),
   round: a => new AnimatedValue(Math.round(getValue(a))),
   ceil: a => new AnimatedValue(Math.ceil(getValue(a))),
-  acc: a => `acc_mock${getValue(a)}`,
-  diff: a => `diff_mock${getValue(a)}`,
   concat: (a, b) => getValue(a) + b,
-  defined: a => `defined_mock${getValue(a)}`,
   eq: (a, b) => new AnimatedValue(Number(getValue(a) === getValue(b))),
   neq: (a, b) => new AnimatedValue(Number(getValue(a) !== getValue(b))),
   lessThan: (a, b) => new AnimatedValue(Number(getValue(a) < getValue(b))),
@@ -63,5 +78,39 @@ export default {
   greaterOrEq: (a, b) => new AnimatedValue(Number(getValue(a) >= getValue(b))),
   lessOrEq: (a, b) => new AnimatedValue(Number(getValue(a) <= getValue(b))),
   not: a => new AnimatedValue(Number(!getValue(a))),
-  cond: (a, b, c) => new AnimatedValue(getValue(a) ? getValue(b) : getValue(c))
+  cond: (a, b, c) => new AnimatedValue(getValue(a) ? getValue(b) : getValue(c)),
+  color: (r, g, b, a = 1) => {
+    const color =
+      16777216 * Math.round(getValue(a) * 255) +
+      65536 * getValue(r) +
+      256 * getValue(g) +
+      getValue(b);
+    if (Platform.OS === "android") {
+      // on Android color is represented as signed 32 bit int
+      if (color < (1 << 31) >>> 0) {
+        return new AnimatedValue(color);
+      }
+      return new AnimatedValue(color - 2 ** 32);
+    }
+    return new AnimatedValue(color);
+  },
+  interpolate: (
+    v: Animated.Value<number>,
+    { inputRange, outputRange }: InterpolationConfig
+  ) => {
+    const [inS, inE] = [getValue(inputRange[0]), getValue(inputRange[1])];
+    const [outS, outE] = [getValue(outputRange[0]), getValue(outputRange[1])];
+    const value = getValue(v);
+    const progress = (value - inS) / (inE - inS);
+    // logic below was made in order to provide a compatibility witn an Animated API
+    const resultForNonZeroRange = outS + progress * (outE - outS);
+    if (inS === inE) {
+      if (value <= inS) {
+        return outS;
+      }
+      return outE;
+    }
+    return resultForNonZeroRange;
+  },
+  Extrapolate
 };
