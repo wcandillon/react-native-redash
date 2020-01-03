@@ -28,7 +28,7 @@ export const cartesian2Canvas = ({ x, y }: Point, center: Point) => ({
 
 export const cartesian2Polar = ({ x, y }: Point) => {
   return {
-    alpha: atan2(y, x),
+    theta: atan2(y, x),
     radius: sqrt(add(pow(x, 2), pow(y, 2)))
   };
 };
