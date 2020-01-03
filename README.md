@@ -195,10 +195,10 @@ For instance, to convert a `x` and `y` coordinate from the React Native canvas t
 const x = 0;
 const y = 100;
 const center = { x: 100, y: 100 };
-const {alpha, radius} = cartesian2Polart(
+const {theta, radius} = cartesian2Polart(
   canvas2Cartesian({ x, y }, center)
 );
-// alpha is π, radius: 100
+// theta is π, radius: 100
 ```
 
 ```
@@ -206,7 +206,7 @@ canvas2Cartesian({ x, y }, center)
 ```
 
 ```
-canvasToPolar({ alpha, radius }, center)
+canvasToPolar({ theta, radius }, center)
 ```
 
 ```
@@ -218,11 +218,11 @@ cartesianToPolar({ x, y })
 ```
 
 ```
-polarToCartesian({ alpha, radius })
+polarToCartesian({ theta, radius })
 ```
 
 ```
-polarToCanvas({ alpha, radius })
+polarToCanvas({ theta, radius })
 ```
 
 

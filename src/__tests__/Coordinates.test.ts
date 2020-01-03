@@ -55,11 +55,11 @@ test("cartesian2Polar 1", () => {
   const x = 0;
   const y = 100;
   const center = { x: 100, y: 100 };
-  const { alpha, radius } = cartesian2Polar(canvas2Cartesian({ x, y }, center));
-  expect(alpha[" __value"]).toBe(Math.PI);
+  const { theta, radius } = cartesian2Polar(canvas2Cartesian({ x, y }, center));
+  expect(theta[" __value"]).toBe(Math.PI);
   expect(radius[" __value"]).toBe(100);
   const { x: x1, y: y1 } = cartesian2Canvas(
-    polar2Cartesian({ alpha, radius }),
+    polar2Cartesian({ theta, radius }),
     center
   );
   expect(x1[" __value"]).toBe(0);
@@ -70,10 +70,13 @@ test("cartesian2Polar 2", () => {
   const x = 0;
   const y = 100;
   const center = { x: 100, y: 100 };
-  const { alpha, radius } = canvas2Polar({ x, y }, center);
-  expect(alpha[" __value"]).toBe(Math.PI);
+  const { theta, radius } = canvas2Polar({ x, y }, center);
+  expect(theta[" __value"]).toBe(Math.PI);
   expect(radius[" __value"]).toBe(100);
-  const { x: x1, y: y1 } = polar2Canvas({ alpha, radius });
+  const { x: x1, y: y1 } = polar2Canvas(
+    { theta, radius },
+    { x: radius, y: radius }
+  );
   expect(x1[" __value"]).toBe(0);
   expect(Math.round(y1[" __value"])).toBe(100);
 });

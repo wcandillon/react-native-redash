@@ -10,7 +10,7 @@ export interface Point {
 }
 
 export interface PolarPoint {
-  alpha: Animated.Adaptable<number>;
+  theta: Animated.Adaptable<number>;
   radius: Animated.Adaptable<number>;
 }
 
@@ -28,21 +28,18 @@ export const cartesian2Canvas = ({ x, y }: Point, center: Point) => ({
 
 export const cartesian2Polar = ({ x, y }: Point) => {
   return {
-    alpha: atan2(y, x),
+    theta: atan2(y, x),
     radius: sqrt(add(pow(x, 2), pow(y, 2)))
   };
 };
 
-export const polar2Cartesian = ({ alpha, radius }: PolarPoint) => ({
-  x: multiply(radius, cos(alpha)),
-  y: multiply(radius, sin(alpha))
+export const polar2Cartesian = ({ theta, radius }: PolarPoint) => ({
+  x: multiply(radius, cos(theta)),
+  y: multiply(radius, sin(theta))
 });
 
-export const polar2Canvas = ({ alpha, radius }: PolarPoint) =>
-  cartesian2Canvas(polar2Cartesian({ alpha, radius }), {
-    x: radius,
-    y: radius
-  });
+export const polar2Canvas = ({ theta, radius }: PolarPoint, center: Point) =>
+  cartesian2Canvas(polar2Cartesian({ theta, radius }), center);
 
 export const canvas2Polar = ({ x, y }: Point, center: Point) =>
   cartesian2Polar(canvas2Cartesian({ x, y }, center));
