@@ -17,6 +17,7 @@ const {
   interpolate,
   multiply,
   lessThan,
+  concat,
   add
 } = Animated;
 
@@ -193,7 +194,7 @@ export const interpolatePath = (
       index === 0 ? string`M${mx},${my} ` : ""
     }C${p1x},${p1y} ${p2x},${p2y} ${p3x},${p3y}`;
   });
-  return string`${commands}`;
+  return concat(...commands);
 };
 
 export const bInterpolatePath = (
