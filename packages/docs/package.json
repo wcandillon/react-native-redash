@@ -33,7 +33,8 @@
     "@types/styled-components": "^4.4.1",
     "babel-loader": "^8.0.6",
     "babel-plugin-styled-components": "^1.10.6",
-    "gatsby-plugin-root-import": "^2.0.5"
+    "gatsby-plugin-root-import": "^2.0.5",
+    "gh-pages": "^2.2.0"
   },
   "scripts": {
     "build": "gatsby build",
@@ -41,6 +42,7 @@
     "start": "npm run develop",
     "serve": "gatsby serve",
     "clean": "gatsby clean",
+    "deploy": "gatsby build --prefix-paths && gh-pages -d public",
     "test": "echo \"Write tests! -> https://gatsby.dev/unit-testing\" && exit 1"
   }
 }
