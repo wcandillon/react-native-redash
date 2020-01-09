@@ -1,5 +1,6 @@
 {
   "name": "react-native-redash",
+  "private": true,
   "version": "0.0.0-development",
   "description": "Utility library for React Native Reanimated",
   "main": "lib/module/index.js",
@@ -8,7 +9,10 @@
     "tsc": "tsc --noEmit",
     "test": "jest",
     "prepare": "bob build",
-    "semantic-release": "semantic-release"
+    "semantic-release": "semantic-release",
+    "docs:build": "yarn workspace docs run build",
+    "docs:start": "yarn workspace docs run start",
+    "docs:serve": "yarn workspace docs run serve"
   },
   "repository": {
     "type": "git",
@@ -20,6 +24,9 @@
     "url": "https://github.com/wcandillon/redash/issues"
   },
   "homepage": "https://github.com/wcandillon/redash#readme",
+  "workspaces": [
+    "packages/*"
+  ],
   "peerDependencies": {
     "react": "*",
     "react-native": "*",
