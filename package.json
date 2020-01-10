@@ -10,8 +10,7 @@
     "test": "jest",
     "prepare": "bob build",
     "semantic-release": "semantic-release",
-    "docs:start": "yarn workspace docs run start",
-    "docs:deploy": "yarn workspace docs run deploy"
+    "docs": "yarn workspace docs"
   },
   "repository": {
     "type": "git",
