@@ -1,0 +1,2 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[40],{ND7p:function(e,n,t){"use strict";t.r(n);var a=t("ERkP"),l=t.n(a),c=t("Nhdc");n.default=function(){return l.a.createElement(l.a.Fragment,null,l.a.createElement(c.e,{title:"inc - Math"}),l.a.createElement("h1",null,"inc(value: Value)"),l.a.createElement("p",null,"Increment value by one."))}}}]);
+//# sourceMappingURL=40-2db2eb0bdd29d9708feb.js.map

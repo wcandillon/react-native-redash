@@ -1,0 +1,2 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[44],{ruPC:function(e,n,t){"use strict";t.r(n);var a=t("ERkP"),o=t.n(a),r=t("Nhdc");n.default=function(){return o.a.createElement(o.a.Fragment,null,o.a.createElement(r.e,{title:"toDeg - Math"}),o.a.createElement("h1",null,"toDeg(node: Node): Node"),o.a.createElement("p",null,"Transforms an angle from radians to degrees."),o.a.createElement(r.b,{code:"\ntoDeg(deg: Node) => Node;\n      "}))}}}]);
+//# sourceMappingURL=44-5c6121f6ff90e0445cc2.js.map

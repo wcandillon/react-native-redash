@@ -1,0 +1,2 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[24],{NL6f:function(e,n,t){"use strict";t.r(n);var o=t("ERkP"),r=t.n(o),c=t("tYqs");n.default=function(){return r.a.createElement(c.Redirect,{to:"/gestures/onScroll",noThrow:!0,replace:!0})}}}]);
+//# sourceMappingURL=24-a147d4dad13e8f631284.js.map

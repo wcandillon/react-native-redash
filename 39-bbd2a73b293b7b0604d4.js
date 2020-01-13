@@ -1,0 +1,2 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[39],{toto:function(e,t,n){"use strict";n.r(t);var a=n("ERkP"),l=n.n(a),c=n("Nhdc");t.default=function(){return l.a.createElement(l.a.Fragment,null,l.a.createElement(c.e,{title:"dec - Math"}),l.a.createElement("h1",null,"dec(value: Value)"),l.a.createElement("p",null,"Decrement value by one."))}}}]);
+//# sourceMappingURL=39-bbd2a73b293b7b0604d4.js.map

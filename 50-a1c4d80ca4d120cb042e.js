@@ -1,0 +1,2 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[50],{lmrE:function(e,n,t){"use strict";t.r(n);var r=t("ERkP"),a=t.n(r),o=t("tYqs");n.default=function(){return a.a.createElement(o.Redirect,{to:"/svg/parsePath",noThrow:!0,replace:!0})}}}]);
+//# sourceMappingURL=50-a1c4d80ca4d120cb042e.js.map

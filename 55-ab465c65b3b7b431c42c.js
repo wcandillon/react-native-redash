@@ -1,0 +1,2 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[55],{PsR9:function(e,t,a){"use strict";a.r(t);var n=a("ERkP"),r=a.n(n),l=a("Nhdc");t.default=function(){return r.a.createElement(r.a.Fragment,null,r.a.createElement(l.e,{title:"translateZ - Transformations"}),r.a.createElement("h1",null,"translateZ(perspective, z)"),r.a.createElement("p",null,"Convert a translateZ transformation into a scale transformation."),r.a.createElement(l.b,{code:"\ntranslateZ(perspective: Node, z: Node)\n      "}))}}}]);
+//# sourceMappingURL=55-ab465c65b3b7b431c42c.js.map

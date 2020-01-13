@@ -1,0 +1,2 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[8],{GJ1S:function(e,n,t){"use strict";t.r(n);var a=t("ERkP"),o=t.n(a),r=t("tYqs");n.default=function(){return o.a.createElement(r.Redirect,{to:"/animations/useValues",noThrow:!0,replace:!0})}}}]);
+//# sourceMappingURL=8-dddb929f39bb6c32c749.js.map

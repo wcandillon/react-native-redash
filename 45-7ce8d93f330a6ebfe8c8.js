@@ -1,0 +1,2 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[45],{"37AX":function(e,n,a){"use strict";a.r(n);var t=a("ERkP"),o=a.n(t),d=a("Nhdc");n.default=function(){return o.a.createElement(o.a.Fragment,null,o.a.createElement(d.e,{title:"toRad - Math"}),o.a.createElement("h1",null,"toRad(node: Node): Node"),o.a.createElement("p",null,"Transforms an angle from degrees to radians."),o.a.createElement(d.b,{code:"\ntoRad(deg: Node) => Node;\n      "}))}}}]);
+//# sourceMappingURL=45-7ce8d93f330a6ebfe8c8.js.map

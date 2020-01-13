@@ -1,0 +1,2 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[12],{nogl:function(e,n,t){"use strict";t.r(n);var a=t("ERkP"),l=t.n(a),o=t("Nhdc");n.default=function(){return l.a.createElement(l.a.Fragment,null,l.a.createElement(o.e,{title:"snapPoint - Animations"}),l.a.createElement("h1",null,"snapPoint(point, velocity, points)"),l.a.createElement("p",null,"Select a point based on a node value and its velocity."))}}}]);
+//# sourceMappingURL=12-d70422b9b118c79fe2e7.js.map

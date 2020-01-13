@@ -1,0 +1,2 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[20],{Uttg:function(e,t,n){"use strict";n.r(t);var r=n("ERkP"),a=n.n(r),o=n("tYqs");t.default=function(){return a.a.createElement(o.Redirect,{to:"/array/get",noThrow:!0,replace:!0})}}}]);
+//# sourceMappingURL=20-cd270e67518a2557de02.js.map
