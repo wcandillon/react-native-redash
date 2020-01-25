@@ -4,6 +4,7 @@ import { useMemoOne } from "use-memo-one";
 import { min } from "./Math";
 
 const {
+  Clock,
   Value,
   set,
   add,
@@ -90,6 +91,15 @@ export const useNamedValues = <V extends Atomic, K extends string>(
     return result;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps);
+
+export const useClocks = (
+  numberOfClocks: number,
+  deps: Dependencies
+): Animated.Clock[] =>
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useMemoOne(() => new Array(numberOfClocks).fill(0).map(() => new Clock()), [
+    deps
+  ]);
 
 export const useDiff = (node: Animated.Node<number>, deps: Dependencies) => {
   const [dDiff] = useValues<number>([0], deps);
