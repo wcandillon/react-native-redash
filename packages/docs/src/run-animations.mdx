@@ -4,3 +4,96 @@ route: /run-animations
 ---
 
 # Run Animations
+
+---
+
+## `timing()`
+
+```tsx
+interface TimingParams {
+    clock?: Animated.Clock;
+    from?: Animated.Adaptable<number>;
+    to?: Animated.Adaptable<number>;
+    duration?: Animated.Adaptable<number>;
+    easing?: Animated.EasingFunction;
+}
+const timing: (params: TimingParams) => Animated.Node<number>;
+```
+
+Convenience function to run a timing animation.
+Example usage:
+
+```tsx
+timing({
+  duration: 10 * 1000,
+  from: 0,
+  to: 1,
+  easing: Easing.linear,
+});
+```
+
+---
+
+## `decay()`
+
+```tsx
+export interface DecayParams {
+    clock?: Animated.Clock;
+    from?: Animated.Adaptable<number>;
+    velocity?: Animated.Value<number>;
+    deceleration?: Animated.Adaptable<number>;
+}
+const decay: (params: DecayParams) => Animated.Node<number>;
+```
+
+Convenience function to run a decay animation.
+
+## `spring()`
+
+```tsx
+interface SpringParams {
+    clock?: Animated.Clock;
+    from?: Animated.Adaptable<number>;
+    to: Animated.Adaptable<number>;
+    velocity?: Animated.Value<number>;
+    config?: SpringConfig;
+}
+const spring: (params: SpringParams) => Animated.Node<number>;
+```
+
+Convenience function to run a spring animation.
+
+
+## `delay()`
+
+```tsx
+const delay: (node: Animated.Node<number>, duration: number) => Animated.Node<number>;
+```
+
+Evaluate an animation node after a certain amount of time. `duration` is in milliseconds.
+Example usage:
+
+```js
+delay(set(value, 1), 250);
+```
+
+## `loop()`
+
+```tsx
+interface LoopProps {
+    clock?: Animated.Clock;
+    easing?: Animated.EasingFunction;
+    duration?: number;
+    boomerang?: boolean;
+    autoStart?: boolean;
+}
+const loop: (loopConfig: LoopProps) => Animated.Node<number>;
+```
+
+Returns an animated node that goes from `0` to `1` during the time set by `duration` continuously. If the `boomerang` option is set to `true`, the animation goes from `0` to `1` and then from `1` to `0` in the next cycle.
+Example usage:
+
+```tsx
+const progress = new Value(0);
+set(progress, loop({ duration: 400, easing: Easing.linear }));
+```

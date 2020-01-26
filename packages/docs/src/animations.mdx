@@ -4,3 +4,53 @@ route: /animations
 ---
 
 # Animations
+
+---
+
+## `useValues()`
+
+```tsx
+const useValues: <V extends string | number | boolean>(values: V[], deps: Dependencies) => Animated.Value<V>[];
+```
+
+Create animation values which lifecycle is granted by `deps`.
+For instance the code snippet below:
+
+```tsx
+const [toggle, state] = useValues([0, State.UNDETERMINED], []);
+```
+
+is a shortcut for
+
+```tsx
+const [toggle state] = useMemoOne(() => [new Value(0), new Value(State.UNDETERMINED)], []);
+```
+
+---
+
+## `useDiff()`
+
+```tsx
+const useDiff: (node: Animated.Node<number>, deps: Dependencies) => Animated.Value<number>;
+```
+
+Returns a difference between the node value from the last frame and the current one.
+`useDiff` works for every frame whereas `diff` works on every evaluation.
+
+---
+
+## `snapPoint()`
+
+```tsx
+const snapPoint: (value: Animated.Adaptable<number>, velocity: Animated.Adaptable<number>, points: Animated.Adaptable<number>[]) => Animated.Adaptable<number>;
+```
+
+Select a point based on a node value and its velocity.
+
+## `bInterpolate`
+
+```tsx
+const bInterpolate: (value: Animated.Adaptable<number>, origin: Animated.Adaptable<number>, destination: Animated.Adaptable<number>) => Animated.Node<number>;
+```
+
+Interpolate the node from 0 to 1 without clamping.

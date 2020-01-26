@@ -4,3 +4,37 @@ route: /colors
 ---
 
 # Colors
+
+```tsx
+// Interpolate in RGB color space (default)
+interpolateColor(node, {
+  inputRange: [0, 100],
+  outputRange: ["blue", "red"]
+});
+
+// Interpolate in HSV color space
+interpolateColor(
+  node,
+  {
+    inputRange: [0, 1],
+    outputRange: ["blue", "red"]
+  },
+  "hsv"
+);
+```
+
+---
+
+## `interpolateColor()`
+
+```tsx
+const interpolateColor: (value: Animated.Adaptable<number>, config: ColorInterpolationConfig, colorSpace?: "hsv" | "rgb") => Animated.Node<number>;
+```
+
+---
+
+## `bInterpolateColor()`
+
+```tsx
+const bInterpolateColor: (value: Animated.Adaptable<number>, color1: string | number, color2: string | number, colorSpace?: "hsv" | "rgb") => Animated.Node<number>;
+```
