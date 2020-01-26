@@ -8,6 +8,8 @@ route: /svg
 Redash provides some utilities functions to deal with SVG paths.
 `parsePath()` will normalize the SVG path in a sequence of Bézier curves that can be processed on the UI thread using Reanimated. 
 
+---
+
 ## `parsePath()`
 
 ```tsx
@@ -23,6 +25,8 @@ Here is an example below:
 const path = parsePath(d);
 const { y, x } = getPointAtLength(path, length);
 ```
+
+---
 
 ## `getPointAtLength()`
 
@@ -40,6 +44,8 @@ Implementation of [getPointAtLength](https://developer.mozilla.org/en-US/docs/We
 const path = parsePath(d);
 const { y, x } = getPointAtLength(path, length);
 ```
+
+---
 
 ## `interpolatePath()`
 
@@ -61,6 +67,8 @@ return (
   </Svg>
 );
 ```
+
+---
 
 ## `bInterpolatePath()`
 
@@ -96,6 +104,8 @@ return (
   </>
 );
 ```
+
+---
 
 ## `getLengthAtX()`
 
