@@ -1,4 +1,5 @@
 export default {
   typescript: true,
-  dest: "../../docs"
+  dest: "../../docs",
+  base: "/react-native-redash/"
 };
