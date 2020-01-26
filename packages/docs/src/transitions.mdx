@@ -1,0 +1,72 @@
+---
+name: Transitions
+route: /transitions
+---
+
+# Transitions
+
+Transitions are essential to the user experience.
+Redash offers four utility functions for transitions which are broke down in the table below.
+If you want to build a transition based on a React state change use `useTimingTransition()` or `useSpringTransition()`.
+To transition an animation value change, use `withTimingTransition()` or `withSpringTransition()`.
+
+|        | State (JS Thread)      | Value (UI Thread)        |
+| ------ |:----------------------:| ------------------------:|
+| Timing | useTimingTransition()  | withTimingTransition()   |
+| Spring | useSpringTransition()  | withSpringTransition()   |
+
+## Attach a transition to a state
+
+```tsx
+import {useTimingTransition} from "react-native-redash";
+
+const Toggle = () => {
+  const [open, setOpen] = useState(false);
+  const transition = useTimingTransition(open, { duration: 400 });
+}
+```
+
+## Attach a transition to an animation value
+
+```tsx
+import {useTimingTransition} from "react-native-redash";
+
+const Toggle = () => {
+  const open = new Value<number>(0);
+  const transition = withTimingTransition(open, { duration: 400 });
+}
+```
+
+---
+
+## `useTimingTransition()`
+
+```tsx
+const useTimingTransition: (state: number | boolean, config?: Partial<Pick<Animated.TimingConfig, "duration" | "easing">>) => Animated.Node<number>;
+```
+
+---
+
+## `useSpringTransition()`
+
+```tsx
+const useSpringTransition: (state: number | boolean, config?: Partial<Pick<Animated.SpringConfig, "damping" | "mass" | "stiffness" | "overshootClamping" | "restSpeedThreshold" | "restDisplacementThreshold">>) => Animated.Node<number>;
+```
+
+---
+
+## `withTimingTransition()`
+
+```tsx
+const withTimingTransition: (value: Animated.Node<number>, timingConfig?: Partial<Pick<Animated.TimingConfig, "duration" | "easing">>, gestureState?: Animated.Value<State>) => Animated.Node<number>;
+```
+
+---
+
+## `withSpringTransition()`
+
+
+```tsx
+const withSpringTransition: (value: Animated.Node<number>, springConfig?: Partial<Pick<Animated.SpringConfig, "damping" | "mass" | "stiffness" | "overshootClamping" | "restSpeedThreshold" | "restDisplacementThreshold">>, velocity?: Animated.Adaptable<number>, gestureState?: Animated.Value<State>) => Animated.Node<number>;
+```
+

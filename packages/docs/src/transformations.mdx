@@ -1,0 +1,46 @@
+---
+name: Transformations
+route: /transformations
+---
+
+# Transformations
+
+---
+
+## `translateZ()`
+
+```tsx
+const translateZ: (perspective: Animated.Adaptable<number>, z: Animated.Adaptable<number>) => {
+    scale: Animated.Node<number>;
+};
+```
+
+Convert a translateZ transformation into a scale transformation.
+Example usage with `transform`.
+
+```tsx
+const perspective = 800;
+const z = new Value(100);
+//...
+transform: [{ perspective }, translateZ(perspective, z)];
+```
+
+---
+
+## `transformOrigin()`
+
+```tsx
+const transformOrigin: ({ x, y }: Point, ...transformations: AnimatedTransform[]) => AnimatedTransform[];
+```
+
+Changes the origin of the transformations.
+
+Example:
+
+```tsx
+<View
+  style={{
+    transform: transformOrigin(cx, cy, { rotateX })
+  }}
+/>
+```

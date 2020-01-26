@@ -5,17 +5,17 @@
 
 Utility library for React Native Gesture Handler and Reanimated. As seen on the [“Can it be done in React Native?”](http://youtube.com/user/wcandill) YouTube series.
 
-## Usage
+## Installation
 
 ```sh
 yarn add react-native-redash
 ```
 
-```js
-import { atan2 } from "react-native-redash";
+## Documentation
 
-atan2(y, x);
-```
+[https://wcandillon.github.io/react-native-redash](https://wcandillon.github.io/react-native-redash)
+
+
 
 ## Components
 
@@ -29,161 +29,6 @@ Example usage:
 <ReText text={new Value("hello world!")} style={{ color: "blue" }} />
 ```
 
-## SVG
-
-### `parsePath(SVGPath: String): ReanimatedPath`
-
-Given an SVG Path, returns a denormalized object of values that can be used for animations on that path.
-From the perspective of the user, the returned value should be considered a black box.
-Here is an example below:
-
-```ts
-// We get the data from the SVG Path denormalized a way that can be handled with Reanimated
-const path = parsePath(d);
-const { y, x } = getPointAtLength(path, length);
-```
-
-### `getPointAtLength(path): { x: Node, y: Node }`
-
-Implementation of [getPointAtLength](https://developer.mozilla.org/en-US/docs/Web/API/SVGPathElement/getPointAtLength) for Reanimated.
-
-```ts
-// We get the data from the SVG Path denormalized a way that can be handled with Reanimated
-const path = parsePath(d);
-const { y, x } = getPointAtLength(path, length);
-```
-
-### `interpolatePath(value: Node, { inputRange, outputRange }): path`
-
-Interpolate from one SVG point to the other, this function assumes that each path has the same number of points.
-
-```tsx
-const phone1 = "M 18 149C 18 149 25 149 25 149 25 14...";
-const d = interpolatePath(slider, {
-  inputRange: [0, width, width * 2],
-  outputRange: [phone1, phone2, phone3]
-});
-return (
-  <Svg style={styles.svg} viewBox="0 0 100 300">
-    <AnimatedPath fill="black" {...{ d }} />
-  </Svg>
-);
-```
-
-### `bInterpolatePath(progress, path1, path2): path`
-
-Interpolate from one SVG point to the other, this function assumes that each path has the same number of points.
-
-```tsx
-const rhino = "M 217.765 29.683 C 225.855 29.683 ";
-const elephant = "M 223.174 43.413 ...";
-return (
-  <>
-    <Animated.Code>
-      {() =>
-        set(
-          progress,
-          timing(clock, progress, {
-            to: 1,
-            duration: 2000,
-            easing: Easing.linear
-          })
-        )
-      }
-    </Animated.Code>
-    <Svg style={styles.container} viewBox="0 0 409 280">
-      <AnimatedPath
-        d={bInterpolatePath(progress, rhino, elephant)}
-        fill="#7d8f9b"
-      />
-    </Svg>
-  </>
-);
-```
-
-### `getLengthAtX(path: ReanimatedPath, x: Node): Node`
-
-Convenience function for bezier curves where there is really only ever one "y" value associated with one "x" value.
-This function works by finding the roots of the cubic bezier curve so it might be too compute-intensive to calculate for each frame.
-
-## Math
-
-### `inc(value: Value)`
-
-Increment value by one.
-
-### `dec(value: Value)`
-
-Decrement value by one.
-
-### `toRad(node: Node): Node`
-
-Transforms an angle from degrees to radians.
-
-```js
-(deg: Node) => Node;
-```
-
-### `toDeg(node: Node): Node`
-
-Transforms an angle from radians to degrees.
-
-```js
-toDeg(rad: Node) => Node
-```
-
-### `min(...nodes: Node[]): Node`
-
-Takes one or more nodes as input and returns the minimum of all the node's values.
-This is equivalent to `Animated.min` but with support for more than two parameters.
-
-```js
-min(...args: Node[]) => Node
-```
-
-### `max(...nodes: Node[]): Node`
-
-Takes one or more nodes as input and returns the maximum of all the node's values.
-This is equivalent to `Animated.min` but with support for more than two parameters.
-
-```js
-max(...args: Node[]) => Node
-```
-
-### `clamp(node: Node, lowerBound: Adaptable, upperBound: Adaptable)`
-
-Clamps a node with a lower and upper bound.
-
-```js
-clamp(new Value(-1), 0, 100); // 0
-clamp(new Value(1), 0, 100); // 1
-clamp(new Value(101), 0, 100); // 100
-```
-
-###  between = (node: Node, lowerBound: Adaptable, upperBound: Adaptable, inclusive: boolean)
-
-Returns true if `node` is within `lowerBound` and `upperBound`.
-
-### `approximates(value: Node, approximatesTo: Node, precision = 0.001): number`
-
-Returns 1 if the difference between the two values is less than precision.
-Otherwise returns 0.
-Default value for the precision is 0.001.
-
-### `atan2(node: Node): Node`
-
-Returns the angle in the plane (in radians) between the positive x-axis and the ray from (0,0) to the point (x,y), `atan2(y,x)`.
-
-```js
-atan2(y: Node, x Node) => Node
-```
-
-### `cubicBezier(t: Node, p0: Node, p1: Node, p2: Node, p3: Node): Node`
-
-Returns the coordinate of a cubic bezier curve.
-`t` is the length of the curve from 0 to 1. `cubicBezier(0, p0, p1, p2, p3)` equals `p0` and `cubicBezier(1, p0, p1, p2, p3)` equals `p3`.
-`p0` and `p3` are respectively the starting and ending point of the curve.
-`p1` and `p2` are the control points.
 
 ## Coordinates
 
@@ -262,27 +107,6 @@ Returns 1 if the node's value is contained in the array of nodes, 0 otherwise.
 
 ```js
 contains(values: Node[], value: Node) => Node
-```
-
-## Transitions
-
-Transitions are essential to the user experience.
-Redash offers four utility functions for transitions which are broke down in the table below.
-If you want to build a transition based on a React state change use `useTimingTransition()` or `useSpringTransition()`.
-To transition an animation value change, use `withTimingTransition()` or `withSpringTransition()`.
-
-|        | State (JS Thread)      | Value (UI Thread)        |
-| ------ |:----------------------:| ------------------------:|
-| Timing | useTimingTransition()  | withTimingTransition()   |
-| Spring | useSpringTransition()  | withSpringTransition()   |
-
-### Example
-
-```tsx
-const Toggle = () => {
-  const [open, setOpen] = useState(false);
-  const transition = useTimingTransition(open, { duration: 400 });
-}
 ```
 
 ## Animations

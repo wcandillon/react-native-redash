@@ -1,0 +1,62 @@
+---
+name: Gestures
+route: /gestures
+---
+
+# Gestures
+
+---
+
+## `withOffset()`
+
+```tsx
+export declare const withOffset: (value: Animated.Node<number>, state: Animated.Value<State>, offset?: Animated.Value<number>) => Animated.Node<number>;
+```
+
+Decorates animated value from the pan gesture handler so that its position is memorized accross touches.
+
+---
+
+## `onScroll()`
+
+```tsx
+export declare const onScroll: (contentOffset: {
+    x?: Animated.Node<number> | undefined;
+    y?: Animated.Node<number> | undefined;
+}) => (...args: any[]) => void;
+```
+
+Returns a reanimated event handler for the ScrollView.
+
+Example usage for a vertical `ScrollView`.
+
+```tsx
+<Animated.ScrollView onScroll={onScroll({ y: new Value(0) })} vertical />
+```
+
+And for a horizontal one.
+
+```tsx
+<Animated.ScrollView onScroll={onScroll({ x: new Value(0) })} horizontal />
+```
+
+---
+
+### `onGestureEvent()`
+
+```tsx
+export declare const onGestureEvent: (nativeEvent: Partial<Adaptable<GestureHandlerStateChangeNativeEvent & TapGestureHandlerEventExtra>> | Partial<Adaptable<GestureHandlerStateChangeNativeEvent & LongPressGestureHandlerEventExtra>> | Partial<Adaptable<GestureHandlerStateChangeNativeEvent & ForceTouchGestureHandlerEventExtra>> | Partial<Adaptable<GestureHandlerStateChangeNativeEvent & PanGestureHandlerEventExtra>> | Partial<Adaptable<GestureHandlerStateChangeNativeEvent & PinchGestureHandlerEventExtra>> | Partial<Adaptable<GestureHandlerStateChangeNativeEvent & RotationGestureHandlerEventExtra>> | Partial<Adaptable<GestureHandlerStateChangeNativeEvent & FlingGestureHandlerEventExtra>>) => {
+    onHandlerStateChange: (...args: any[]) => void;
+    onGestureEvent: (...args: any[]) => void;
+};
+```
+
+Returns a reanimated event handler for any Gesture handler event handler.
+Example usage for a vertical `PanGestureHandler`.
+
+```tsx
+const translationX = new Value(0);
+const state = new Value(State.UNDETERMINED);
+const gestureHandler = onGestureEvent({ translationX, state });
+return <PanGestureHandler {...gestureHandler} />;
+```

@@ -1,0 +1,22 @@
+---
+name: Strings
+route: /strings
+---
+
+# Strings
+
+---
+
+## `string()`
+
+```tsx
+const string: (strings: readonly string[], ...values: readonly (string | number | Animated.Node<number> | readonly (number | Animated.Node<number> | readonly (number | Animated.Node<number>)[])[] | Animated.Node<string> | readonly (string | Animated.Node<string> | readonly (string | Animated.Node<string>)[])[])[]) => Animated.Node<string>;
+```
+
+Tagged template for animated string values.
+
+```tsx
+const { x, y } = { x: new Value(0), y: new Value(0) };
+const d = string`M0,0 ${x},${y}`;
+return <AnimatedPath {...{ d }} />;
+```
