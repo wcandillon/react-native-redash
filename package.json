@@ -1,4 +1,5 @@
 {
+  "private": true,
   "name": "react-native-redash",
   "version": "0.0.0-development",
   "description": "Utility library for React Native Reanimated",

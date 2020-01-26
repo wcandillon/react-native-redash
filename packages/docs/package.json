@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "redash",
+  "name": "redash-docs",
   "version": "2.0.0-rc.41",
   "license": "MIT",
   "files": [

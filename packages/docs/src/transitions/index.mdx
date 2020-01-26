@@ -36,3 +36,37 @@ const Toggle = () => {
   const transition = withTimingTransition(open, { duration: 400 });
 }
 ```
+
+---
+
+## `useTimingTransition()`
+
+```tsx
+const useTimingTransition: (state: number | boolean, config?: Partial<Pick<Animated.TimingConfig, "duration" | "easing">>) => Animated.Node<number>;
+```
+
+---
+
+## `useSpringTransition()`
+
+```tsx
+const useSpringTransition: (state: number | boolean, config?: Partial<Pick<Animated.SpringConfig, "damping" | "mass" | "stiffness" | "overshootClamping" | "restSpeedThreshold" | "restDisplacementThreshold">>) => Animated.Node<number>;
+```
+
+---
+
+## `withTimingTransition()`
+
+```tsx
+const withTimingTransition: (value: Animated.Node<number>, timingConfig?: Partial<Pick<Animated.TimingConfig, "duration" | "easing">>, gestureState?: Animated.Value<State>) => Animated.Node<number>;
+```
+
+---
+
+## `withSpringTransition()`
+
+
+```tsx
+const withSpringTransition: (value: Animated.Node<number>, springConfig?: Partial<Pick<Animated.SpringConfig, "damping" | "mass" | "stiffness" | "overshootClamping" | "restSpeedThreshold" | "restDisplacementThreshold">>, velocity?: Animated.Adaptable<number>, gestureState?: Animated.Value<State>) => Animated.Node<number>;
+```
+
