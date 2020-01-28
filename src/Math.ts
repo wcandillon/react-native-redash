@@ -16,7 +16,8 @@ const {
   and,
   greaterOrEq,
   lessOrEq,
-  proc
+  proc,
+  round: reRound
 } = Animated;
 
 export const bin = (value: boolean): 0 | 1 => (value ? 1 : 0);
@@ -97,3 +98,10 @@ export const cubicBezier = (
   const d = multiply(1, pow(term, 0), pow(t, 3), p3);
   return add(a, b, c, d);
 };
+
+export const round = (value: Animated.Adaptable<number>, precision: Animated.Adaptable<number> = 0) =>
+  cond(
+    precision,
+    divide(reRound(multiply(value, precision, 10)), precision, 10),
+    reRound(value)
+  );
