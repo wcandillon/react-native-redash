@@ -7,6 +7,24 @@ route: /strings
 
 ---
 
+## `<ReText>`
+
+This component is like `<Text>` but accepts a string animation node as property.
+Behind the scene, `<ReText>` is using `<TextInput>` with some default styling.
+Therefore there might be some slight inconsistencies with `<Text>`.
+
+```tsx
+() => {
+  const price = new Value(42);
+  return (
+    <ReText
+      text={concat("$ ", price)}
+      style={{ color: "black", fontVariant: ["tabular-nums"] }}
+    />
+  )
+}
+```
+
 ## `string()`
 
 ```tsx
