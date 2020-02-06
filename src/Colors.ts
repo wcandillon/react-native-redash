@@ -16,7 +16,7 @@ const {
   Extrapolate
 } = Animated;
 
-type Color = string | number;
+type Color = Animated.Adaptable<string> | Animated.Adaptable<number>;
 
 export const opacity = (c: number) => ((c >> 24) & 255) / 255;
 export const red = (c: number) => (c >> 16) & 255;
@@ -172,7 +172,7 @@ const interpolateColorsRGB = (
 };
 
 interface ColorInterpolationConfig {
-  inputRange: ReadonlyArray<Adaptable<number>>;
+  inputRange: ReadonlyArray<Animated.Adaptable<number>>;
   outputRange: Color[];
 }
 
