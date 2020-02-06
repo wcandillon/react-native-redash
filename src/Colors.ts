@@ -172,7 +172,7 @@ const interpolateColorsRGB = (
 };
 
 interface ColorInterpolationConfig {
-  inputRange: number[];
+  inputRange: ReadonlyArray<Adaptable<number>>;
   outputRange: Color[];
 }
 
