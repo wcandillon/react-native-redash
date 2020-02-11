@@ -48,7 +48,7 @@ export const snapPoint = (
   value: Animated.Adaptable<number>,
   velocity: Animated.Adaptable<number>,
   points: Animated.Adaptable<number>[]
-) => {
+): Animated.Node<number> => {
   const point = add(value, multiply(0.2, velocity));
   const diffPoint = (p: Animated.Adaptable<number>) => abs(sub(point, p));
   const deltas = points.map(p => diffPoint(p));
