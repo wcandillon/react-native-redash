@@ -71,13 +71,14 @@ export const bInterpolate = (
 
 type Dependencies = readonly unknown[];
 type Atomic = string | number | boolean;
-
-export const useValues = <V extends Atomic>(
-  values: V[],
+export const useValues = <T extends readonly Atomic[]>(
+  values: T,
   deps: Dependencies
-): Animated.Value<V>[] =>
+) =>
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useMemoOne(() => values.map(v => new Value(v)), deps);
+  (useMemoOne(() => values.map(v => new Value(v)), deps) as unknown) as {
+    [K in keyof T]: T[K] extends Atomic ? Animated.Value<T[K]> : never;
+  };
 
 export const useNamedValues = <V extends Atomic, K extends string>(
   values: Record<K, V>,
