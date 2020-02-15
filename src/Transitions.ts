@@ -20,7 +20,7 @@ const {
 } = Animated;
 
 export const withTransition = (
-  value: Animated.Node<number>,
+  value: Animated.Adaptable<number>,
   timingConfig: TimingConfig = {},
   gestureState: Animated.Value<State> = new Value(State.UNDETERMINED)
 ) => {
@@ -55,7 +55,7 @@ export const withTransition = (
 };
 
 export const withSpringTransition = (
-  value: Animated.Node<number>,
+  value: Animated.Adaptable<number>,
   springConfig: SpringConfig = {},
   velocity: Animated.Adaptable<number> = 0,
   gestureState: Animated.Value<State> = new Value(State.UNDETERMINED)
