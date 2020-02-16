@@ -28,6 +28,26 @@ const [toggle state] = useMemoOne(() => [new Value(0), new Value(State.UNDETERMI
 
 ---
 
+## `useClocks()`
+
+```tsx
+const useClocks: (numberOfClocks: number, deps: Dependencies) => Animated.Clock[];
+```
+
+Create a number of clocks which lifecycle is granted by `deps`. For instance the code snippet below:
+
+```tsx
+const [clock1, clock2, clock3] = useClocks(3, []);
+```
+
+is a shortcut for
+
+```tsx
+const [clock1, clock2, clock3] = useMemoOne(() => [new Clock(), new Clock(), new Clock()], []);
+```
+
+---
+
 ## `useDiff()`
 
 ```tsx
@@ -46,6 +66,8 @@ const snapPoint: (value: Animated.Adaptable<number>, velocity: Animated.Adaptabl
 ```
 
 Select a point based on a node value and its velocity.
+
+---
 
 ## `bInterpolate`
 
