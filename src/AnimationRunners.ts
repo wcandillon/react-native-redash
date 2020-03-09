@@ -114,7 +114,7 @@ export const timing = (params: TimingParams) => {
 export interface DecayParams {
   clock?: Animated.Clock;
   from?: Animated.Adaptable<number>;
-  velocity?: Animated.Value<number>;
+  velocity?: Animated.Adaptable<number>;
   deceleration?: Animated.Adaptable<number>;
 }
 
