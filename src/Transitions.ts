@@ -19,6 +19,8 @@ const {
   useCode
 } = Animated;
 
+const defaultSpringConfig = SpringUtils.makeDefaultConfig();
+
 export const withTransition = (
   value: Animated.Node<number>,
   timingConfig: TimingConfig = {},
@@ -107,7 +109,7 @@ export const useTransition = (
 
 export const useSpringTransition = (
   state: boolean | number,
-  config: SpringConfig = {}
+  config: SpringConfig = defaultSpringConfig
 ) => {
   const value = useMemoOne(() => new Value(0), []);
   useCode(() => set(value, typeof state === "boolean" ? bin(state) : state), [
