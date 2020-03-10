@@ -161,13 +161,12 @@ const interpolateColorsRGB = (
       extrapolate: Extrapolate.CLAMP
     })
   );
-  const a = round(
-    interpolate(animationValue, {
-      inputRange,
-      outputRange: colors.map(c => opacity(c)),
-      extrapolate: Extrapolate.CLAMP
-    })
-  );
+  const a = interpolate(animationValue, {
+    inputRange,
+    outputRange: colors.map(c => opacity(c)),
+    extrapolate: Extrapolate.CLAMP
+  });
+
   return color(r, g, b, a);
 };
 
