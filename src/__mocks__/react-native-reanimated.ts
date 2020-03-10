@@ -43,8 +43,16 @@ export default {
   proc: cb => cb,
   add: (a, b) => new AnimatedValue(getValue(a) + getValue(b)),
   sub: (a, b) => new AnimatedValue(getValue(a) - getValue(b)),
-  divide: (a, b) => new AnimatedValue(getValue(a) / getValue(b)),
-  multiply: (a, b) => new AnimatedValue(getValue(a) * getValue(b)),
+  divide: (...vals) =>
+    new AnimatedValue(
+      vals
+        .map(v => getValue(v))
+        .reduce((acc, v) => {
+          return acc / v;
+        })
+    ),
+  multiply: (...vals) =>
+    new AnimatedValue(vals.map(v => getValue(v)).reduce((acc, v) => acc * v)),
   sin: a => new AnimatedValue(Math.sin(getValue(a))),
   tan: a => new AnimatedValue(Math.tan(getValue(a))),
   cos: a => new AnimatedValue(Math.cos(getValue(a))),

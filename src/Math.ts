@@ -11,6 +11,7 @@ const {
   sub,
   min: min2,
   max: max2,
+  round: reRound,
   greaterThan,
   pow,
   and,
@@ -96,4 +97,12 @@ export const cubicBezier = (
   const c = multiply(3, pow(term, 1), pow(t, 2), p2);
   const d = multiply(1, pow(term, 0), pow(t, 3), p3);
   return add(a, b, c, d);
+};
+
+export const round = (
+  value: Animated.Adaptable<number>,
+  precision: Animated.Adaptable<number> = 0
+) => {
+  const p = pow(10, precision);
+  return divide(reRound(multiply(value, p)), p);
 };
