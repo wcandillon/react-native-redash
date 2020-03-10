@@ -16,8 +16,11 @@ const {
   startClock,
   timing,
   neq,
-  useCode
+  useCode,
+  SpringUtils
 } = Animated;
+
+const defaultSpringConfig = SpringUtils.makeDefaultConfig();
 
 export const withTransition = (
   value: Animated.Node<number>,
@@ -56,7 +59,7 @@ export const withTransition = (
 
 export const withSpringTransition = (
   value: Animated.Node<number>,
-  springConfig: SpringConfig = {},
+  springConfig: SpringConfig = defaultSpringConfig,
   velocity: Animated.Adaptable<number> = 0,
   gestureState: Animated.Value<State> = new Value(State.UNDETERMINED)
 ) => {
@@ -107,7 +110,7 @@ export const useTransition = (
 
 export const useSpringTransition = (
   state: boolean | number,
-  config: SpringConfig = {}
+  config: SpringConfig = defaultSpringConfig
 ) => {
   const value = useMemoOne(() => new Value(0), []);
   useCode(() => set(value, typeof state === "boolean" ? bin(state) : state), [
