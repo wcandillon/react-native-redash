@@ -1,0 +1,69 @@
+{
+  "name": "react-native-redash",
+  "version": "0.0.0-development",
+  "description": "Utility library for React Native Reanimated",
+  "main": "lib/module/index.js",
+  "scripts": {
+    "lint": "eslint --ext .ts,.tsx src",
+    "tsc": "tsc --noEmit",
+    "test": "jest",
+    "prepare": "bob build",
+    "semantic-release": "semantic-release"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wcandillon/redash.git"
+  },
+  "author": "William Candillon",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/wcandillon/redash/issues"
+  },
+  "homepage": "https://github.com/wcandillon/redash#readme",
+  "peerDependencies": {
+    "react": "*",
+    "react-native": "*",
+    "react-native-gesture-handler": "*",
+    "react-native-reanimated": "*"
+  },
+  "devDependencies": {
+    "@react-native-community/bob": "^0.4.1",
+    "@types/color": "^3.0.0",
+    "@types/jest": "^24.0.24",
+    "@types/react": "*",
+    "@types/react-native": "^0.60.25",
+    "babel-jest": "^24.9.0",
+    "babel-preset-expo": "^8.0.0",
+    "eslint": "^6.7.2",
+    "eslint-config-react-native-wcandillon": "2.3.4",
+    "jest": "^24.9.0",
+    "react": "^16.8.6",
+    "react-native": "^0.61.0",
+    "react-native-gesture-handler": "~1.5.0",
+    "react-native-reanimated": "^1.4.0",
+    "semantic-release": "^15.13.3",
+    "semantic-release-cli": "^4.1.2",
+    "typescript": "^3.6.2"
+  },
+  "react-native": "lib/module/index.js",
+  "module": "lib/module/index.js",
+  "types": "lib/typescript/index.d.ts",
+  "files": [
+    "src",
+    "lib"
+  ],
+  "@react-native-community/bob": {
+    "source": "src",
+    "output": "lib",
+    "targets": [
+      "module",
+      "typescript"
+    ]
+  },
+  "dependencies": {
+    "abs-svg-path": "^0.1.1",
+    "normalize-svg-path": "^1.0.1",
+    "parse-svg-path": "^0.1.2",
+    "use-memo-one": "^1.1.1"
+  }
+}

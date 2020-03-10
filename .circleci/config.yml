@@ -34,14 +34,14 @@ jobs:
           key: v1-dependencies-{{ checksum "package.json" }}
         
       # run tests!
-      - run: yarn lint
-      - run: yarn tsc
-      - run: yarn test
+      - run: yarn workspace react-native-redash lint
+      - run: yarn workspace react-native-redash tsc
+      - run: yarn workspace react-native-redash test
 
       - deploy:
           name: NPM Deployment
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
-                yarn semantic-release
+                yarn workspace react-native-redash semantic-release
             fi
 
