@@ -114,7 +114,7 @@ export const timing = (params: TimingParams) => {
 export interface DecayParams {
   clock?: Animated.Clock;
   from?: Animated.Adaptable<number>;
-  velocity?: Animated.Value<number>;
+  velocity?: Animated.Adaptable<number>;
   deceleration?: Animated.Adaptable<number>;
 }
 
@@ -154,7 +154,7 @@ export interface SpringParams {
   clock?: Animated.Clock;
   from?: Animated.Adaptable<number>;
   to: Animated.Adaptable<number>;
-  velocity?: Animated.Value<number>;
+  velocity?: Animated.Adaptable<number>;
   config?: SpringConfig;
 }
 
