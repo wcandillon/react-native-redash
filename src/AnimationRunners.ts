@@ -14,8 +14,11 @@ const {
   and,
   timing: reTiming,
   decay: reDecay,
-  spring: reSpring
+  spring: reSpring,
+  SpringUtils
 } = Animated;
+
+const defaultSpringConfig = SpringUtils.makeDefaultConfig();
 
 interface AnimateParams<S, C> {
   clock: Animated.Clock;
@@ -174,13 +177,8 @@ export const spring = (params: SpringParams) => {
   };
 
   const config = {
+    ...defaultSpringConfig,
     toValue: new Value(0),
-    damping: 6,
-    mass: 1,
-    stiffness: 64,
-    overshootClamping: false,
-    restSpeedThreshold: 0.01,
-    restDisplacementThreshold: 0.01,
     ...springConfig
   };
 
