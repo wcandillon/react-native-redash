@@ -20,7 +20,6 @@ const {
   add,
   block,
   cond,
-  divide,
   eq,
   multiply,
   set,
@@ -34,6 +33,17 @@ const {
   decay: reDecay,
   spring: reSpring
 } = Animated;
+
+export const withScaleOffset = (
+  value: Animated.Node<number>,
+  state: Animated.Value<State>,
+  offset: Animated.Value<number> = new Value(1)
+) =>
+  cond(
+    eq(state, State.END),
+    [set(offset, multiply(offset, value)), offset],
+    multiply(offset, value)
+  );
 
 export const withOffset = (
   value: Animated.Node<number>,
@@ -170,26 +180,6 @@ export const withDecay = (config: WithDecayParams) => {
       cond(decayState.finished, finishDecay)
     ]),
     decayState.position
-  ]);
-};
-
-export const preserveMultiplicativeOffset = (
-  value: Animated.Adaptable<number>,
-  state: Animated.Adaptable<number>
-) => {
-  const previous = new Animated.Value(1);
-  const offset = new Animated.Value(1);
-
-  return block([
-    cond(
-      eq(state, State.BEGAN),
-      [set(previous, 1)],
-      [
-        set(offset, multiply(offset, divide(value, previous))),
-        set(previous, value)
-      ]
-    ),
-    offset
   ]);
 };
 

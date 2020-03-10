@@ -56,7 +56,7 @@ export const snapPoint = (
   return points.reduce(
     (acc, p) => cond(eq(diffPoint(p), minDelta), p, acc),
     new Value()
-  );
+  ) as Animated.Node<number>;
 };
 
 export const bInterpolate = (

@@ -16,7 +16,7 @@ const {
   Extrapolate
 } = Animated;
 
-type Color = string | number;
+type Color = Animated.Adaptable<string> | Animated.Adaptable<number>;
 
 export const opacity = (c: number) => ((c >> 24) & 255) / 255;
 export const red = (c: number) => (c >> 16) & 255;
@@ -113,7 +113,7 @@ const rgbToHsv = (c: number) => {
 
 const interpolateColorsHSV = (
   animationValue: Animated.Adaptable<number>,
-  inputRange: number[],
+  inputRange: readonly Animated.Adaptable<number>[],
   colors: number[]
 ): Animated.Node<number> => {
   const colorsAsHSV = colors.map(c => rgbToHsv(c));
@@ -137,7 +137,7 @@ const interpolateColorsHSV = (
 
 const interpolateColorsRGB = (
   animationValue: Animated.Adaptable<number>,
-  inputRange: number[],
+  inputRange: readonly Animated.Adaptable<number>[],
   colors: number[]
 ) => {
   const r = round(
@@ -171,7 +171,7 @@ const interpolateColorsRGB = (
 };
 
 interface ColorInterpolationConfig {
-  inputRange: number[];
+  inputRange: readonly Animated.Adaptable<number>[];
   outputRange: Color[];
 }
 
