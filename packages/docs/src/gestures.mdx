@@ -15,6 +15,16 @@ export declare const withOffset: (value: Animated.Node<number>, state: Animated.
 
 Decorates animated value from the pan gesture handler so that its position is memorized accross touches.
 
+## `withScaleOffset()`
+
+```tsx
+export declare const withScaleOffset: (value: Animated.Node<number>, state: Animated.Value<State>, offset?: Animated.Value<number>) => Animated.Node<number>;
+```
+
+Decorates animated value from the pinch gesture handler so that its scale value is memorized accross touches.
+This function differs from `withOffset` because it uses multiplication instead of additions.
+Translations start from 0 and are added on top of each other whereas scale transformations start from 1 and are multiplied on top of each other.
+
 ---
 
 ## `onScroll()`
