@@ -41,16 +41,12 @@ export default {
   Node: AnimatedValue,
   block: arr => arr[arr.length - 1],
   proc: cb => cb,
-  add: (a, b) => new AnimatedValue(getValue(a) + getValue(b)),
-  sub: (a, b) => new AnimatedValue(getValue(a) - getValue(b)),
+  add: (...vals) =>
+    new AnimatedValue(vals.map(v => getValue(v)).reduce((acc, v) => acc + v)),
+  sub: (...vals) =>
+    new AnimatedValue(vals.map(v => getValue(v)).reduce((acc, v) => acc - v)),
   divide: (...vals) =>
-    new AnimatedValue(
-      vals
-        .map(v => getValue(v))
-        .reduce((acc, v) => {
-          return acc / v;
-        })
-    ),
+    new AnimatedValue(vals.map(v => getValue(v)).reduce((acc, v) => acc / v)),
   multiply: (...vals) =>
     new AnimatedValue(vals.map(v => getValue(v)).reduce((acc, v) => acc * v)),
   sin: a => new AnimatedValue(Math.sin(getValue(a))),
