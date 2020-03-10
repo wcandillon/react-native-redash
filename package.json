@@ -3,6 +3,10 @@
   "name": "redash",
   "description": "Utility library for React Native Reanimated",
   "scripts": {
+    "lint": "yarn workspace react-native-redash lint",
+    "tsc": "yarn workspace react-native-redash tsc",
+    "test": "yarn workspace react-native-redash test",
+    "check": "yarn workspace react-native-redash check"
   },
   "repository": {
     "type": "git",
