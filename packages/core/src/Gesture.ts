@@ -36,7 +36,7 @@ const {
 
 export const withScaleOffset = (
   value: Animated.Node<number>,
-  state: Animated.Value<State>,
+  state: Animated.Node<State>,
   offset: Animated.Value<number> = new Value(1)
 ) =>
   cond(
@@ -47,7 +47,7 @@ export const withScaleOffset = (
 
 export const withOffset = (
   value: Animated.Node<number>,
-  state: Animated.Value<State>,
+  state: Animated.Node<State>,
   offset: Animated.Value<number> = new Value(0)
 ) =>
   cond(
@@ -65,7 +65,7 @@ type SpringConfig = Omit<Animated.SpringConfig, "toValue">;
 export interface WithSpringParams {
   value: Animated.Adaptable<number>;
   velocity: Animated.Adaptable<number>;
-  state: Animated.Value<State>;
+  state: Animated.Node<State>;
   snapPoints: Animated.Adaptable<number>[];
   offset?: Animated.Value<number>;
   config?: SpringConfig;
@@ -142,7 +142,7 @@ export const withSpring = (props: WithSpringParams) => {
 interface WithDecayParams {
   value: Animated.Adaptable<number>;
   velocity: Animated.Adaptable<number>;
-  state: Animated.Value<State>;
+  state: Animated.Node<State>;
   offset?: Animated.Value<number>;
   deceleration?: number;
 }
