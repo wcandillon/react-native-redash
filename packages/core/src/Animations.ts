@@ -107,6 +107,14 @@ export const useDiff = (node: Animated.Node<number>, deps: Dependencies) => {
   return dDiff;
 };
 
+const useDebug = (values: { [key: string]: Animated.Node<number> }) => {
+  const keys = Object.keys(values);
+  useCode(() => block(keys.map(name => debug(name, values[name]))), [
+    keys,
+    values
+  ]);
+};
+
 export const addTo = proc(
   (value: Animated.Value<number>, node: Animated.Adaptable<number>) =>
     set(value, add(value, node))
