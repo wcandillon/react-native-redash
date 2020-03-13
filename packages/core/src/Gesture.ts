@@ -56,6 +56,19 @@ export const withOffset = (
     add(offset, value)
   );
 
+// https://github.com/software-mansion/react-native-gesture-handler/issues/546
+export const withFocalOffset = (
+  value: Animated.Node<number>,
+  state: Animated.Node<State>,
+  numberOfPointers: Animated.Node<number>,
+  offset: Animated.Value<number> = new Value(0)
+) =>
+  cond(
+    and(eq(state, State.ACTIVE), eq(numberOfPointers, 2)),
+    [set(offset, value), offset],
+    offset
+  );
+
 interface PrivateSpringConfig extends Animated.SpringConfig {
   toValue: Animated.Value<number>;
 }
