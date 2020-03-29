@@ -59,15 +59,13 @@ export const snapPoint = (
   ) as Animated.Node<number>;
 };
 
-export const bInterpolate = (
-  value: Animated.Adaptable<number>,
-  origin: Animated.Adaptable<number>,
-  destination: Animated.Adaptable<number>
-) =>
-  interpolate(value, {
-    inputRange: [0, 1],
-    outputRange: [origin, destination]
-  });
+export const bInterpolate = proc(
+  (
+    value: Animated.Adaptable<number>,
+    origin: Animated.Adaptable<number>,
+    destination: Animated.Adaptable<number>
+  ) => add(origin, multiply(value, sub(destination, origin)))
+);
 
 type Dependencies = readonly unknown[];
 type Atomic = string | number | boolean;
