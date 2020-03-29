@@ -13,7 +13,6 @@ const {
   eq,
   abs,
   sub,
-  interpolate,
   not,
   diff,
   lessThan,

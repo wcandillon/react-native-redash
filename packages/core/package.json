@@ -7,7 +7,6 @@
     "lint": "eslint --ext .ts,.tsx src",
     "tsc": "tsc --noEmit",
     "test": "jest",
-    "check": "eslint --ext .ts,.tsx src && tsc --noEmit && jest",
     "prepare": "bob build",
     "semantic-release": "semantic-release"
   },
