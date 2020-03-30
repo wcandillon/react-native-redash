@@ -1,13 +1,9 @@
 import Animated from "react-native-reanimated";
 
 import { atan2 } from "./Math";
+import { Point } from "./Vectors";
 
 const { sub, multiply, add, cos, sin, pow, sqrt } = Animated;
-
-export interface Point {
-  x: Animated.Adaptable<number>;
-  y: Animated.Adaptable<number>;
-}
 
 export interface PolarPoint {
   theta: Animated.Adaptable<number>;
