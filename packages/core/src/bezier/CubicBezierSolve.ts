@@ -20,7 +20,7 @@ const {
   sub,
   cos,
   not,
-  acos
+  acos,
 } = Animated;
 
 const isRootValidForCubicBezier = (root: Animated.Node<number>) =>
@@ -81,7 +81,7 @@ const cubicBezierSolve = (
         cond(not(approximates(b, 0)), set(root1, divide(multiply(-1, c), b)), [
           set(q, sqrt(sub(pow(b, 2), multiply(4, a, c)))),
           set(root1, divide(sub(q, b), multiply(2, a))),
-          set(root2, divide(sub(multiply(b, -1), q), multiply(2, a)))
+          set(root2, divide(sub(multiply(b, -1), q), multiply(2, a))),
         ])
       ),
       [
@@ -127,7 +127,7 @@ const cubicBezierSolve = (
                 multiply(t1, cos(divide(add(phi, 4 * Math.PI), 3))),
                 divide(a, 3)
               )
-            )
+            ),
           ],
           cond(
             eq(discriminant, 0),
@@ -141,19 +141,19 @@ const cubicBezierSolve = (
                 )
               ),
               set(root1, sub(multiply(2, u1), divide(a, 3))),
-              set(root2, sub(multiply(-1, u1), divide(a, 3)))
+              set(root2, sub(multiply(-1, u1), divide(a, 3))),
             ],
             [
               set(sd, sqrt(discriminant)),
               set(u1, cuberoot(sub(sq, q2))),
               set(v1, cuberoot(add(sq, q2))),
-              set(root1, sub(u1, v1, divide(a, 3)))
+              set(root1, sub(u1, v1, divide(a, 3))),
             ]
           )
-        )
+        ),
       ]
     ),
-    find([root1, root2, root3], isRootValidForCubicBezier)
+    find([root1, root2, root3], isRootValidForCubicBezier),
   ]);
 };
 

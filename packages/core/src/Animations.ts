@@ -20,7 +20,7 @@ const {
   useCode,
   divide,
   modulo,
-  proc
+  proc,
 } = Animated;
 
 export type SpringConfig = Partial<Omit<Animated.SpringConfig, "toValue">>;
@@ -37,7 +37,7 @@ export const moving = (
     lessThan(abs(delta), minPositionDelta),
     [
       set(noMovementFrames, add(noMovementFrames, 1)),
-      not(greaterThan(noMovementFrames, emptyFrameThreshold))
+      not(greaterThan(noMovementFrames, emptyFrameThreshold)),
     ],
     [set(noMovementFrames, 0), 1]
   );
@@ -50,7 +50,7 @@ export const snapPoint = (
 ) => {
   const point = add(value, multiply(0.2, velocity));
   const diffPoint = (p: Animated.Adaptable<number>) => abs(sub(point, p));
-  const deltas = points.map(p => diffPoint(p));
+  const deltas = points.map((p) => diffPoint(p));
   const minDelta = min(...deltas);
   return points.reduce(
     (acc, p) => cond(eq(diffPoint(p), minDelta), p, acc),
@@ -74,7 +74,7 @@ export const useValues = <V extends Atomic>(
   deps: Dependencies
 ): Animated.Value<V>[] =>
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useMemoOne(() => values.map(v => new Value(v)), deps);
+  useMemoOne(() => values.map((v) => new Value(v)), deps);
 
 export const useNamedValues = <V extends Atomic, K extends string>(
   values: Record<K, V>,
@@ -82,7 +82,7 @@ export const useNamedValues = <V extends Atomic, K extends string>(
 ): Record<K, Animated.Value<V>> =>
   useMemoOne(() => {
     const result: Record<string, Animated.Value<V>> = {};
-    Object.keys(values).forEach(key => {
+    Object.keys(values).forEach((key) => {
       result[key as K] = new Value(values[key as K]);
     });
     return result;
@@ -95,7 +95,7 @@ export const useClocks = (
 ): Animated.Clock[] =>
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useMemoOne(() => new Array(numberOfClocks).fill(0).map(() => new Clock()), [
-    deps
+    deps,
   ]);
 
 export const useDiff = (node: Animated.Node<number>, deps: Dependencies) => {

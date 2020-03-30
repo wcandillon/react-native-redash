@@ -17,7 +17,7 @@ const {
   and,
   greaterOrEq,
   lessOrEq,
-  proc
+  proc,
 } = Animated;
 
 export const bin = (value: boolean): 0 | 1 => (value ? 1 : 0);

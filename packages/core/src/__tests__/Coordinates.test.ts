@@ -4,7 +4,7 @@ import {
   cartesian2Canvas,
   cartesian2Polar,
   polar2Canvas,
-  polar2Cartesian
+  polar2Cartesian,
 } from "../Coordinates";
 
 jest.mock("react-native-reanimated");
