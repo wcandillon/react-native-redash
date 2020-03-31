@@ -22,6 +22,10 @@ const createVector: (x: number, y: number) => {
 
 ```tsx
 export declare const Vector: {
+    create: (x: number, y: number) => {
+      x: Animated.Value<number>;
+      y: Animated.Value<number>;
+    },
     invert: (a: Vector) => {
         x: Animated.Node<number>;
         y: Animated.Node<number>;

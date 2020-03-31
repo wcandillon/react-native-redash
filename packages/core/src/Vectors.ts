@@ -12,7 +12,7 @@ export interface VectorValue {
   y: Animated.Value<number>;
 }
 
-export const createVector = (x: number, y: number) => ({
+const create = (x: number, y: number) => ({
   x: new Value(x),
   y: new Value(y),
 });
@@ -43,6 +43,7 @@ const set = (a: VectorValue, b: Vector) =>
   block([Animated.set(a.x, b.x), Animated.set(a.y, b.y)]);
 
 export const Vector = {
+  create,
   invert,
   add,
   sub,
