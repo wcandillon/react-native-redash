@@ -185,7 +185,7 @@ export const withDecay = (config: WithDecayParams) => {
   ]);
 };
 
-export const onScroll = (contentOffset: {
+export const onScrollEvent = (contentOffset: {
   x?: Animated.Node<number>;
   y?: Animated.Node<number>;
 }) =>
