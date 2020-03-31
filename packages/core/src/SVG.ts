@@ -18,7 +18,7 @@ const {
   multiply,
   lessThan,
   concat,
-  add
+  add,
 } = Animated;
 
 // const COMMAND = 0;
@@ -100,7 +100,7 @@ export const parsePath = (d: string): ReanimatedPath => {
       p1,
       p2,
       p3,
-      length
+      length,
     };
   });
   const segments = parts.map((part, index) => {
@@ -110,23 +110,23 @@ export const parsePath = (d: string): ReanimatedPath => {
       start,
       end,
       p0x: part.p0.x,
-      p3x: part.p3.x
+      p3x: part.p3.x,
     };
   });
   return {
     segments,
     totalLength: parts.reduce((acc, part) => acc + part.length, 0),
-    length: parts.map(part => part.length),
-    start: segments.map(segment => segment.start),
-    end: segments.map(segment => segment.end),
-    p0x: parts.map(part => part.p0.x),
-    p0y: parts.map(part => part.p0.y),
-    p1x: parts.map(part => part.p1.x),
-    p1y: parts.map(part => part.p1.y),
-    p2x: parts.map(part => part.p2.x),
-    p2y: parts.map(part => part.p2.y),
-    p3x: parts.map(part => part.p3.x),
-    p3y: parts.map(part => part.p3.y)
+    length: parts.map((part) => part.length),
+    start: segments.map((segment) => segment.start),
+    end: segments.map((segment) => segment.end),
+    p0x: parts.map((part) => part.p0.x),
+    p0y: parts.map((part) => part.p0.y),
+    p1x: parts.map((part) => part.p1.x),
+    p1y: parts.map((part) => part.p1.y),
+    p2x: parts.map((part) => part.p2.x),
+    p2y: parts.map((part) => part.p2.y),
+    p3x: parts.map((part) => part.p3.x),
+    p3y: parts.map((part) => part.p3.y),
   };
 };
 
@@ -154,11 +154,11 @@ export const getPointAtLength = (
   const p3y = get(path.p3y, index);
   const t = interpolate(length, {
     inputRange: [start, end],
-    outputRange: [0, 1]
+    outputRange: [0, 1],
   });
   return {
     x: cubicBezier(t, p0x, p1x, p2x, p3x),
-    y: cubicBezier(t, p0y, p1y, p2y, p3y)
+    y: cubicBezier(t, p0y, p1y, p2y, p3y),
   };
 };
 
@@ -166,7 +166,7 @@ export const interpolatePath = (
   value: Animated.Adaptable<number>,
   { inputRange, outputRange, ...config }: PathInterpolationConfig
 ): Animated.Node<string> => {
-  const paths = outputRange.map(path =>
+  const paths = outputRange.map((path) =>
     typeof path === "string" ? parsePath(path) : path
   );
   const path = paths[0];
@@ -174,8 +174,8 @@ export const interpolatePath = (
     const interpolatePoint = (point: BezierPoint) =>
       interpolate(value, {
         inputRange,
-        outputRange: paths.map(p => p[point][index]),
-        ...config
+        outputRange: paths.map((p) => p[point][index]),
+        ...config,
       });
 
     const mx = interpolatePoint("p0x");
@@ -204,7 +204,7 @@ export const bInterpolatePath = (
 ): Animated.Node<string> =>
   interpolatePath(value, {
     inputRange: [0, 1],
-    outputRange: [path1, path2]
+    outputRange: [path1, path2],
   });
 
 // https://pomax.github.io/bezierinfo/#yforx

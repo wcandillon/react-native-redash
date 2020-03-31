@@ -4,7 +4,7 @@ import Animated from "react-native-reanimated";
 enum Extrapolate {
   EXTEND = "extend",
   CLAMP = "clamp",
-  IDENTITY = "identity"
+  IDENTITY = "identity",
 }
 
 interface InterpolationConfig {
@@ -15,7 +15,7 @@ interface InterpolationConfig {
   extrapolateRight?: Extrapolate;
 }
 
-const getValue = node => {
+const getValue = (node) => {
   if (typeof node === "number") {
     return node;
   }
@@ -39,22 +39,22 @@ class AnimatedValue {
 export default {
   Value: AnimatedValue,
   Node: AnimatedValue,
-  block: arr => arr[arr.length - 1],
-  proc: cb => cb,
+  block: (arr) => arr[arr.length - 1],
+  proc: (cb) => cb,
   add: (...vals) =>
-    new AnimatedValue(vals.map(v => getValue(v)).reduce((acc, v) => acc + v)),
+    new AnimatedValue(vals.map((v) => getValue(v)).reduce((acc, v) => acc + v)),
   sub: (...vals) =>
-    new AnimatedValue(vals.map(v => getValue(v)).reduce((acc, v) => acc - v)),
+    new AnimatedValue(vals.map((v) => getValue(v)).reduce((acc, v) => acc - v)),
   divide: (...vals) =>
-    new AnimatedValue(vals.map(v => getValue(v)).reduce((acc, v) => acc / v)),
+    new AnimatedValue(vals.map((v) => getValue(v)).reduce((acc, v) => acc / v)),
   multiply: (...vals) =>
-    new AnimatedValue(vals.map(v => getValue(v)).reduce((acc, v) => acc * v)),
-  sin: a => new AnimatedValue(Math.sin(getValue(a))),
-  tan: a => new AnimatedValue(Math.tan(getValue(a))),
-  cos: a => new AnimatedValue(Math.cos(getValue(a))),
-  sqrt: a => new AnimatedValue(Math.sqrt(getValue(a))),
-  min: (...a) => new AnimatedValue(Math.min(...a.map(b => getValue(b)))),
-  max: (...a) => new AnimatedValue(Math.max(...a.map(b => getValue(b)))),
+    new AnimatedValue(vals.map((v) => getValue(v)).reduce((acc, v) => acc * v)),
+  sin: (a) => new AnimatedValue(Math.sin(getValue(a))),
+  tan: (a) => new AnimatedValue(Math.tan(getValue(a))),
+  cos: (a) => new AnimatedValue(Math.cos(getValue(a))),
+  sqrt: (a) => new AnimatedValue(Math.sqrt(getValue(a))),
+  min: (...a) => new AnimatedValue(Math.min(...a.map((b) => getValue(b)))),
+  max: (...a) => new AnimatedValue(Math.max(...a.map((b) => getValue(b)))),
   pow: (...a) =>
     new AnimatedValue(
       a.reduce((b, c, index) => (index > 0 ? getValue(b) ** getValue(c) : c), 0)
@@ -66,14 +66,14 @@ export default {
   },
   or: (a, b) => new AnimatedValue(getValue(a) || getValue(b)),
   modulo: (a, b) => new AnimatedValue(getValue(a) % getValue(b)),
-  exp: a => new AnimatedValue(Math.exp(getValue(a))),
-  asin: a => new AnimatedValue(Math.asin(getValue(a))),
-  atan: a => new AnimatedValue(Math.atan(getValue(a))),
-  acos: a => new AnimatedValue(Math.acos(getValue(a))),
-  floor: a => new AnimatedValue(Math.floor(getValue(a))),
-  abs: a => new AnimatedValue(Math.abs(getValue(a))),
-  round: a => new AnimatedValue(Math.round(getValue(a))),
-  ceil: a => new AnimatedValue(Math.ceil(getValue(a))),
+  exp: (a) => new AnimatedValue(Math.exp(getValue(a))),
+  asin: (a) => new AnimatedValue(Math.asin(getValue(a))),
+  atan: (a) => new AnimatedValue(Math.atan(getValue(a))),
+  acos: (a) => new AnimatedValue(Math.acos(getValue(a))),
+  floor: (a) => new AnimatedValue(Math.floor(getValue(a))),
+  abs: (a) => new AnimatedValue(Math.abs(getValue(a))),
+  round: (a) => new AnimatedValue(Math.round(getValue(a))),
+  ceil: (a) => new AnimatedValue(Math.ceil(getValue(a))),
   concat: (a, b) => getValue(a) + b,
   eq: (a, b) => new AnimatedValue(Number(getValue(a) === getValue(b))),
   neq: (a, b) => new AnimatedValue(Number(getValue(a) !== getValue(b))),
@@ -81,7 +81,7 @@ export default {
   greaterThan: (a, b) => new AnimatedValue(Number(getValue(a) > getValue(b))),
   greaterOrEq: (a, b) => new AnimatedValue(Number(getValue(a) >= getValue(b))),
   lessOrEq: (a, b) => new AnimatedValue(Number(getValue(a) <= getValue(b))),
-  not: a => new AnimatedValue(Number(!getValue(a))),
+  not: (a) => new AnimatedValue(Number(!getValue(a))),
   cond: (a, b, c) => new AnimatedValue(getValue(a) ? getValue(b) : getValue(c)),
   color: (r, g, b, a = 1) => {
     const color =
@@ -116,5 +116,5 @@ export default {
     }
     return resultForNonZeroRange;
   },
-  Extrapolate
+  Extrapolate,
 };

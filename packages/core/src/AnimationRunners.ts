@@ -15,7 +15,7 @@ const {
   timing: reTiming,
   decay: reDecay,
   spring: reSpring,
-  SpringUtils
+  SpringUtils,
 } = Animated;
 
 const defaultSpringConfig = SpringUtils.makeDefaultConfig();
@@ -57,18 +57,18 @@ const animate = <T extends Animation>({
   clock,
   state,
   config,
-  from
+  from,
 }: AnimateParams<T["state"], T["config"]>) =>
   block([
     onInit(clock, [
       set(state.finished, 0),
       set(state.time, 0),
       set(state.position, from),
-      startClock(clock)
+      startClock(clock),
     ]),
     fn(clock, state, config),
     cond(state.finished, stopClock(clock)),
-    state.position
+    state.position,
   ]);
 
 export interface TimingParams {
@@ -86,20 +86,20 @@ export const timing = (params: TimingParams) => {
     duration: 250,
     from: 0,
     to: 1,
-    ...params
+    ...params,
   };
 
   const state: Animated.TimingState = {
     finished: new Value(0),
     position: new Value(0),
     time: new Value(0),
-    frameTime: new Value(0)
+    frameTime: new Value(0),
   };
 
   const config = {
     toValue: new Value(0),
     duration,
-    easing
+    easing,
   };
 
   return block([
@@ -109,8 +109,8 @@ export const timing = (params: TimingParams) => {
       fn: reTiming,
       state,
       config,
-      from
-    })
+      from,
+    }),
   ]);
 };
 
@@ -127,18 +127,18 @@ export const decay = (params: DecayParams) => {
     velocity: new Value(0),
     deceleration: 0.998,
     from: 0,
-    ...params
+    ...params,
   };
 
   const state: Animated.DecayState = {
     finished: new Value(0),
     position: new Value(0),
     time: new Value(0),
-    velocity: new Value(0)
+    velocity: new Value(0),
   };
 
   const config: Animated.DecayConfig = {
-    deceleration
+    deceleration,
   };
 
   return block([
@@ -148,8 +148,8 @@ export const decay = (params: DecayParams) => {
       fn: reDecay,
       state,
       config,
-      from
-    })
+      from,
+    }),
   ]);
 };
 
@@ -166,20 +166,20 @@ export const spring = (params: SpringParams) => {
     clock: new Clock(),
     velocity: new Value(0),
     from: 0,
-    ...params
+    ...params,
   };
 
   const state: Animated.SpringState = {
     finished: new Value(0),
     position: new Value(0),
     time: new Value(0),
-    velocity: new Value(0)
+    velocity: new Value(0),
   };
 
   const config = {
     ...defaultSpringConfig,
     toValue: new Value(0),
-    ...springConfig
+    ...springConfig,
   };
 
   return block([
@@ -189,8 +189,8 @@ export const spring = (params: SpringParams) => {
       fn: reSpring,
       state,
       config,
-      from
-    })
+      from,
+    }),
   ]);
 };
 
@@ -198,7 +198,7 @@ export const delay = (node: Animated.Node<number>, duration: number) => {
   const clock = new Clock();
   return block([
     timing({ clock, from: 0, to: 1, duration }),
-    cond(not(clockRunning(clock)), node)
+    cond(not(clockRunning(clock)), node),
   ]);
 };
 
@@ -217,18 +217,18 @@ export const loop = (loopConfig: LoopProps) => {
     duration: 250,
     boomerang: false,
     autoStart: true,
-    ...loopConfig
+    ...loopConfig,
   };
   const state = {
     finished: new Value(0),
     position: new Value(0),
     time: new Value(0),
-    frameTime: new Value(0)
+    frameTime: new Value(0),
   };
   const config = {
     toValue: new Value(1),
     duration,
-    easing
+    easing,
   };
 
   return block([
@@ -240,8 +240,8 @@ export const loop = (loopConfig: LoopProps) => {
       set(state.frameTime, 0),
       boomerang
         ? set(config.toValue, cond(config.toValue, 0, 1))
-        : set(state.position, 0)
+        : set(state.position, 0),
     ]),
-    state.position
+    state.position,
   ]);
 };

@@ -8,7 +8,7 @@ import {
   PinchGestureHandlerEventExtra,
   RotationGestureHandlerEventExtra,
   State,
-  TapGestureHandlerEventExtra
+  TapGestureHandlerEventExtra,
 } from "react-native-gesture-handler";
 
 import { snapPoint } from "./Animations";
@@ -31,7 +31,9 @@ const {
   neq,
   call,
   decay: reDecay,
-  spring: reSpring
+  spring: reSpring,
+  onChange,
+  debug,
 } = Animated;
 
 export const withScaleOffset = (
@@ -80,17 +82,17 @@ export const withSpring = (props: WithSpringParams) => {
     snapPoints,
     offset,
     config: springConfig,
-    onSnap
+    onSnap,
   } = {
     offset: new Value(0),
-    ...props
+    ...props,
   };
   const clock = new Clock();
   const springState: Animated.SpringState = {
     finished: new Value(0),
     velocity: new Value(0),
     position: new Value(0),
-    time: new Value(0)
+    time: new Value(0),
   };
 
   const config: PrivateSpringConfig = {
@@ -101,7 +103,7 @@ export const withSpring = (props: WithSpringParams) => {
     overshootClamping: false,
     restSpeedThreshold: 0.01,
     restDisplacementThreshold: 0.01,
-    ...springConfig
+    ...springConfig,
   };
 
   const gestureAndAnimationIsOver = new Value(1);
@@ -109,7 +111,7 @@ export const withSpring = (props: WithSpringParams) => {
   const finishSpring = [
     set(offset, springState.position),
     stopClock(clock),
-    set(gestureAndAnimationIsOver, 1)
+    set(gestureAndAnimationIsOver, 1),
   ];
   const snap = onSnap
     ? [cond(clockRunning(clock), call([springState.position], onSnap))]
@@ -120,7 +122,7 @@ export const withSpring = (props: WithSpringParams) => {
     cond(neq(state, State.END), [
       set(gestureAndAnimationIsOver, 0),
       set(springState.finished, 0),
-      set(springState.position, add(offset, value))
+      set(springState.position, add(offset, value)),
     ]),
     cond(and(eq(state, State.END), not(gestureAndAnimationIsOver)), [
       cond(and(not(clockRunning(clock)), not(springState.finished)), [
@@ -130,12 +132,12 @@ export const withSpring = (props: WithSpringParams) => {
           config.toValue,
           snapPoint(springState.position, velocity, snapPoints)
         ),
-        startClock(clock)
+        startClock(clock),
       ]),
       reSpring(clock, springState, config),
-      cond(springState.finished, [...snap, ...finishSpring])
+      cond(springState.finished, [...snap, ...finishSpring]),
     ]),
-    springState.position
+    springState.position,
   ]);
 };
 
@@ -151,14 +153,14 @@ export const withDecay = (config: WithDecayParams) => {
   const { value, velocity, state, offset, deceleration } = {
     offset: new Value(0),
     deceleration: 0.998,
-    ...config
+    ...config,
   };
   const clock = new Clock();
   const decayState = {
     finished: new Value(0),
     velocity: new Value(0),
     position: new Value(0),
-    time: new Value(0)
+    time: new Value(0),
   };
 
   const isDecayInterrupted = and(eq(state, State.BEGAN), clockRunning(clock));
@@ -168,31 +170,31 @@ export const withDecay = (config: WithDecayParams) => {
     cond(isDecayInterrupted, finishDecay),
     cond(neq(state, State.END), [
       set(decayState.finished, 0),
-      set(decayState.position, add(offset, value))
+      set(decayState.position, add(offset, value)),
     ]),
     cond(eq(state, State.END), [
       cond(and(not(clockRunning(clock)), not(decayState.finished)), [
         set(decayState.velocity, velocity),
         set(decayState.time, 0),
-        startClock(clock)
+        startClock(clock),
       ]),
       reDecay(clock, decayState, { deceleration }),
-      cond(decayState.finished, finishDecay)
+      cond(decayState.finished, finishDecay),
     ]),
-    decayState.position
+    decayState.position,
   ]);
 };
 
-export const onScroll = (contentOffset: {
+export const onScrollEvent = (contentOffset: {
   x?: Animated.Node<number>;
   y?: Animated.Node<number>;
 }) =>
   event([
     {
       nativeEvent: {
-        contentOffset
-      }
-    }
+        contentOffset,
+      },
+    },
   ]);
 
 type NativeEvent = GestureHandlerStateChangeNativeEvent &
@@ -214,7 +216,7 @@ export const onGestureEvent = (
   const gestureEvent = event([{ nativeEvent }]);
   return {
     onHandlerStateChange: gestureEvent,
-    onGestureEvent: gestureEvent
+    onGestureEvent: gestureEvent,
   };
 };
 
@@ -233,7 +235,7 @@ export const panGestureHandler = () => {
     y,
     translationY,
     velocityY,
-    state
+    state,
   });
   return {
     x,
@@ -243,7 +245,7 @@ export const panGestureHandler = () => {
     translationY,
     velocityY,
     state,
-    gestureHandler
+    gestureHandler,
   };
 };
 
@@ -255,14 +257,14 @@ export const horizontalPanGestureHandler = () => {
   const gestureHandler = onGestureEvent({
     translationX,
     velocityX,
-    state
+    state,
   });
   return {
     x,
     translationX,
     state,
     velocityX,
-    gestureHandler
+    gestureHandler,
   };
 };
 
@@ -275,13 +277,43 @@ export const verticalPanGestureHandler = () => {
     y,
     translationY,
     velocityY,
-    state
+    state,
   });
   return {
     y,
     translationY,
     state,
     velocityY,
-    gestureHandler
+    gestureHandler,
   };
+};
+
+export const debugGestureState = (
+  label: string,
+  state: Animated.Node<State>
+) => {
+  const d = (value: string): Animated.Node<number> =>
+    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+    // @ts-ignore
+    debug(label, new Value(value));
+  return onChange(
+    state,
+    cond(
+      eq(state, State.UNDETERMINED),
+      d("UNDETERMINED"),
+      cond(
+        eq(state, State.BEGAN),
+        d("BEGAN"),
+        cond(
+          eq(state, State.ACTIVE),
+          d("ACTIVE"),
+          cond(
+            eq(state, State.END),
+            d("END"),
+            cond(eq(state, State.CANCELLED), d("CANCELLED"), d("FAILED"))
+          )
+        )
+      )
+    )
+  );
 };

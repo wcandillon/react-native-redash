@@ -18,7 +18,7 @@ export const translateZ = (
 
 export const translate = ({ x: translateX, y: translateY }: Point) => [
   { translateX },
-  { translateY }
+  { translateY },
 ];
 
 export const transformOrigin = (
@@ -29,5 +29,5 @@ export const transformOrigin = (
   { translateY: y },
   ...transformations,
   { translateX: multiply(x, -1) },
-  { translateY: multiply(y, -1) }
+  { translateY: multiply(y, -1) },
 ];

@@ -13,7 +13,7 @@ const {
   divide,
   sub,
   color,
-  Extrapolate
+  Extrapolate,
 } = Animated;
 
 type Color = Animated.Adaptable<string> | Animated.Adaptable<number>;
@@ -75,7 +75,7 @@ function colorHSV(
     colorRGB(0, x, c),
     lessThan(h, 300),
     colorRGB(x, 0, c),
-    colorRGB(c, 0, x) /* else */
+    colorRGB(c, 0, x) /* else */,
   ]) as Animated.Node<number>;
 }
 
@@ -116,21 +116,21 @@ const interpolateColorsHSV = (
   inputRange: readonly Animated.Adaptable<number>[],
   colors: number[]
 ): Animated.Node<number> => {
-  const colorsAsHSV = colors.map(c => rgbToHsv(c));
+  const colorsAsHSV = colors.map((c) => rgbToHsv(c));
   const h = interpolate(animationValue, {
     inputRange,
-    outputRange: colorsAsHSV.map(c => c.h),
-    extrapolate: Extrapolate.CLAMP
+    outputRange: colorsAsHSV.map((c) => c.h),
+    extrapolate: Extrapolate.CLAMP,
   });
   const s = interpolate(animationValue, {
     inputRange,
-    outputRange: colorsAsHSV.map(c => c.s),
-    extrapolate: Extrapolate.CLAMP
+    outputRange: colorsAsHSV.map((c) => c.s),
+    extrapolate: Extrapolate.CLAMP,
   });
   const v = interpolate(animationValue, {
     inputRange,
-    outputRange: colorsAsHSV.map(c => c.v),
-    extrapolate: Extrapolate.CLAMP
+    outputRange: colorsAsHSV.map((c) => c.v),
+    extrapolate: Extrapolate.CLAMP,
   });
   return colorHSV(h, s, v);
 };
@@ -143,28 +143,28 @@ const interpolateColorsRGB = (
   const r = round(
     interpolate(animationValue, {
       inputRange,
-      outputRange: colors.map(c => red(c)),
-      extrapolate: Extrapolate.CLAMP
+      outputRange: colors.map((c) => red(c)),
+      extrapolate: Extrapolate.CLAMP,
     })
   );
   const g = round(
     interpolate(animationValue, {
       inputRange,
-      outputRange: colors.map(c => green(c)),
-      extrapolate: Extrapolate.CLAMP
+      outputRange: colors.map((c) => green(c)),
+      extrapolate: Extrapolate.CLAMP,
     })
   );
   const b = round(
     interpolate(animationValue, {
       inputRange,
-      outputRange: colors.map(c => blue(c)),
-      extrapolate: Extrapolate.CLAMP
+      outputRange: colors.map((c) => blue(c)),
+      extrapolate: Extrapolate.CLAMP,
     })
   );
   const a = interpolate(animationValue, {
     inputRange,
-    outputRange: colors.map(c => opacity(c)),
-    extrapolate: Extrapolate.CLAMP
+    outputRange: colors.map((c) => opacity(c)),
+    extrapolate: Extrapolate.CLAMP,
   });
 
   return color(r, g, b, a);
@@ -181,7 +181,7 @@ export const interpolateColor = (
   colorSpace: "hsv" | "rgb" = "rgb"
 ): Animated.Node<number> => {
   const { inputRange } = config;
-  const outputRange = config.outputRange.map(c =>
+  const outputRange = config.outputRange.map((c) =>
     typeof c === "number" ? c : processColor(c)
   );
   if (colorSpace === "hsv") {
@@ -200,7 +200,7 @@ export const bInterpolateColor = (
     value,
     {
       inputRange: [0, 1],
-      outputRange: [color1, color2]
+      outputRange: [color1, color2],
     },
     colorSpace
   );
