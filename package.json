@@ -5,7 +5,10 @@
   "scripts": {
     "lint": "yarn workspace react-native-redash lint",
     "tsc": "yarn workspace react-native-redash tsc",
-    "test": "yarn workspace react-native-redash test"
+    "test": "yarn workspace react-native-redash test",
+    "build": "yarn workspace react-native-redash prepare",
+    "serve:docs": "yarn workspace docs dev",
+    "build:docs": "yarn workspace docs build"
   },
   "repository": {
     "type": "git",

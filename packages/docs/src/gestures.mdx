@@ -27,10 +27,10 @@ Translations start from 0 and are added on top of each other whereas scale trans
 
 ---
 
-## `onScroll()`
+## `onScrollEvent()`
 
 ```tsx
-export declare const onScroll: (contentOffset: {
+export declare const onScrollEvent: (contentOffset: {
     x?: Animated.Node<number> | undefined;
     y?: Animated.Node<number> | undefined;
 }) => (...args: any[]) => void;
@@ -41,7 +41,7 @@ Returns a reanimated event handler for the ScrollView.
 Example usage for a vertical `ScrollView`.
 
 ```tsx
-<Animated.ScrollView onScroll={onScroll({ y: new Value(0) })} vertical />
+<Animated.ScrollView onScroll={onScrollEvent({ y: new Value(0) })} />
 ```
 
 And for a horizontal one.
