@@ -1,17 +1,16 @@
 import Animated from "react-native-reanimated";
 import { processColor } from "react-native";
 
+import { clamp, fract, mix } from "./Math";
+
 const {
-  cond,
   add,
   multiply,
-  lessThan,
   abs,
-  modulo,
   round,
   interpolate,
-  divide,
   sub,
+  proc,
   color,
   Extrapolate,
 } = Animated;
@@ -23,61 +22,39 @@ export const red = (c: number) => (c >> 16) & 255;
 export const green = (c: number) => (c >> 8) & 255;
 export const blue = (c: number) => c & 255;
 
-function match(
-  condsAndResPairs: readonly Animated.Node<number>[],
-  offset = 0
-): undefined | Animated.Node<number> {
-  if (condsAndResPairs.length - offset === 1) {
-    return condsAndResPairs[offset];
+export const hsv2rgb = proc(
+  (
+    h: Animated.Adaptable<number>,
+    s: Animated.Adaptable<number>,
+    v: Animated.Adaptable<number>
+  ) => {
+    // vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
+    const K = {
+      x: 1,
+      y: 2 / 3,
+      z: 1 / 3,
+      w: 3,
+    };
+    // vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
+    const p = {
+      x: abs(sub(multiply(fract(add(h, K.x)), 6), K.w)),
+      y: abs(sub(multiply(fract(add(h, K.y)), 6), K.w)),
+      z: abs(sub(multiply(fract(add(h, K.z)), 6), K.w)),
+    };
+    // return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
+    const rgb = {
+      x: multiply(v, mix(s, K.x, clamp(sub(p.x, K.x), 0, 1))),
+      y: multiply(v, mix(s, K.x, clamp(sub(p.y, K.x), 0, 1))),
+      z: multiply(v, mix(s, K.x, clamp(sub(p.z, K.x), 0, 1))),
+    };
+    const result = {
+      x: round(multiply(rgb.x, 255)),
+      y: round(multiply(rgb.y, 255)),
+      z: round(multiply(rgb.z, 255)),
+    };
+    return color(result.x, result.y, result.z);
   }
-  if (condsAndResPairs.length - offset === 0) {
-    return undefined;
-  }
-  return cond(
-    condsAndResPairs[offset],
-    condsAndResPairs[offset + 1],
-    match(condsAndResPairs, offset + 2)
-  );
-}
-
-function colorHSV(
-  h: Animated.Adaptable<number> /* 0 - 360 */,
-  s: Animated.Adaptable<number> /* 0 - 1 */,
-  v: Animated.Adaptable<number> /* 0 - 1 */
-): Animated.Node<number> {
-  // Converts color from HSV format into RGB
-  // Formula explained here: https://www.rapidtables.com/convert/color/hsv-to-rgb.html
-  const c = multiply(v, s);
-  const hh = divide(h, 60);
-  const x = multiply(c, sub(1, abs(sub(modulo(hh, 2), 1))));
-
-  const m = sub(v, c);
-
-  const colorRGB = (
-    r: Animated.Adaptable<number>,
-    g: Animated.Adaptable<number>,
-    b: Animated.Adaptable<number>
-  ) =>
-    color(
-      round(multiply(255, add(r, m))),
-      round(multiply(255, add(g, m))),
-      round(multiply(255, add(b, m)))
-    );
-
-  return match([
-    lessThan(h, 60),
-    colorRGB(c, x, 0),
-    lessThan(h, 120),
-    colorRGB(x, c, 0),
-    lessThan(h, 180),
-    colorRGB(0, c, x),
-    lessThan(h, 240),
-    colorRGB(0, x, c),
-    lessThan(h, 300),
-    colorRGB(x, 0, c),
-    colorRGB(c, 0, x) /* else */,
-  ]) as Animated.Node<number>;
-}
+);
 
 const rgbToHsv = (c: number) => {
   const r = red(c) / 255;
@@ -108,7 +85,7 @@ const rgbToHsv = (c: number) => {
     }
     h /= 6;
   }
-  return { h: h * 360, s, v };
+  return { h, s, v };
 };
 
 const interpolateColorsHSV = (
@@ -132,7 +109,7 @@ const interpolateColorsHSV = (
     outputRange: colorsAsHSV.map((c) => c.v),
     extrapolate: Extrapolate.CLAMP,
   });
-  return colorHSV(h, s, v);
+  return hsv2rgb(h, s, v);
 };
 
 const interpolateColorsRGB = (

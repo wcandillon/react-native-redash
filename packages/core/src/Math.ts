@@ -18,9 +18,12 @@ const {
   greaterOrEq,
   lessOrEq,
   proc,
+  floor,
 } = Animated;
 
 export const bin = (value: boolean): 0 | 1 => (value ? 1 : 0);
+
+export const fract = (x: Animated.Node<number>) => sub(x, floor(x));
 
 export const inc = proc((value: Animated.Value<number>) =>
   set(value, add(value, 1))
@@ -35,6 +38,14 @@ export const min = (...args: Animated.Adaptable<number>[]) =>
 
 export const max = (...args: Animated.Adaptable<number>[]) =>
   args.reduce((acc, arg) => max2(acc, arg));
+
+export const mix = proc(
+  (
+    value: Animated.Adaptable<number>,
+    origin: Animated.Adaptable<number>,
+    destination: Animated.Adaptable<number>
+  ) => add(origin, multiply(value, sub(destination, origin)))
+);
 
 export const clamp = proc(
   (
