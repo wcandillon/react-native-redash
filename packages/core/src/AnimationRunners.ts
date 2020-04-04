@@ -49,8 +49,10 @@ interface DecayAnimation {
 
 type Animation = SpringAnimation | DecayAnimation | TimingAnimation;
 
-const onInit = (clock: Animated.Clock, sequence: Animated.Adaptable<number>) =>
-  cond(not(clockRunning(clock)), sequence);
+const onInit = (
+  clock: Animated.Clock,
+  sequence: Animated.Adaptable<number>[]
+) => cond(not(clockRunning(clock)), sequence);
 
 const animate = <T extends Animation>({
   fn,
