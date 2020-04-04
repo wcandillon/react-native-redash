@@ -75,14 +75,18 @@ const cubicBezierSolve = (
     set(c, pa),
     set(d, add(multiply(-1, pa), multiply(3, pb), multiply(-3, pc), pd)),
     cond(
-      approximates(d, 0),
+      approximates(d, 0, 0.001),
       cond(
-        approximates(d, 0),
-        cond(not(approximates(b, 0)), set(root1, divide(multiply(-1, c), b)), [
-          set(q, sqrt(sub(pow(b, 2), multiply(4, a, c)))),
-          set(root1, divide(sub(q, b), multiply(2, a))),
-          set(root2, divide(sub(multiply(b, -1), q), multiply(2, a))),
-        ])
+        approximates(d, 0, 0.001),
+        cond(
+          not(approximates(b, 0, 0.001)),
+          set(root1, divide(multiply(-1, c), b)),
+          [
+            set(q, sqrt(sub(pow(b, 2), multiply(4, a, c)))),
+            set(root1, divide(sub(q, b), multiply(2, a))),
+            set(root2, divide(sub(multiply(b, -1), q), multiply(2, a))),
+          ]
+        )
       ),
       [
         set(a, divide(a, d)),

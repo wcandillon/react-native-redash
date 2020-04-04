@@ -7,7 +7,7 @@ test("atan2()", () => {
 });
 
 test("round()", () => {
-  expect(round(5.123)[" __value"]).toBe(5);
+  expect(round(5.123, 0)[" __value"]).toBe(5);
   expect(round(5.123, 1)[" __value"]).toBe(5.1);
   expect(round(5.123, 2)[" __value"]).toBe(5.12);
   expect(round(5.123, 3)[" __value"]).toBe(5.123);
