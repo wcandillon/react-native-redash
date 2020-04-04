@@ -1,4 +1,4 @@
-import { mix } from "../Animations";
+import { mix } from "../Math";
 
 jest.mock("react-native-reanimated");
 
