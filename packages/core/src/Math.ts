@@ -1,6 +1,7 @@
 import Animated from "react-native-reanimated";
 
 const {
+  eq,
   set,
   cond,
   add,
@@ -98,7 +99,7 @@ export const atan2 = proc(
       [sub(coeff1, multiply(coeff1, divide(sub(x, absY), add(x, absY))))],
       [sub(coeff2, multiply(coeff1, divide(add(x, absY), sub(absY, x))))]
     );
-    return cond(lessThan(y, 0), multiply(angle, -1), angle);
+    return cond(lessThan(y, 0), multiply(angle, -1), cond(eq(y, 0), 0, angle));
   }
 );
 

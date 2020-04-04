@@ -4,6 +4,9 @@ jest.mock("react-native-reanimated");
 
 test("atan2()", () => {
   expect(atan2(100, 100)[" __value"]).toBe(Math.atan2(100, 100));
+  expect(atan2(0, 0)[" __value"]).toBe(Math.atan2(0, 0));
+  expect(atan2(0, 100)[" __value"]).toBe(Math.atan2(0, 100));
+  expect(atan2(100, 0)[" __value"]).toBe(Math.atan2(100, 0));
 });
 
 test("round()", () => {
