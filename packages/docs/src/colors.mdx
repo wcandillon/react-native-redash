@@ -66,3 +66,17 @@ const interpolateColor: (value: Animated.Adaptable<number>, config: ColorInterpo
 ```tsx
 const bInterpolateColor: (value: Animated.Adaptable<number>, color1: string | number, color2: string | number, colorSpace?: "hsv" | "rgb") => Animated.Node<number>;
 ```
+
+---
+
+## `colorForBackground()`
+
+```tsx
+const colorForBackground = (
+    r: Animated.Adaptable<number>,
+    g: Animated.Adaptable<number>,
+    b: Animated.Adaptable<number>
+) Animated.Node<number>;
+```
+
+Returns `color(0, 0, 0)` (black) or `color(255, 255, 255)` (white) depending on the value of the background color.
