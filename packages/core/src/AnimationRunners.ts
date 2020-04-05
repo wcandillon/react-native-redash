@@ -49,9 +49,6 @@ interface DecayAnimation {
 
 type Animation = SpringAnimation | DecayAnimation | TimingAnimation;
 
-const onInit = (clock: Animated.Clock, sequence: Animated.Adaptable<number>) =>
-  cond(not(clockRunning(clock)), sequence);
-
 const animate = <T extends Animation>({
   fn,
   clock,
@@ -60,7 +57,7 @@ const animate = <T extends Animation>({
   from,
 }: AnimateParams<T["state"], T["config"]>) =>
   block([
-    onInit(clock, [
+    cond(not(clockRunning(clock)), [
       set(state.finished, 0),
       set(state.time, 0),
       set(state.position, from),
@@ -103,7 +100,10 @@ export const timing = (params: TimingParams) => {
   };
 
   return block([
-    onInit(clock, [set(config.toValue, to), set(state.frameTime, 0)]),
+    cond(not(clockRunning(clock)), [
+      set(config.toValue, to),
+      set(state.frameTime, 0),
+    ]),
     animate<TimingAnimation>({
       clock,
       fn: reTiming,
@@ -142,7 +142,7 @@ export const decay = (params: DecayParams) => {
   };
 
   return block([
-    onInit(clock, [set(state.velocity, velocity)]),
+    cond(not(clockRunning(clock)), [set(state.velocity, velocity)]),
     animate<DecayAnimation>({
       clock,
       fn: reDecay,
@@ -183,7 +183,10 @@ export const spring = (params: SpringParams) => {
   };
 
   return block([
-    onInit(clock, [set(config.toValue, to), set(state.velocity, velocity)]),
+    cond(not(clockRunning(clock)), [
+      set(config.toValue, to),
+      set(state.velocity, velocity),
+    ]),
     animate<SpringAnimation>({
       clock,
       fn: reSpring,

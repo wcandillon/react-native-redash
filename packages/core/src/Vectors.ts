@@ -42,7 +42,7 @@ const invert = (a: Vector) => multiply({ x: -1, y: -1 }, a);
 const set = (a: VectorValue, b: Vector) =>
   block([Animated.set(a.x, b.x), Animated.set(a.y, b.y)]);
 
-export const Vector = {
+export const vec = {
   create,
   invert,
   add,

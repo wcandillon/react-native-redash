@@ -18,6 +18,25 @@ This can be useful in reanimated since 0 and 1 are used for conditional statemen
 
 ---
 
+## `mix`
+
+```tsx
+const mix: (value: Animated.Adaptable<number>, origin: Animated.Adaptable<number>, destination: Animated.Adaptable<number>) => Animated.Node<number>;
+```
+
+Interpolate the node from 0 to 1 without clamping.
+---
+
+## `fract`
+
+```tsx
+const fract: (x: Animated.Adaptable<number>) => Animated.Node<number>;
+```
+
+`fract` returns the fractional part of `x`. This is calculated as `x - floor(x)`.
+
+---
+
 ## `inc()`
 
 ```tsx
