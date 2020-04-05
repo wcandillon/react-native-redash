@@ -117,7 +117,7 @@ const interpolateColorsHSV = (
     outputRange: colorsAsHSV.map((c) => c.v),
     extrapolate: Extrapolate.CLAMP,
   });
-  return hsv2rgb(h, s, v);
+  return hsv2color(h, s, v);
 };
 
 const interpolateColorsRGB = (
