@@ -25,10 +25,10 @@ interpolateColor(
 
 --
 
-## `hsv2rgb()`
+## `hsv2color`
 
 ```tsx
-export declare const hsv2rgb: (
+export declare const hsv2color: (
   h: Animated.Adaptable<number>,
   s: Animated.Adaptable<number>,
   v: Animated.Adaptable<number>
@@ -36,6 +36,20 @@ export declare const hsv2rgb: (
 ```
 
 Convert an HSV color into a color node.
+
+--
+
+## `hsv2rgb()`
+
+```tsx
+export declare const hsv2rgb: (
+  h: Animated.Adaptable<number>,
+  s: Animated.Adaptable<number>,
+  v: Animated.Adaptable<number>
+) => { r: Animated.Node<number>, g: Animated.Node<number>, b: Animated.Node<number>};
+```
+
+Convert an HSV color into an rgb object.
 
 ---
 
