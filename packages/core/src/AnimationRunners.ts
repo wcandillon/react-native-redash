@@ -150,7 +150,7 @@ export const decay = (params: DecayParams) => {
       config,
       from,
     }),
-  ]);
+  ] as ReadonlyArray<Animated.Node<number>>);
 };
 
 export interface SpringParams {
@@ -194,7 +194,7 @@ export const spring = (params: SpringParams) => {
       config,
       from,
     }),
-  ]);
+  ] as ReadonlyArray<Animated.Node<number>>);
 };
 
 export const delay = (node: Animated.Node<number>, duration: number) => {
