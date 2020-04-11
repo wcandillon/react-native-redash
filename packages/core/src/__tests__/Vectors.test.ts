@@ -38,6 +38,15 @@ test("divide", () => {
   expect(vec.divide(a, b, c, d)).toEqual(result);
 });
 
+test("invert", () => {
+  const a = vec.create(1, 1);
+  const r1 = vec.createValue(-1, -1);
+  expect(vec.invert(a)).toEqual(r1);
+  const b = vec.create(-1, -1);
+  const r2 = vec.createValue(1, 1);
+  expect(vec.invert(b)).toEqual(r2);
+});
+
 test("clamp", () => {
   const v1 = vec.create(-1, -1);
   const v2 = vec.create(2, 2);

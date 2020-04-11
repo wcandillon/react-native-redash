@@ -20,14 +20,14 @@ export interface Vector<
 
 const create = (
   x: Animated.Adaptable<number>,
-  y: Animated.Adaptable<number>
+  y?: Animated.Adaptable<number>
 ) => ({
   x,
-  y,
+  y: y || x,
 });
 
 const createValue = (x: number, y: number) =>
-  create(new Value(x), new Value(y));
+  create(new Value(x), new Value(y || x));
 
 const get = (vectors: Vector[], dimension: Dimension) =>
   vectors.map((vector) => vector[dimension]);
@@ -44,7 +44,7 @@ const divide = (...vectors: BinArgOp) => apply(Animated.divide, ...vectors);
 const clamp = (value: Vector, min: Vector, max: Vector) =>
   apply(clamp1, value, min, max);
 
-const invert = (a: Vector) => multiply({ x: -1, y: -1 }, a);
+const invert = (a: Vector) => multiply(create(-1), a);
 
 const set = (a: Vector<Animated.Value<number>>, b: Vector) =>
   block([Animated.set(a.x, b.x), Animated.set(a.y, b.y)]);
