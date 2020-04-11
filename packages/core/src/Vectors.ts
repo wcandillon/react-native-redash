@@ -4,6 +4,7 @@ import { clamp as clamp1 } from "./Math";
 
 const { Value, block } = Animated;
 type Axis = "x" | "y";
+type Fn = (...args: Animated.Adaptable<number>[]) => Animated.Node<number>;
 type BinArgOp<T extends Animated.Adaptable<number> | Vector = Vector> = [
   T,
   T,
@@ -30,10 +31,10 @@ const createValue = (x: number, y: number) => ({
   y: new Value(y),
 });
 
-const get = (vectors: BinArgOp, axis: Axis) =>
-  vectors.map((vector) => vector[axis]) as BinArgOp<Animated.Adaptable<number>>;
+const get = (vectors: Vector[], axis: Axis) =>
+  vectors.map((vector) => vector[axis]);
 
-const apply = (fn, ...vectors) => ({
+const apply = (fn: Fn, ...vectors: Vector[]) => ({
   x: fn(...get(vectors, "x")),
   y: fn(...get(vectors, "y")),
 });
