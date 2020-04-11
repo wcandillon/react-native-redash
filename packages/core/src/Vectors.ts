@@ -18,15 +18,16 @@ export interface Vector<
   y: T;
 }
 
-const create = (x: number, y: number) => ({
+const create = (
+  x: Animated.Adaptable<number>,
+  y: Animated.Adaptable<number>
+) => ({
   x,
   y,
 });
 
-const createValue = (x: number, y: number) => ({
-  x: new Value(x),
-  y: new Value(y),
-});
+const createValue = (x: number, y: number) =>
+  create(new Value(x), new Value(y));
 
 const get = (vectors: Vector[], dimensions: Dimensions) =>
   vectors.map((vector) => vector[dimensions]);
