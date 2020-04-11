@@ -3,7 +3,7 @@ import Animated from "react-native-reanimated";
 import { clamp as clamp1 } from "./Math";
 
 const { Value, block } = Animated;
-type Dimensions = "x" | "y";
+type Dimension = "x" | "y";
 type Fn = (...args: Animated.Adaptable<number>[]) => Animated.Node<number>;
 type BinArgOp<T extends Animated.Adaptable<number> | Vector = Vector> = [
   T,
@@ -29,8 +29,8 @@ const create = (
 const createValue = (x: number, y: number) =>
   create(new Value(x), new Value(y));
 
-const get = (vectors: Vector[], dimensions: Dimensions) =>
-  vectors.map((vector) => vector[dimensions]);
+const get = (vectors: Vector[], dimension: Dimension) =>
+  vectors.map((vector) => vector[dimension]);
 
 const apply = (fn: Fn, ...vectors: Vector[]) => ({
   x: fn(...get(vectors, "x")),
