@@ -6,6 +6,7 @@
     "lint": "yarn workspace react-native-redash lint",
     "tsc": "yarn workspace react-native-redash tsc",
     "test": "yarn workspace react-native-redash test",
+    "ci": "yarn run lint && yarn run tsc && yarn test",
     "build": "yarn workspace react-native-redash prepare",
     "serve:docs": "yarn workspace docs dev",
     "build:docs": "yarn workspace docs build"
