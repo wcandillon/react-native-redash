@@ -3,7 +3,7 @@ import Animated from "react-native-reanimated";
 import { clamp as clamp1 } from "./Math";
 
 const { Value, block } = Animated;
-type Axis = "x" | "y";
+type Dimensions = "x" | "y";
 type Fn = (...args: Animated.Adaptable<number>[]) => Animated.Node<number>;
 type BinArgOp<T extends Animated.Adaptable<number> | Vector = Vector> = [
   T,
@@ -11,14 +11,11 @@ type BinArgOp<T extends Animated.Adaptable<number> | Vector = Vector> = [
   ...T[]
 ];
 
-export interface Vector {
-  x: Animated.Adaptable<number>;
-  y: Animated.Adaptable<number>;
-}
-
-export interface VectorValue {
-  x: Animated.Value<number>;
-  y: Animated.Value<number>;
+export interface Vector<
+  T extends Animated.Adaptable<number> = Animated.Adaptable<number>
+> {
+  x: T;
+  y: T;
 }
 
 const create = (x: number, y: number) => ({
@@ -31,8 +28,8 @@ const createValue = (x: number, y: number) => ({
   y: new Value(y),
 });
 
-const get = (vectors: Vector[], axis: Axis) =>
-  vectors.map((vector) => vector[axis]);
+const get = (vectors: Vector[], dimensions: Dimensions) =>
+  vectors.map((vector) => vector[dimensions]);
 
 const apply = (fn: Fn, ...vectors: Vector[]) => ({
   x: fn(...get(vectors, "x")),
@@ -48,7 +45,7 @@ const clamp = (value: Vector, min: Vector, max: Vector) =>
 
 const invert = (a: Vector) => multiply({ x: -1, y: -1 }, a);
 
-const set = (a: VectorValue, b: Vector) =>
+const set = (a: Vector<Animated.Value<number>>, b: Vector) =>
   block([Animated.set(a.x, b.x), Animated.set(a.y, b.y)]);
 
 export const vec = {
