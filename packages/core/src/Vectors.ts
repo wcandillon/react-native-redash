@@ -1,6 +1,14 @@
 import Animated from "react-native-reanimated";
 
+import { clamp as clamp1 } from "./Math";
+
 const { Value, block } = Animated;
+type Axis = "x" | "y";
+type BinArgOp<T extends Animated.Adaptable<number> | Vector = Vector> = [
+  T,
+  T,
+  ...T[]
+];
 
 export interface Vector {
   x: Animated.Adaptable<number>;
@@ -13,29 +21,29 @@ export interface VectorValue {
 }
 
 const create = (x: number, y: number) => ({
+  x,
+  y,
+});
+
+const createValue = (x: number, y: number) => ({
   x: new Value(x),
   y: new Value(y),
 });
 
-const add = (a: Vector, b: Vector) => ({
-  x: Animated.add(a.x, b.x),
-  y: Animated.add(a.y, b.y),
+const get = (vectors: BinArgOp, axis: Axis) =>
+  vectors.map((vector) => vector[axis]) as BinArgOp<Animated.Adaptable<number>>;
+
+const apply = (fn, ...vectors) => ({
+  x: fn(...get(vectors, "x")),
+  y: fn(...get(vectors, "y")),
 });
 
-const sub = (a: Vector, b: Vector) => ({
-  x: Animated.sub(a.x, b.x),
-  y: Animated.sub(a.y, b.y),
-});
-
-const multiply = (a: Vector, b: Vector) => ({
-  x: Animated.multiply(a.x, b.x),
-  y: Animated.multiply(a.y, b.y),
-});
-
-const divide = (a: Vector, b: Vector) => ({
-  x: Animated.divide(a.x, b.x),
-  y: Animated.divide(a.y, b.y),
-});
+const add = (...vectors: BinArgOp) => apply(Animated.add, ...vectors);
+const sub = (...vectors: BinArgOp) => apply(Animated.sub, ...vectors);
+const multiply = (...vectors: BinArgOp) => apply(Animated.multiply, ...vectors);
+const divide = (...vectors: BinArgOp) => apply(Animated.divide, ...vectors);
+const clamp = (value: Vector, min: Vector, max: Vector) =>
+  apply(clamp1, value, min, max);
 
 const invert = (a: Vector) => multiply({ x: -1, y: -1 }, a);
 
@@ -44,10 +52,12 @@ const set = (a: VectorValue, b: Vector) =>
 
 export const vec = {
   create,
+  createValue,
   invert,
   add,
   sub,
   multiply,
   divide,
   set,
+  clamp,
 };
