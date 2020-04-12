@@ -56,4 +56,5 @@ export const vec = {
   divide,
   set,
   clamp,
+  apply,
 };
