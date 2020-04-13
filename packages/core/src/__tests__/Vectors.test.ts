@@ -26,8 +26,8 @@ test("multiply", () => {
   const c = vec.create(1, 1);
   const d = vec.create(2, 2);
   const result = vec.createValue(2, 2);
-  expect(vec.multiply(a, b, c, d)).toEqual(result);
-  expect(vec.multiply(2, 1, 1, 1)).toEqual(result);
+  expect(vec.dot(a, b, c, d)).toEqual(result);
+  expect(vec.dot(2, 1, 1, 1)).toEqual(result);
 });
 
 test("divide", () => {
@@ -36,7 +36,7 @@ test("divide", () => {
   const c = vec.create(1, 1);
   const d = vec.create(2, 2);
   const result = vec.createValue(0.5, 0.5);
-  expect(vec.divide(a, b, c, d)).toEqual(result);
+  expect(vec.div(a, b, c, d)).toEqual(result);
 });
 
 test("invert", () => {
