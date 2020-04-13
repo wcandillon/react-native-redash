@@ -5,11 +5,7 @@ import { clamp as clamp1 } from "./Math";
 const { Value, block } = Animated;
 type Dimension = "x" | "y";
 type Fn = (...args: Animated.Adaptable<number>[]) => Animated.Node<number>;
-type BinArgOp<T extends Animated.Adaptable<number> | Vector = Vector> = [
-  T,
-  T,
-  ...T[]
-];
+type BinArgOp<T extends Vector | number = Vector | number> = [T, T, ...T[]];
 
 export interface Vector<
   T extends Animated.Adaptable<number> = Animated.Adaptable<number>
@@ -23,13 +19,15 @@ const create = <T extends Animated.Adaptable<number>>(x: T, y?: T) => ({
   y: y || x,
 });
 
-const createValue = (x: number, y: number) =>
+const createValue = (x: number, y?: number) =>
   create(new Value(x), new Value(y || x));
 
-const get = (vectors: Vector[], dimension: Dimension) =>
-  vectors.map((vector) => vector[dimension]);
+const get = (vectors: (Vector | number)[], dimension: Dimension) =>
+  vectors.map((vector) =>
+    typeof vector === "number" ? vector : vector[dimension]
+  );
 
-const apply = (fn: Fn, ...vectors: Vector[]) => ({
+const apply = (fn: Fn, ...vectors: (Vector | number)[]) => ({
   x: fn(...get(vectors, "x")),
   y: fn(...get(vectors, "y")),
 });
