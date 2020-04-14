@@ -45,8 +45,11 @@ const clamp = (value: Vector, min: Vector, max: Vector) =>
 
 const invert = (a: Vector) => dot(-1, a);
 
-const set = (a: Vector<Animated.Value<number>>, b: Vector) =>
-  block([Animated.set(a.x, b.x), Animated.set(a.y, b.y)]);
+const set = (a: Vector<Animated.Value<number>>, b: Adaptable) =>
+  block([
+    Animated.set(a.x, isAdaptable(b) ? b : b.x),
+    Animated.set(a.y, isAdaptable(b) ? b : b.y),
+  ]);
 
 export const vec = {
   create,

@@ -2,6 +2,7 @@ import Animated from "react-native-reanimated";
 import { useMemoOne } from "use-memo-one";
 
 import { min } from "./Math";
+import { vec } from "./Vectors";
 
 const {
   Clock,
@@ -60,6 +61,18 @@ export const snapPoint = (
 
 type Dependencies = readonly unknown[];
 type Atomic = string | number | boolean;
+
+export const useVector = (x: number, y: number, deps: Dependencies) =>
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useMemoOne(() => vec.createValue(x, y), [deps]);
+
+export const useClock = (deps: Dependencies) =>
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useMemoOne(() => new Clock(), [deps]);
+
+export const useValue = <V extends Atomic>(value: V, deps: Dependencies) =>
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useMemoOne(() => new Value(value), [deps]);
 
 export const useValues = <V extends Atomic>(
   values: V[],

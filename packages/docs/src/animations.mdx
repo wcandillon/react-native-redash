@@ -7,6 +7,37 @@ route: /animations
 
 ---
 
+## `useValue()`
+
+```tsx
+const useValue: <V extends string | number | boolean>(value: V, deps: Dependencies) => Animated.Value<V>;
+```
+
+Creates an animation value which identity is preserved by `deps`.
+
+---
+
+## `useClock()`
+
+```tsx
+const useClock: (deps: Dependencies) => Animated.Clock;
+```
+
+Creates a clock which identity is preserved by `deps`.
+
+
+---
+
+## `useVector()`
+
+```tsx
+const useVector: (x: number, y: number, deps: Dependencies) => Vector<Animated.Value>;
+```
+
+Creates a vector which identity is preserved by `deps`.
+
+---
+
 ## `useValues()`
 
 ```tsx
