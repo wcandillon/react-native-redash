@@ -90,10 +90,7 @@ at `BEGAN` but rather in `ACTIVE`. See https://github.com/kmagiera/react-native-
 ## `pinchActive()`
 
 ```tsx
-const pinchActive:  (state: Animated.Node<State>, numberOfPointers: Animated.Adaptable<number> = 2) => Animated.Node<1 | 0>;
+const pinchActive:  (state: Animated.Node<State>) => Animated.Node<1 | 0>;
 ```
 
 Returns one if the gesture is active (and doesn't overlap with `pinchBegan`).
-It can also take `numberOfPointers` into account.
-In React Native Gesture Handler, the pinch gesture stay active with the number of numberOfPointers going from two to one.
-`pinchActive()` will always return false if `numberOfPointers` is less than two.
