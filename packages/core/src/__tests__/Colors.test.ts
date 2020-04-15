@@ -1,13 +1,6 @@
 import { processColor } from "react-native";
 import Animated from "react-native-reanimated";
-import {
-  mixColor,
-  blue,
-  green,
-  hsv2rgb,
-  opacity,
-  red,
-} from "../Colors";
+import { blue, green, hsv2rgb, mixColor, opacity, red } from "../Colors";
 
 const { color, Value } = Animated;
 jest.mock("react-native-reanimated");
@@ -84,9 +77,9 @@ test("simple interpolation 2", () => {
 });
 
 test("simple interpolation 3", () => {
-  expect(
-    mixColor(new Value(0.5), 0x00ff00, 0x0000ff)[" __value"]
-  ).toBe(0x008080);
+  expect(mixColor(new Value(0.5), 0x00ff00, 0x0000ff)[" __value"]).toBe(
+    0x008080
+  );
 });
 
 test("hsv2rgb 1", () => {
