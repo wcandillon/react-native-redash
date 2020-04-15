@@ -1,7 +1,7 @@
 import { processColor } from "react-native";
 import Animated from "react-native-reanimated";
 import {
-  bInterpolateColor,
+  mixColor,
   blue,
   green,
   hsv2rgb,
@@ -72,20 +72,20 @@ test("opacity", () => {
 });
 
 test("simple interpolation 1", () => {
-  expect(bInterpolateColor(new Value(0), "white", "black")[" __value"]).toBe(
+  expect(mixColor(new Value(0), "white", "black")[" __value"]).toBe(
     processColor("#ffffff")
   );
 });
 
 test("simple interpolation 2", () => {
-  expect(bInterpolateColor(new Value(1), "white", "black")[" __value"]).toBe(
+  expect(mixColor(new Value(1), "white", "black")[" __value"]).toBe(
     processColor("#000000")
   );
 });
 
 test("simple interpolation 3", () => {
   expect(
-    bInterpolateColor(new Value(0.5), 0x00ff00, 0x0000ff)[" __value"]
+    mixColor(new Value(0.5), 0x00ff00, 0x0000ff)[" __value"]
   ).toBe(0x008080);
 });
 
