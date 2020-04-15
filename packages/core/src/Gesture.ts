@@ -45,10 +45,15 @@ export const pinchBegan = proc((state: Animated.Node<State>) =>
     : and(eq(state, State.ACTIVE), eq(diff(state), State.ACTIVE - State.BEGAN))
 );
 
-export const pinchActive = proc((state: Animated.Node<State>) =>
-  Platform.OS === "ios"
-    ? eq(state, State.ACTIVE)
-    : and(eq(state, State.ACTIVE), not(pinchBegan(state)))
+export const pinchActive = proc(
+  (state: Animated.Node<State>, numberOfPointers: Animated.Node<number>) =>
+    Platform.OS === "ios"
+      ? and(eq(state, State.ACTIVE), eq(numberOfPointers, 2))
+      : and(
+          eq(state, State.ACTIVE),
+          not(pinchBegan(state)),
+          eq(numberOfPointers, 2)
+        )
 );
 
 export const withScaleOffset = (
