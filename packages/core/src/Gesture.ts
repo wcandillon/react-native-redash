@@ -42,7 +42,7 @@ const {
 export const pinchBegan = proc((state: Animated.Node<State>) =>
   Platform.OS === "ios"
     ? eq(state, State.BEGAN)
-    : and(eq(state, State.ACTIVE), eq(diff(state), State.ACTIVE - State.BEGAN))
+    : eq(diff(state), State.ACTIVE - State.BEGAN)
 );
 
 export const pinchActive = proc((state: Animated.Node<State>) =>
