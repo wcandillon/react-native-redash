@@ -188,7 +188,7 @@ export const interpolateColor = (
   return interpolateColorsRGB(value, inputRange, outputRange);
 };
 
-export const bInterpolateColor = (
+export const mixColor = (
   value: Animated.Adaptable<number>,
   color1: Color,
   color2: Color,
