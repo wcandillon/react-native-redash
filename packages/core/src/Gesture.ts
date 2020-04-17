@@ -40,20 +40,18 @@ const {
 
 // See: https://github.com/kmagiera/react-native-gesture-handler/issues/553
 export const pinchBegan = proc((state: Animated.Node<State>) =>
-  Platform.OS === "ios"
-    ? eq(state, State.BEGAN)
-    : and(eq(state, State.ACTIVE), eq(diff(state), State.ACTIVE - State.BEGAN))
+  Platform.OS === "android"
+    ? cond(eq(diff(state), State.ACTIVE - State.BEGAN), eq(state, State.ACTIVE))
+    : eq(state, State.BEGAN)
 );
 
 export const pinchActive = proc(
   (state: Animated.Node<State>, numberOfPointers: Animated.Node<number>) =>
-    Platform.OS === "ios"
-      ? and(eq(state, State.ACTIVE), eq(numberOfPointers, 2))
-      : and(
-          eq(state, State.ACTIVE),
-          not(pinchBegan(state)),
-          eq(numberOfPointers, 2)
-        )
+    and(
+      eq(state, State.ACTIVE),
+      eq(numberOfPointers, 2),
+      Platform.OS === "android" ? not(pinchBegan(state)) : 1
+    )
 );
 
 export const withScaleOffset = (
