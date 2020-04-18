@@ -169,7 +169,7 @@ const multiply4 = (m1: Matrix4, m2: Matrix4): Matrix4 => {
 export const accumulatedTransform = (transforms: Transforms) => {
   const matrix = transforms.reduce((acc, transform): Matrix4 => {
     const key = Object.keys(transform)[0] as TransformName;
-    const value = transform[key];
+    const value = lookup(transform, key);
     if (key === "translateX") {
       return multiply4(acc, translateXMatrix(value));
     }
