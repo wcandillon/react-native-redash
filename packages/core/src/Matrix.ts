@@ -30,14 +30,25 @@ type TransformName =
   | "translateX"
   | "translateY"
   | "scale"
+  | "scaleX"
+  | "scaleY"
   | "rotateZ"
   | "rotate";
 type TranslateX = { translateX: Animated.Adaptable<number> };
 type TranslateY = { translateY: Animated.Adaptable<number> };
 type Scale = { scale: Animated.Adaptable<number> };
+type ScaleX = { scaleX: Animated.Adaptable<number> };
+type ScaleY = { scaleZ: Animated.Adaptable<number> };
 type Rotate = { rotate: Animated.Adaptable<number> };
 type RotateZ = { rotateZ: Animated.Adaptable<number> };
-type Transform = TranslateX | TranslateY | Scale | Rotate | RotateZ;
+type Transform =
+  | TranslateX
+  | TranslateY
+  | Scale
+  | ScaleX
+  | ScaleY
+  | Rotate
+  | RotateZ;
 type Transforms = Transform[];
 
 const exhaustiveCheck = (a: never): never => {
@@ -67,6 +78,20 @@ const translateYMatrix = (y: Animated.Adaptable<number>): Matrix4 => [
 
 const scaleMatrix = (s: Animated.Adaptable<number>): Matrix4 => [
   [s, 0, 0, 0],
+  [0, s, 0, 0],
+  [0, 0, 1, 0],
+  [0, 0, 0, 1],
+];
+
+const scaleXMatrix = (s: Animated.Adaptable<number>): Matrix4 => [
+  [s, 0, 0, 0],
+  [0, 1, 0, 0],
+  [0, 0, 1, 0],
+  [0, 0, 0, 1],
+];
+
+const scaleYMatrix = (s: Animated.Adaptable<number>): Matrix4 => [
+  [1, 0, 0, 0],
   [0, s, 0, 0],
   [0, 0, 1, 0],
   [0, 0, 0, 1],
@@ -142,30 +167,29 @@ const multiply4 = (m1: Matrix4, m2: Matrix4): Matrix4 => {
 
 // eslint-disable-next-line import/prefer-default-export
 export const accumulatedTransform = (transforms: Transforms) => {
-  let matrix = identityMatrix;
-  transforms.forEach((transform) => {
+  const matrix = transforms.reduce((acc, transform): Matrix4 => {
     const key = Object.keys(transform)[0] as TransformName;
-    const value = transform[key] as Animated.Adaptable<number>;
-    switch (key) {
-      case "translateX":
-        matrix = multiply4(matrix, translateXMatrix(value));
-        break;
-      case "translateY":
-        matrix = multiply4(matrix, translateYMatrix(value));
-        break;
-      case "scale":
-        matrix = multiply4(matrix, scaleMatrix(value));
-        break;
-      case "rotateZ":
-        matrix = multiply4(matrix, rotateZMatrix(value));
-        break;
-      case "rotate":
-        matrix = multiply4(matrix, rotateZMatrix(value));
-        break;
-      default:
-        exhaustiveCheck(key);
+    const value = transform[key];
+    if (key === "translateX") {
+      return multiply4(acc, translateXMatrix(value));
     }
-  });
+    if (key === "translateY") {
+      return multiply4(acc, translateYMatrix(value));
+    }
+    if (key === "scale") {
+      return multiply4(acc, scaleMatrix(value));
+    }
+    if (key === "scaleX") {
+      return multiply4(acc, scaleXMatrix(value));
+    }
+    if (key === "scaleY") {
+      return multiply4(acc, scaleYMatrix(value));
+    }
+    if (key === "rotate" || key === "rotateZ") {
+      return multiply4(acc, rotateZMatrix(value));
+    }
+    return exhaustiveCheck(key);
+  }, identityMatrix);
   // https://www.w3.org/TR/css-transforms-1/#decomposing-a-2d-matrix
   const row0x = matrix[0][0];
   const row0y = matrix[1][0];
@@ -195,5 +219,6 @@ export const accumulatedTransform = (transforms: Transforms) => {
     scaleY,
     scale,
     rotateZ,
+    rotate: rotateZ,
   };
 };
