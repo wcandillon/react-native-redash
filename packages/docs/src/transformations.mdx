@@ -68,10 +68,9 @@ This function works well with `PinchGestureHandler` or `RotationGestureHandler` 
 
 Example: 
 
-```
+```tsx
 const { rotateZ, translateX } = accumulatedTransform([
   { translateX: 100 },
-  { translateY: 100 },
   { translateX: -CARD_WIDTH / 2 },
   { rotateZ: -Math.PI / 6 },
   { translateX: CARD_WIDTH / 2 },
