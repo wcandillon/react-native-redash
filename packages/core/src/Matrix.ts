@@ -1,5 +1,4 @@
 import Animated from "react-native-reanimated";
-import { atan2 } from "./Math";
 
 const {
   and,
@@ -14,6 +13,8 @@ const {
   lessThan,
   divide,
   greaterOrEq,
+  atan,
+  pow,
 } = Animated;
 
 type Column4 = readonly [
@@ -172,8 +173,8 @@ export const accumulatedTransform = (transforms: Transforms) => {
   const row1y = matrix[1][1];
   const translateX = matrix[0][3];
   const translateY = matrix[1][3];
-  const scaleXAbs = sqrt(add(multiply(row0x, row0x), multiply(row0y, row0y)));
-  const scaleYAbs = sqrt(add(multiply(row1x, row1x), multiply(row1y, row1y)));
+  const scaleXAbs = sqrt(add(pow(row0x, 2), pow(row0y, 2)));
+  const scaleYAbs = sqrt(add(pow(row1x, 2), pow(row1y, 2)));
   const determinant = sub(multiply(row0x, row1y), multiply(row0y, row1x));
   const scaleX = multiply(
     cond(and(lessThan(determinant, 0), lessThan(row0x, row1y)), -1, 1),
@@ -183,9 +184,9 @@ export const accumulatedTransform = (transforms: Transforms) => {
     cond(and(lessThan(determinant, 0), greaterOrEq(row0x, row1y)), -1, 1),
     scaleYAbs
   );
-  const row0y1 = divide(row0x, scaleX);
-  const row0x1 = divide(row0y, scaleX);
-  const rotate = atan2(row0y1, row0x1);
+  const row0y1 = divide(row0y, scaleX);
+  const row0x1 = divide(row0x, scaleX);
+  const rotateZ = atan(divide(row0y1, row0x1));
   const scale = cond(eq(scaleX, scaleY), scaleX, 1);
   return {
     translateX,
@@ -193,6 +194,6 @@ export const accumulatedTransform = (transforms: Transforms) => {
     scaleX,
     scaleY,
     scale,
-    rotate,
+    rotateZ,
   };
 };
