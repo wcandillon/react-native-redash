@@ -44,3 +44,40 @@ Example:
   }}
 />
 ```
+
+---
+
+## `accumulateTransform()`
+
+```tsx
+interface AccumulatedTransform {
+  scale: Animated.Node<number>;
+  scaleX: Animated.Node<number>;
+  scaleY: Animated.Node<number>;
+  translateX: Animated.Node<number>;
+  translateY: Animated.Node<number>;
+  rotateZ: Animated.Node<number>;
+}
+
+const accumulateTransform: (transform: AnimatedTransform[]) => AccumulatedTransform;
+```
+
+Given a set of 2d transformations, returns the accumlated transformation.
+This is useful to keep the state of a complex 2d transformation into a set of animation value.
+This function works well with `PinchGestureHandler` or `RotationGestureHandler` for instance.
+
+Example: 
+
+```tsx
+const { rotateZ, translateX } = accumulatedTransform([
+  { translateX: 100 },
+  { translateX: -CARD_WIDTH / 2 },
+  { rotateZ: -Math.PI / 6 },
+  { translateX: CARD_WIDTH / 2 },
+]);
+return (
+  <Animated.View style={{ transform: [{ rotateZ }, { translateX }]}}>
+    <Card />
+  </Animated.View>
+)
+```
