@@ -1,6 +1,6 @@
 import Animated from "react-native-reanimated";
 
-const { add, cond, eq, multiply, sqrt } = Animated;
+const { add, cond, eq, multiply, sqrt, cos, sin } = Animated;
 
 type Column4 = readonly [
   Animated.Adaptable<number>,
@@ -53,6 +53,27 @@ const translateYMatrix = (y: Animated.Adaptable<number>): Matrix4 => [
 const scaleMatrix = (s: Animated.Adaptable<number>): Matrix4 => [
   [s, 0, 0, 0],
   [0, s, 0, 0],
+  [0, 0, 1, 0],
+  [0, 0, 0, 1],
+];
+
+const rotateXMatrix = (r: Animated.Adaptable<number>): Matrix4 => [
+  [1, 0, 0, 0],
+  [0, cos(r), multiply(-1, sin(r)), 0],
+  [0, sin(r), cos(r), 0],
+  [0, 0, 0, 1],
+];
+
+const rotateYMatrix = (r: Animated.Adaptable<number>): Matrix4 => [
+  [cos(r), 0, sin(r), 0],
+  [0, 1, 0, 0],
+  [multiply(-1, sin(r)), 0, cos(r), 0],
+  [0, 0, 0, 1],
+];
+
+const rotateZMatrix = (r: Animated.Adaptable<number>): Matrix4 => [
+  [cos(r), multiply(-1, sin(r)), 0, 0],
+  [sin(r), cos(r), 0, 0],
   [0, 0, 1, 0],
   [0, 0, 0, 1],
 ];
@@ -117,6 +138,18 @@ export const accumulatedTransform = (transforms: Transforms) => {
         break;
       case "scale":
         matrix = multiply4(matrix, scaleMatrix(value));
+        break;
+      case "rotateX":
+        matrix = multiply4(matrix, rotateXMatrix(value));
+        break;
+      case "rotateY":
+        matrix = multiply4(matrix, rotateYMatrix(value));
+        break;
+      case "rotateZ":
+        matrix = multiply4(matrix, rotateZMatrix(value));
+        break;
+      case "rotate":
+        matrix = multiply4(matrix, rotateZMatrix(value));
         break;
       default:
         exhaustiveCheck(key);
