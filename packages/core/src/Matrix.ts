@@ -23,6 +23,7 @@ type Column4 = readonly [
   Animated.Adaptable<number>,
   Animated.Adaptable<number>
 ];
+
 type Row4 = Column4;
 type Matrix4 = [Column4, Column4, Column4, Column4];
 
@@ -34,22 +35,16 @@ type TransformName =
   | "scaleY"
   | "rotateZ"
   | "rotate";
-type TranslateX = { translateX: Animated.Adaptable<number> };
-type TranslateY = { translateY: Animated.Adaptable<number> };
-type Scale = { scale: Animated.Adaptable<number> };
-type ScaleX = { scaleX: Animated.Adaptable<number> };
-type ScaleY = { scaleZ: Animated.Adaptable<number> };
-type Rotate = { rotate: Animated.Adaptable<number> };
-type RotateZ = { rotateZ: Animated.Adaptable<number> };
-type Transform =
-  | TranslateX
-  | TranslateY
-  | Scale
-  | ScaleX
-  | ScaleY
-  | Rotate
-  | RotateZ;
-type Transforms = Transform[];
+type Transformations = { [Name in TransformName]: Animated.Adaptable<number> };
+type Transforms = (
+  | Pick<Transformations, "translateX">
+  | Pick<Transformations, "translateY">
+  | Pick<Transformations, "scale">
+  | Pick<Transformations, "scaleX">
+  | Pick<Transformations, "scaleY">
+  | Pick<Transformations, "rotateZ">
+  | Pick<Transformations, "rotate">
+)[];
 
 const exhaustiveCheck = (a: never): never => {
   throw new Error(`Unexhaustive handling for ${a}`);
@@ -169,7 +164,7 @@ const multiply4 = (m1: Matrix4, m2: Matrix4): Matrix4 => {
 export const accumulatedTransform = (transforms: Transforms) => {
   const matrix = transforms.reduce((acc, transform): Matrix4 => {
     const key = Object.keys(transform)[0] as TransformName;
-    const value = lookup(transform, key);
+    const value = (transform as Pick<Transformations, typeof key>)[key];
     if (key === "translateX") {
       return multiply4(acc, translateXMatrix(value));
     }
