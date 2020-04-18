@@ -1,6 +1,20 @@
 import Animated from "react-native-reanimated";
+import { atan2 } from "./Math";
 
-const { add, cond, eq, multiply, sqrt, cos, sin } = Animated;
+const {
+  and,
+  add,
+  cond,
+  eq,
+  multiply,
+  sqrt,
+  cos,
+  sin,
+  sub,
+  lessThan,
+  divide,
+  greaterOrEq,
+} = Animated;
 
 type Column4 = readonly [
   Animated.Adaptable<number>,
@@ -15,14 +29,14 @@ type TransformName =
   | "translateX"
   | "translateY"
   | "scale"
-  | "rotateX"
-  | "rotateY"
   | "rotateZ"
   | "rotate";
 type TranslateX = { translateX: Animated.Adaptable<number> };
 type TranslateY = { translateY: Animated.Adaptable<number> };
 type Scale = { scale: Animated.Adaptable<number> };
-type Transform = TranslateX | TranslateY | Scale;
+type Rotate = { rotate: Animated.Adaptable<number> };
+type RotateZ = { rotateZ: Animated.Adaptable<number> };
+type Transform = TranslateX | TranslateY | Scale | Rotate | RotateZ;
 type Transforms = Transform[];
 
 const exhaustiveCheck = (a: never): never => {
@@ -57,6 +71,7 @@ const scaleMatrix = (s: Animated.Adaptable<number>): Matrix4 => [
   [0, 0, 0, 1],
 ];
 
+/*
 const rotateXMatrix = (r: Animated.Adaptable<number>): Matrix4 => [
   [1, 0, 0, 0],
   [0, cos(r), multiply(-1, sin(r)), 0],
@@ -70,6 +85,7 @@ const rotateYMatrix = (r: Animated.Adaptable<number>): Matrix4 => [
   [multiply(-1, sin(r)), 0, cos(r), 0],
   [0, 0, 0, 1],
 ];
+*/
 
 const rotateZMatrix = (r: Animated.Adaptable<number>): Matrix4 => [
   [cos(r), multiply(-1, sin(r)), 0, 0],
@@ -139,12 +155,6 @@ export const accumulatedTransform = (transforms: Transforms) => {
       case "scale":
         matrix = multiply4(matrix, scaleMatrix(value));
         break;
-      case "rotateX":
-        matrix = multiply4(matrix, rotateXMatrix(value));
-        break;
-      case "rotateY":
-        matrix = multiply4(matrix, rotateYMatrix(value));
-        break;
       case "rotateZ":
         matrix = multiply4(matrix, rotateZMatrix(value));
         break;
@@ -162,8 +172,20 @@ export const accumulatedTransform = (transforms: Transforms) => {
   const row1y = matrix[1][1];
   const translateX = matrix[0][3];
   const translateY = matrix[1][3];
-  const scaleX = sqrt(add(multiply(row0x, row0x), multiply(row0y, row0y)));
-  const scaleY = sqrt(add(multiply(row1x, row1x), multiply(row1y, row1y)));
+  const scaleXAbs = sqrt(add(multiply(row0x, row0x), multiply(row0y, row0y)));
+  const scaleYAbs = sqrt(add(multiply(row1x, row1x), multiply(row1y, row1y)));
+  const determinant = sub(multiply(row0x, row1y), multiply(row0y, row1x));
+  const scaleX = multiply(
+    cond(and(lessThan(determinant, 0), lessThan(row0x, row1y)), -1, 1),
+    scaleXAbs
+  );
+  const scaleY = multiply(
+    cond(and(lessThan(determinant, 0), greaterOrEq(row0x, row1y)), -1, 1),
+    scaleYAbs
+  );
+  const row0y1 = divide(row0x, scaleX);
+  const row0x1 = divide(row0y, scaleX);
+  const rotate = atan2(row0y1, row0x1);
   const scale = cond(eq(scaleX, scaleY), scaleX, 1);
   return {
     translateX,
@@ -171,5 +193,6 @@ export const accumulatedTransform = (transforms: Transforms) => {
     scaleX,
     scaleY,
     scale,
+    rotate,
   };
 };
