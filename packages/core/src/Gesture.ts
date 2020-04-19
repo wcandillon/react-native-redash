@@ -12,7 +12,6 @@ import {
 } from "react-native-gesture-handler";
 
 import { Platform } from "react-native";
-import { useMemoOne } from "use-memo-one";
 import { snapPoint } from "./Animations";
 import { vec } from "./Vectors";
 
@@ -331,24 +330,3 @@ export const debugGestureState = (
     )
   );
 };
-
-type Dependencies = readonly unknown[];
-
-export const useGestureHandler = (
-  nativeEvent: Partial<Adaptable<NativeEvent>>,
-  deps: Dependencies
-) =>
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useMemoOne(() => onGestureEvent(nativeEvent), deps);
-
-export const usePanGestureHandler = (deps: Dependencies) =>
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useMemoOne(() => panGestureHandler(), deps);
-
-export const useVerticalPanGestureHandler = (deps: Dependencies) =>
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useMemoOne(() => verticalPanGestureHandler(), deps);
-
-export const useHorizontalPanGestureHandler = (deps: Dependencies) =>
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useMemoOne(() => horizontalPanGestureHandler(), deps);
