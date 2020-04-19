@@ -36,7 +36,7 @@ type TransformName =
   | "rotateZ"
   | "rotate";
 type Transformations = { [Name in TransformName]: Animated.Adaptable<number> };
-type Transforms = (
+export type Transforms = (
   | Pick<Transformations, "translateX">
   | Pick<Transformations, "translateY">
   | Pick<Transformations, "scale">
