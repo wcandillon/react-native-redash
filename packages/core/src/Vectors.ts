@@ -40,8 +40,12 @@ const add = (...vectors: BinArgOp) => apply(Animated.add, ...vectors);
 const sub = (...vectors: BinArgOp) => apply(Animated.sub, ...vectors);
 const dot = (...vectors: BinArgOp) => apply(Animated.multiply, ...vectors);
 const div = (...vectors: BinArgOp) => apply(Animated.divide, ...vectors);
-const clamp = (value: Vector, min: Vector, max: Vector) =>
-  apply(clamp1, value, min, max);
+const min = (vector: Vector, value: Animated.Adaptable<number>) =>
+  apply(Animated.min, vector, value);
+const max = (vector: Vector, value: Animated.Adaptable<number>) =>
+  apply(Animated.max, vector, value);
+const clamp = (value: Vector, minVec: Vector, maxVec: Vector) =>
+  apply(clamp1, value, minVec, maxVec);
 
 const invert = (a: Vector) => dot(-1, a);
 
@@ -64,4 +68,6 @@ export const vec = {
   set,
   clamp,
   apply,
+  min,
+  max,
 };
