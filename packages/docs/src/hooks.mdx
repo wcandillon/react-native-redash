@@ -1,0 +1,194 @@
+---
+name: Hooks
+route: /hooks
+---
+
+# Hooks
+
+---
+
+The hooks provided by redash are here so you can create animation values, clocks, and event nodes that will keep their identity across component re-renders.
+
+
+## `useValue()`
+
+```tsx
+const useValue: <V extends string | number | boolean>(value: V, deps: Dependencies) => Animated.Value<V>;
+```
+
+Creates an animation value which identity is preserved by `deps`.
+
+---
+
+## `useValues()`
+
+```tsx
+const useValues: <V extends string | number | boolean>(values: V[], deps: Dependencies) => Animated.Value<V>[];
+```
+
+Create animation values which lifecycle is granted by `deps`.
+For instance the code snippet below:
+
+```tsx
+const [toggle, state] = useValues([0, State.UNDETERMINED], []);
+```
+
+is a shortcut for
+
+```tsx
+const [toggle state] = useMemoOne(() => [new Value(0), new Value(State.UNDETERMINED)], []);
+```
+
+---
+
+## `useClock()`
+
+```tsx
+const useClock: (deps: Dependencies) => Animated.Clock;
+```
+
+Creates a clock which identity is preserved by `deps`.
+
+---
+
+## `useClocks()`
+
+```tsx
+const useClocks: (numberOfClocks: number, deps: Dependencies) => Animated.Clock[];
+```
+
+Create a number of clocks which lifecycle is granted by `deps`. For instance the code snippet below:
+
+```tsx
+const [clock1, clock2, clock3] = useClocks(3, []);
+```
+
+is a shortcut for
+
+```tsx
+const [clock1, clock2, clock3] = useMemoOne(() => [new Clock(), new Clock(), new Clock()], []);
+```
+
+---
+
+## `useVector()`
+
+```tsx
+const useVector: (x: number, y: number, deps: Dependencies) => Vector<Animated.Value>;
+```
+
+Creates a vector which identity is preserved by `deps`.
+
+---
+
+## `useGestureHandler()`
+
+```tsx
+const useGestureHandler = (
+  nativeEvent: Parameters<typeof onGestureEvent>[0],
+  deps: Dependencies
+)
+```
+
+Example:
+
+```tsx
+const state = useValue(State.UNDETERMINED, []);
+const gestureHandler = useGestureHandler({ state }, [state]);
+return (
+  <TapGestureHandler {...gestureHandler}>
+  //...
+  </TapGestureHandler>
+)
+```
+
+---
+
+## `usePanGestureHandler()`
+
+```tsx
+const usePanGestureHandler = (
+  deps: Dependencies
+) => {
+  position: Vector<Animated.Value<number>>,
+  translation: Vector<Animated.Value<number>>,
+  velocity: Vector<Animated.Value<number>>,
+  state: Animated.Value<State>,
+  gestureHandler: Animated.Node<number>
+};
+```
+
+
+Example:
+
+```tsx
+const {gestureHandler, state, translation} = usePanGestureHandler([]);
+return (
+  <PanGestureHandler {...gestureHandler}>
+    <Animated.View style={{ flex: 1, backgroundColor: "cyan", transform: [{ translateX: translation.x }] }} />
+  </PanGestureHandler>
+)
+```
+
+---
+
+## `useVerticalPanGestureHandler()`
+
+```tsx
+const useVerticalPanGestureHandler = (
+  deps: Dependencies
+) => {
+  translationY: Animated.Value<number>,
+  velocityY: Animated.Value<number>,
+  state: Animated.Value<State>,
+  gestureHandler: Animated.Node<number>
+};
+```
+
+Example:
+
+```tsx
+const {gestureHandler, state, translationY} = useVerticalPanGestureHandler([]);
+return (
+  <PanGestureHandler {...gestureHandler}>
+    <Animated.View style={{ flex: 1, backgroundColor: "cyan", transform: [{ translateY: translationY }] }} />
+  </PanGestureHandler>
+)
+```
+
+---
+
+## `usePanHorizontalGestureHandler()`
+
+```tsx
+const useHorizontalPanGestureHandler = (
+  deps: Dependencies
+) => {
+  translationX: Animated.Value<number>,
+  velocityX: Animated.Value<number>,
+  state: Animated.Value<State>,
+  gestureHandler: Animated.Node<number>
+};
+```
+
+Example:
+
+```tsx
+const {gestureHandler, state, translationX} = useHorizontalPanGestureHandler([]);
+return (
+  <PanGestureHandler {...gestureHandler}>
+    <Animated.View style={{ flex: 1, backgroundColor: "cyan", transform: [{ translateX: translationX }] }} />
+  </PanGestureHandler>
+)
+```
+
+---
+
+## `useDiff()`
+
+```tsx
+const useDiff: (node: Animated.Node<number>, deps: Dependencies) => Animated.Value<number>;
+```
+
+Returns a difference between the node value from the last frame and the current one.
+`useDiff` works for every frame whereas `diff` works on every evaluation.

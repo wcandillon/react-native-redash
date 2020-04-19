@@ -1,8 +1,0 @@
-{
-  "extends": "react-native-wcandillon",
-  "rules": {
-    "react-native/no-color-literals": 0,
-    "import/prefer-default-export": 0,
-    "import/no-unresolved": 0
-  }
-}

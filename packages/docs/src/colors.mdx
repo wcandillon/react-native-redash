@@ -1,0 +1,82 @@
+---
+name: Colors
+route: /colors
+---
+
+# Colors
+
+```tsx
+// Interpolate in RGB color space (default)
+interpolateColor(node, {
+  inputRange: [0, 100],
+  outputRange: ["blue", "red"]
+});
+
+// Interpolate in HSV color space
+interpolateColor(
+  node,
+  {
+    inputRange: [0, 1],
+    outputRange: ["blue", "red"]
+  },
+  "hsv"
+);
+```
+
+--
+
+## `hsv2color()`
+
+```tsx
+export declare const hsv2color: (
+  h: Animated.Adaptable<number>,
+  s: Animated.Adaptable<number>,
+  v: Animated.Adaptable<number>
+) => Animated.Node<number>;
+```
+
+Convert an HSV color into a color node.
+
+--
+
+## `hsv2rgb()`
+
+```tsx
+export declare const hsv2rgb: (
+  h: Animated.Adaptable<number>,
+  s: Animated.Adaptable<number>,
+  v: Animated.Adaptable<number>
+) => { r: Animated.Node<number>, g: Animated.Node<number>, b: Animated.Node<number>};
+```
+
+Convert an HSV color into an rgb object.
+
+---
+
+## `interpolateColor()`
+
+```tsx
+const interpolateColor: (value: Animated.Adaptable<number>, config: ColorInterpolationConfig, colorSpace?: "hsv" | "rgb") => Animated.Node<number>;
+```
+
+---
+
+## `bInterpolateColor()`
+
+```tsx
+const bInterpolateColor: (value: Animated.Adaptable<number>, color1: string | number, color2: string | number, colorSpace?: "hsv" | "rgb") => Animated.Node<number>;
+```
+
+---
+
+## `colorForBackground()`
+
+```tsx
+const colorForBackground = (
+    r: Animated.Adaptable<number>,
+    g: Animated.Adaptable<number>,
+    b: Animated.Adaptable<number>
+) Animated.Node<number>;
+```
+
+Returns `color(0, 0, 0)` (black) or `color(255, 255, 255)` (white) depending on the value of the background color.

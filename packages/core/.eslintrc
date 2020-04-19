@@ -1,0 +1,18 @@
+{
+  "extends": "react-native-wcandillon",
+  "rules": {
+    "no-bitwise": 0,
+    "import/extensions": [
+      2,
+      {
+        "extensions": [
+          ".ts",
+          ".tsx"
+        ]
+      }
+    ]
+  },
+  "env": {
+    "jest": true
+  }
+}

@@ -1,0 +1,117 @@
+---
+name: SVG
+route: /svg
+---
+
+# SVG
+
+Redash provides some utilities functions to deal with SVG paths.
+`parsePath()` will normalize the SVG path in a sequence of Bézier curves that can be processed on the UI thread using Reanimated. 
+
+---
+
+## `parsePath()`
+
+```tsx
+const parsePath: (d: string) => ReanimatedPath;
+```
+
+Given an SVG Path, returns a denormalized object of values that can be used for animations on that path.
+From the perspective of the user, the returned value should be considered a black box.
+Here is an example below:
+
+```ts
+// We get the data from the SVG Path denormalized a way that can be handled with Reanimated
+const path = parsePath(d);
+const { y, x } = getPointAtLength(path, length);
+```
+
+---
+
+## `getPointAtLength()`
+
+```tsx
+const getPointAtLength: (path: ReanimatedPath, length: Animated.Adaptable<number>) => {
+    x: Animated.Node<number>;
+    y: Animated.Node<number>;
+};
+```
+
+Implementation of [getPointAtLength](https://developer.mozilla.org/en-US/docs/Web/API/SVGPathElement/getPointAtLength) for Reanimated.
+
+```ts
+// We get the data from the SVG Path denormalized a way that can be handled with Reanimated
+const path = parsePath(d);
+const { y, x } = getPointAtLength(path, length);
+```
+
+---
+
+## `interpolatePath()`
+
+```tsx
+const interpolatePath: (value: Animated.Adaptable<number>, { inputRange, outputRange, ...config }: PathInterpolationConfig) => Animated.Node<string>;
+```
+
+Interpolate from one SVG point to the other, this function assumes that each path has the same number of points.
+
+```tsx
+const phone1 = "M 18 149C 18 149 25 149 25 149 25 14...";
+const d = interpolatePath(slider, {
+  inputRange: [0, width, width * 2],
+  outputRange: [phone1, phone2, phone3]
+});
+return (
+  <Svg style={styles.svg} viewBox="0 0 100 300">
+    <AnimatedPath fill="black" {...{ d }} />
+  </Svg>
+);
+```
+
+---
+
+## `bInterpolatePath()`
+
+```tsx
+const bInterpolatePath: (value: Animated.Value<number>, path1: string | ReanimatedPath, path2: string | ReanimatedPath) => Animated.Node<string>;
+```
+
+Interpolate from one SVG point to the other, this function assumes that each path has the same number of points.
+
+```tsx
+const rhino = "M 217.765 29.683 C 225.855 29.683 ";
+const elephant = "M 223.174 43.413 ...";
+return (
+  <>
+    <Animated.Code>
+      {() =>
+        set(
+          progress,
+          timing(clock, progress, {
+            to: 1,
+            duration: 2000,
+            easing: Easing.linear
+          })
+        )
+      }
+    </Animated.Code>
+    <Svg style={styles.container} viewBox="0 0 409 280">
+      <AnimatedPath
+        d={bInterpolatePath(progress, rhino, elephant)}
+        fill="#7d8f9b"
+      />
+    </Svg>
+  </>
+);
+```
+
+---
+
+## `getLengthAtX()`
+
+```tsx
+const getLengthAtX: (path: ReanimatedPath, x: Animated.Adaptable<number>) => Animated.Node<number>;
+```
+
+Convenience function for bezier curves where there is really only ever one "y" value associated with one "x" value.
+This function works by finding the roots of the cubic bezier curve so it might be too compute-intensive to calculate for each frame.

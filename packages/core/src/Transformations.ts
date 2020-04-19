@@ -1,0 +1,27 @@
+import Animated from "react-native-reanimated";
+
+import { Vector } from "./Vectors";
+import { Transforms } from "./Matrix";
+
+const { divide, sub, multiply } = Animated;
+
+export const translateZ = (
+  perspective: Animated.Adaptable<number>,
+  z: Animated.Adaptable<number>
+) => ({ scale: divide(perspective, sub(perspective, z)) });
+
+export const translate = ({ x: translateX, y: translateY }: Vector) => [
+  { translateX },
+  { translateY },
+];
+
+export const transformOrigin = (
+  { x, y }: Vector,
+  ...transformations: Transforms
+): Transforms => [
+  { translateX: x },
+  { translateY: y },
+  ...transformations,
+  { translateX: multiply(x, -1) },
+  { translateY: multiply(y, -1) },
+];

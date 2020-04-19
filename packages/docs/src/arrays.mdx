@@ -1,0 +1,24 @@
+---
+name: Arrays
+route: /arrays
+---
+
+# Arrays
+
+## `get()`
+
+```tsx
+const get: (array: Animated.Adaptable<number>[], index: Animated.Adaptable<number>, notFound?: Animated.Node<number>) => Animated.Node<number>;
+```
+
+## `contains()`
+
+```tsx
+const contains: (values: Animated.Adaptable<number>[], value: Animated.Adaptable<number>) => Animated.Node<0 | 1>;
+```
+
+## `find()`
+
+```tsx
+const find: (values: Animated.Node<number>[], fn: (v: Animated.Node<number>) => Animated.Node<number>, notFound?: Animated.Node<number>) => Animated.Node<number>;
+```

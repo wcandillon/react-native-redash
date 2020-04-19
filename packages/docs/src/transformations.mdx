@@ -1,0 +1,83 @@
+---
+name: Transformations
+route: /transformations
+---
+
+# Transformations
+
+---
+
+## `translateZ()`
+
+```tsx
+const translateZ: (perspective: Animated.Adaptable<number>, z: Animated.Adaptable<number>) => {
+    scale: Animated.Node<number>;
+};
+```
+
+Convert a translateZ transformation into a scale transformation.
+Example usage with `transform`.
+
+```tsx
+const perspective = 800;
+const z = new Value(100);
+//...
+transform: [{ perspective }, translateZ(perspective, z)];
+```
+
+---
+
+## `transformOrigin()`
+
+```tsx
+const transformOrigin: ({ x, y }: Point, ...transformations: AnimatedTransform[]) => AnimatedTransform[];
+```
+
+Changes the origin of the transformations.
+
+Example:
+
+```tsx
+<View
+  style={{
+    transform: transformOrigin(cx, cy, { rotateX })
+  }}
+/>
+```
+
+---
+
+## `accumulateTransform()`
+
+```tsx
+interface AccumulatedTransform {
+  scale: Animated.Node<number>;
+  scaleX: Animated.Node<number>;
+  scaleY: Animated.Node<number>;
+  translateX: Animated.Node<number>;
+  translateY: Animated.Node<number>;
+  rotateZ: Animated.Node<number>;
+}
+
+const accumulateTransform: (transform: AnimatedTransform[]) => AccumulatedTransform;
+```
+
+Given a set of 2d transformations, returns the accumlated transformation.
+This is useful to keep the state of a complex 2d transformation into a set of animation value.
+This function works well with `PinchGestureHandler` or `RotationGestureHandler` for instance.
+
+Example: 
+
+```tsx
+const { rotateZ, translateX } = accumulatedTransform([
+  { translateX: 100 },
+  { translateX: -CARD_WIDTH / 2 },
+  { rotateZ: -Math.PI / 6 },
+  { translateX: CARD_WIDTH / 2 },
+]);
+return (
+  <Animated.View style={{ transform: [{ rotateZ }, { translateX }]}}>
+    <Card />
+  </Animated.View>
+)
+```
