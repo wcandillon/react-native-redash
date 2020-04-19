@@ -62,6 +62,24 @@ test("clamp", () => {
   expect(vec.clamp(v3, min, max)).toEqual(r3);
 });
 
+test("min", () => {
+  const v1 = vec.create(-1, -1);
+  const v2 = vec.create(2, 2);
+  const r1 = vec.createValue(-1);
+  const r2 = vec.createValue(0, 0);
+  expect(vec.min(v1, 0)).toEqual(r1);
+  expect(vec.min(v2, 0)).toEqual(r2);
+});
+
+test("max", () => {
+  const v1 = vec.create(-1, -1);
+  const v2 = vec.create(2, 2);
+  const r1 = vec.createValue(0);
+  const r2 = vec.createValue(2, 2);
+  expect(vec.max(v1, 0)).toEqual(r1);
+  expect(vec.max(v2, 0)).toEqual(r2);
+});
+
 test("single value", () => {
   const v1 = -1;
   const v2 = 2;
