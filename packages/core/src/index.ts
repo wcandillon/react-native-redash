@@ -12,3 +12,4 @@ export * from "./Transitions";
 export * from "./Transformations";
 export * from "./Matrix";
 export * from "./Vectors";
+export * from "./Hooks";

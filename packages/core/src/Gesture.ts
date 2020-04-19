@@ -13,6 +13,7 @@ import {
 
 import { Platform } from "react-native";
 import { snapPoint } from "./Animations";
+import { vec } from "./Vectors";
 
 const {
   proc,
@@ -239,29 +240,23 @@ export const onGestureEvent = (
 };
 
 export const panGestureHandler = () => {
-  const x = new Value(0);
-  const translationX = new Value(0);
-  const velocityX = new Value(0);
-  const y = new Value(0);
-  const translationY = new Value(0);
-  const velocityY = new Value(0);
+  const position = vec.createValue(0);
+  const translation = vec.createValue(0);
+  const velocity = vec.createValue(0);
   const state = new Value(State.UNDETERMINED);
   const gestureHandler = onGestureEvent({
-    x,
-    translationX,
-    velocityX,
-    y,
-    translationY,
-    velocityY,
+    x: position.x,
+    translationX: translation.x,
+    velocityX: velocity.x,
+    y: position.x,
+    translationY: translation.y,
+    velocityY: velocity.y,
     state,
   });
   return {
-    x,
-    translationX,
-    velocityX,
-    y,
-    translationY,
-    velocityY,
+    position,
+    translation,
+    velocity,
     state,
     gestureHandler,
   };
