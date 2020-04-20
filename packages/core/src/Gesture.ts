@@ -248,7 +248,7 @@ export const panGestureHandler = () => {
     x: position.x,
     translationX: translation.x,
     velocityX: velocity.x,
-    y: position.x,
+    y: position.y,
     translationY: translation.y,
     velocityY: velocity.y,
     state,
