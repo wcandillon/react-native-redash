@@ -1,12 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useMemoOne } from "use-memo-one";
-import Animated, {
-  Clock,
-  Value,
-  diff,
-  set,
-  useCode,
-} from "react-native-reanimated";
+import Animated from "react-native-reanimated";
 import {
   horizontalPanGestureHandler,
   onGestureEvent,
@@ -16,6 +10,8 @@ import {
 import { vec } from "./Vectors";
 
 type Dependencies = readonly unknown[];
+
+const {Clock, Value, diff, set, useCode} = Animated;
 
 export const useGestureHandler = (
   nativeEvent: Parameters<typeof onGestureEvent>[0],
