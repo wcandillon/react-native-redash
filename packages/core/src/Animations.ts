@@ -1,6 +1,6 @@
-import Animated from "react-native-reanimated";
+import Animated, { block, defined } from "react-native-reanimated";
 
-import { min } from "./Math";
+import { max, min } from "./Math";
 
 const {
   Value,
@@ -12,7 +12,6 @@ const {
   abs,
   sub,
   not,
-  diff,
   lessThan,
   greaterThan,
   divide,
@@ -22,6 +21,29 @@ const {
 
 export type SpringConfig = Partial<Omit<Animated.SpringConfig, "toValue">>;
 export type TimingConfig = Partial<Omit<Animated.TimingConfig, "toValue">>;
+
+// currently diffClamp() from reanimated seems currently buggy because of proc()
+export const diff = (v: Animated.Node<number>) => {
+  const stash = new Value(0);
+  const prev = new Value<number>();
+  return block([
+    set(stash, cond(defined(prev), sub(v, prev), 0)),
+    set(prev, v),
+    stash,
+  ]);
+};
+
+export const diffClamp = (
+  a: Animated.Node<number>,
+  minVal: Animated.Adaptable<number>,
+  maxVal: Animated.Adaptable<number>
+) => {
+  const value = new Value<number>();
+  return set(
+    value,
+    min(max(add(cond(defined(value), value, a), diff(a)), minVal), maxVal)
+  );
+};
 
 export const moving = (
   position: Animated.Node<number>,
