@@ -11,7 +11,7 @@ import { vec } from "./Vectors";
 
 type Dependencies = readonly unknown[];
 
-const {Clock, Value, diff, set, useCode} = Animated;
+const { Clock, Value, diff, set, useCode } = Animated;
 
 export const useGestureHandler = (
   nativeEvent: Parameters<typeof onGestureEvent>[0],
