@@ -77,3 +77,11 @@ export const useDiff = (node: Animated.Node<number>, deps: Dependencies) => {
   useCode(() => set(dDiff, diff(node)), [dDiff, node]);
   return dDiff;
 };
+
+export const useDebug = (values: { [key: string]: Animated.Node<number> }) => {
+  const keys = Object.keys(values);
+  useCode(() => block(keys.map(name => debug(name, values[name]))), [
+    keys,
+    values
+  ]);
+};
