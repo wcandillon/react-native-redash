@@ -187,8 +187,33 @@ return (
 ## `useDiff()`
 
 ```tsx
-const useDiff: (node: Animated.Node<number>, deps: Dependencies) => Animated.Value<number>;
+const useDiff: (node: Animated.Node<number>) => Animated.Value<number>;
 ```
 
 Returns a difference between the node value from the last frame and the current one.
 `useDiff` works for every frame whereas `diff` works on every evaluation.
+
+Examples:
+
+```tsx
+const [state, x, y] = useValues([State.UNDETERMINED, 0, 0, 0, 0], []);
+const deltaX = useDiff(x);
+const deltaY = useDiff(y);
+```
+
+---
+
+## `useDebug()`
+
+```tsx
+const useDebug: (values: { [key: string]: Animated.Node<number> });
+```
+
+Examples:
+
+```tsx
+useDebug({
+  translateX,
+  translateY
+})
+```

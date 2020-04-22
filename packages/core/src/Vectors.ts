@@ -15,12 +15,12 @@ export interface Vector<
   y: T;
 }
 
-const create = <T extends Animated.Adaptable<number>>(x: T, y?: T) => ({
-  x,
-  y: y || x,
+const create = <T extends Animated.Adaptable<number>>(x?: T, y?: T) => ({
+  x: x || 0,
+  y: y || x || 0,
 });
 
-const createValue = (x: number, y?: number) =>
+const createValue = (x = 0, y?: number) =>
   create(new Value(x), new Value(y || x));
 
 const isAdaptable = (value: Adaptable): value is Animated.Adaptable<number> =>
@@ -40,14 +40,14 @@ const add = (...vectors: BinArgOp) => apply(Animated.add, ...vectors);
 const sub = (...vectors: BinArgOp) => apply(Animated.sub, ...vectors);
 const dot = (...vectors: BinArgOp) => apply(Animated.multiply, ...vectors);
 const div = (...vectors: BinArgOp) => apply(Animated.divide, ...vectors);
-const min = (vector: Vector, value: Animated.Adaptable<number>) =>
+const min = (vector: Adaptable, value: Animated.Adaptable<number>) =>
   apply(Animated.min, vector, value);
-const max = (vector: Vector, value: Animated.Adaptable<number>) =>
+const max = (vector: Adaptable, value: Animated.Adaptable<number>) =>
   apply(Animated.max, vector, value);
-const clamp = (value: Vector, minVec: Vector, maxVec: Vector) =>
+const clamp = (value: Adaptable, minVec: Adaptable, maxVec: Adaptable) =>
   apply(clamp1, value, minVec, maxVec);
 
-const invert = (a: Vector) => dot(-1, a);
+const invert = (a: Adaptable) => dot(-1, a);
 
 const set = (a: Vector<Animated.Value<number>>, b: Adaptable) =>
   block([
