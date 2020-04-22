@@ -25,7 +25,7 @@ type Column4 = readonly [
 ];
 
 type Row4 = Column4;
-type Matrix4 = [Column4, Column4, Column4, Column4];
+type Matrix4 = readonly [Column4, Column4, Column4, Column4];
 
 type TransformName =
   | "translateX"
@@ -115,10 +115,7 @@ const rotateZMatrix = (r: Animated.Adaptable<number>): Matrix4 => [
   [0, 0, 0, 1],
 ];
 
-const multiplyRowByCol = (
-  row: Row4,
-  col: Column4
-): Animated.Adaptable<number> => {
+const multiplyRowByCol = (row: Row4, col: Column4) => {
   return add(
     multiply(row[0], col[0]),
     multiply(row[1], col[1]),
@@ -127,7 +124,7 @@ const multiplyRowByCol = (
   );
 };
 
-const multiply4 = (m1: Matrix4, m2: Matrix4): Matrix4 => {
+const multiply4 = (m1: Matrix4, m2: Matrix4) => {
   const col0 = [m2[0][0], m2[1][0], m2[2][0], m2[3][0]] as const;
   const col1 = [m2[0][1], m2[1][1], m2[2][1], m2[3][1]] as const;
   const col2 = [m2[0][2], m2[1][2], m2[2][2], m2[3][2]] as const;
@@ -157,12 +154,12 @@ const multiply4 = (m1: Matrix4, m2: Matrix4): Matrix4 => {
       multiplyRowByCol(m1[3], col2),
       multiplyRowByCol(m1[3], col3),
     ],
-  ];
+  ] as const;
 };
 
 // eslint-disable-next-line import/prefer-default-export
 export const accumulatedTransform = (transforms: Transforms) => {
-  const matrix = transforms.reduce((acc, transform): Matrix4 => {
+  const matrix = transforms.reduce((acc, transform) => {
     const key = Object.keys(transform)[0] as TransformName;
     const value = (transform as Pick<Transformations, typeof key>)[key];
     if (key === "translateX") {
@@ -190,8 +187,8 @@ export const accumulatedTransform = (transforms: Transforms) => {
   const row0y = matrix[1][0];
   const row1x = matrix[0][1];
   const row1y = matrix[1][1];
-  const translateX = matrix[0][3];
-  const translateY = matrix[1][3];
+  const translateX = matrix[0][3] as Animated.Node<number>;
+  const translateY = matrix[1][3] as Animated.Node<number>;
   const scaleXAbs = sqrt(add(pow(row0x, 2), pow(row0y, 2)));
   const scaleYAbs = sqrt(add(pow(row1x, 2), pow(row1y, 2)));
   const determinant = sub(multiply(row0x, row1y), multiply(row0y, row1x));
