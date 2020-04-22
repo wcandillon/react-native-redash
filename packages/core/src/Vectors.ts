@@ -15,9 +15,9 @@ export interface Vector<
   y: T;
 }
 
-const create = <T extends Animated.Adaptable<number>>(x?: T, y?: T) => ({
-  x: x || 0,
-  y: y || x || 0,
+const create = <T extends Animated.Adaptable<number>>(x: T, y?: T) => ({
+  x,
+  y: y || x,
 });
 
 const createValue = (x = 0, y?: number) =>
