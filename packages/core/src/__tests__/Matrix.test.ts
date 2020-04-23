@@ -40,8 +40,29 @@ test("accumulatedTransform() 2", () => {
     ...translate(tr),
     ...transformOrigin(origin, { rotateZ: Math.PI / 6 }),
   ]);
-  expect(translateX[" __value"]).toBe(6.8301270189221945);
-  expect(translateY[" __value"]).toBe(11.830127018922195);
+  expect(translateX[" __value"]).toBe(
+    tr.x +
+      origin.x +
+      -origin.x * (Math.cos(Math.PI / 6) - -origin.y * Math.sin(Math.PI / 6))
+  );
+  expect(translateY[" __value"]).toBe(
+    tr.y +
+      origin.y +
+      -origin.x * (Math.sin(Math.PI / 6) + -origin.y * Math.cos(Math.PI / 6))
+  );
+  expect(scale[" __value"]).toBe(1);
+  expect(rotateZ[" __value"]).toBeCloseTo(Math.PI / 6, 15);
+});
+
+test("accumulatedTransform() 3", () => {
+  const tr = vec.create(10, 10);
+  const origin = vec.create(0, 0);
+  const { translateX, translateY, scale, rotateZ } = accumulatedTransform([
+    ...translate(tr),
+    ...transformOrigin(origin, { rotateZ: Math.PI / 6 }),
+  ]);
+  expect(translateX[" __value"]).toBe(tr.x);
+  expect(translateY[" __value"]).toBe(tr.y);
   expect(scale[" __value"]).toBe(1);
   expect(rotateZ[" __value"]).toBeCloseTo(Math.PI / 6, 15);
 });

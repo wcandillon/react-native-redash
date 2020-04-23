@@ -24,12 +24,12 @@ const create: Create = <T extends Animated.Adaptable<number>>(
   x?: T,
   y?: T
 ) => ({
-  x: x || 0,
-  y: y || x || 0,
+  x: x ?? 0,
+  y: y ?? x ?? 0,
 });
 
 const createValue = (x = 0, y?: number) =>
-  create(new Value(x), new Value(y || x));
+  create(new Value(x), new Value(y ?? x));
 
 const isAdaptable = (value: Adaptable): value is Animated.Adaptable<number> =>
   typeof value === "number" ||

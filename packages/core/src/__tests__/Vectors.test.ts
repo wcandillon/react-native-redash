@@ -2,6 +2,48 @@ import { vec } from "../Vectors";
 
 jest.mock("react-native-reanimated");
 
+test("create()", () => {
+  const a = vec.create(1, 0);
+  expect(a.x).toEqual(1);
+  expect(a.y).toEqual(0);
+
+  const b = vec.create();
+  expect(b.x).toEqual(0);
+  expect(b.y).toEqual(0);
+
+  const c = vec.create(1);
+  expect(c.x).toEqual(1);
+  expect(c.y).toEqual(1);
+
+  const d = vec.create(10, 10);
+  expect(d.x).toEqual(10);
+  expect(d.y).toEqual(10);
+
+  const e = vec.create(-5, 0);
+  expect(e.x).toEqual(-5);
+  expect(e.y).toEqual(0);
+
+  const a1 = vec.createValue(1, 0);
+  expect(a1.x[" __value"]).toEqual(1);
+  expect(a1.y[" __value"]).toEqual(0);
+
+  const b1 = vec.createValue();
+  expect(b1.x[" __value"]).toEqual(0);
+  expect(b1.y[" __value"]).toEqual(0);
+
+  const c1 = vec.createValue(1);
+  expect(c1.x[" __value"]).toEqual(1);
+  expect(c1.y[" __value"]).toEqual(1);
+
+  const d1 = vec.createValue(10, 10);
+  expect(d1.x[" __value"]).toEqual(10);
+  expect(d1.y[" __value"]).toEqual(10);
+
+  const e1 = vec.createValue(-5, 0);
+  expect(e1.x[" __value"]).toEqual(-5);
+  expect(e1.y[" __value"]).toEqual(0);
+});
+
 test("add", () => {
   const a = vec.create(1, 1);
   const b = vec.create(1, 1);
