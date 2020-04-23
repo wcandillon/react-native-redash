@@ -1,6 +1,7 @@
 import Animated from "react-native-reanimated";
 
 const {
+  Value,
   and,
   add,
   cond,
@@ -157,7 +158,6 @@ const multiply4 = (m1: Matrix4, m2: Matrix4) => {
   ] as const;
 };
 
-// eslint-disable-next-line import/prefer-default-export
 export const accumulatedTransform = (transforms: Transforms) => {
   const matrix = transforms.reduce((acc, transform) => {
     const key = Object.keys(transform)[0] as TransformName;
@@ -212,5 +212,52 @@ export const accumulatedTransform = (transforms: Transforms) => {
     scale,
     rotateZ,
     rotate: rotateZ,
+  };
+};
+
+export const accumulated2dTransform = (transforms: Transforms) => {
+  let translateX: Animated.Node<number> = new Value(0);
+  let translateY: Animated.Node<number> = new Value(0);
+  let scaleX: Animated.Node<number> = new Value(1);
+  let scaleY: Animated.Node<number> = new Value(1);
+  let rotateZ: Animated.Node<number> = new Value(0);
+
+  transforms.forEach((transform) => {
+    const key = Object.keys(transform)[0] as TransformName;
+    const value = (transform as Pick<Transformations, typeof key>)[key];
+    const tx = multiply(value, scaleX);
+    const ty = multiply(value, scaleY);
+    if (key === "translateX") {
+      translateX = add(
+        translateX,
+        sub(multiply(tx, cos(rotateZ)), multiply(ty, sin(rotateZ)))
+      );
+    } else if (key === "translateY") {
+      translateY = add(
+        translateY,
+        add(multiply(tx, sin(rotateZ)), multiply(ty, cos(rotateZ)))
+      );
+    } else if (key === "scaleX") {
+      scaleX = multiply(scaleX, value);
+    } else if (key === "scaleY") {
+      scaleY = multiply(scaleY, value);
+    } else if (key === "scale") {
+      scaleX = multiply(scaleX, value);
+      scaleY = multiply(scaleY, value);
+    } else if (key === "rotateZ" || key === "rotate") {
+      rotateZ = add(rotateZ, value);
+    } else {
+      exhaustiveCheck(key);
+    }
+  }, 0);
+
+  return {
+    translateX,
+    translateY,
+    scale: cond(eq(scaleX, scaleY), scaleX, 1),
+    scaleX,
+    scaleY,
+    rotate: rotateZ,
+    rotateZ,
   };
 };
