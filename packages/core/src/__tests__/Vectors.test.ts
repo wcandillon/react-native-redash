@@ -7,8 +7,9 @@ test("add", () => {
   const b = vec.create(1, 1);
   const c = vec.create(1, 1);
   const d = vec.create(1, 1);
+  const e = vec.create();
   const result = vec.createValue(4, 4);
-  expect(vec.add(a, b, c, d)).toEqual(result);
+  expect(vec.add(a, b, c, d, e)).toEqual(result);
 });
 
 test("sub", () => {
@@ -16,8 +17,9 @@ test("sub", () => {
   const b = vec.create(1, 1);
   const c = vec.create(1, 1);
   const d = vec.create(1, 1);
+  const e = vec.create();
   const result = vec.createValue(-2, -2);
-  expect(vec.sub(a, b, c, d)).toEqual(result);
+  expect(vec.sub(a, b, c, d, e)).toEqual(result);
 });
 
 test("multiply", () => {
@@ -66,7 +68,7 @@ test("min", () => {
   const v1 = vec.create(-1, -1);
   const v2 = vec.create(2, 2);
   const r1 = vec.createValue(-1);
-  const r2 = vec.createValue(0, 0);
+  const r2 = vec.createValue();
   expect(vec.min(v1, 0)).toEqual(r1);
   expect(vec.min(v2, 0)).toEqual(r2);
 });
@@ -74,7 +76,7 @@ test("min", () => {
 test("max", () => {
   const v1 = vec.create(-1, -1);
   const v2 = vec.create(2, 2);
-  const r1 = vec.createValue(0);
+  const r1 = vec.createValue();
   const r2 = vec.createValue(2, 2);
   expect(vec.max(v1, 0)).toEqual(r1);
   expect(vec.max(v2, 0)).toEqual(r2);
