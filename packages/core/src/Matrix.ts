@@ -17,15 +17,14 @@ const {
   pow,
 } = Animated;
 
-type Column4 = readonly [
-  Animated.Adaptable<number>,
+type Column3 = readonly [
   Animated.Adaptable<number>,
   Animated.Adaptable<number>,
   Animated.Adaptable<number>
 ];
 
-type Row4 = Column4;
-type Matrix4 = readonly [Column4, Column4, Column4, Column4];
+type Row3 = Column3;
+type Matrix3 = readonly [Column3, Column3, Column3];
 
 type TransformName =
   | "translateX"
@@ -50,46 +49,40 @@ const exhaustiveCheck = (a: never): never => {
   throw new Error(`Unexhaustive handling for ${a}`);
 };
 
-const identityMatrix: Matrix4 = [
-  [1, 0, 0, 0],
-  [0, 1, 0, 0],
-  [0, 0, 1, 0],
-  [0, 0, 0, 1],
+const identityMatrix: Matrix3 = [
+  [1, 0, 0],
+  [0, 1, 0],
+  [0, 0, 1],
 ];
 
-const translateXMatrix = (x: Animated.Adaptable<number>): Matrix4 => [
-  [1, 0, 0, x],
-  [0, 1, 0, 0],
-  [0, 0, 1, 0],
-  [0, 0, 0, 1],
+const translateXMatrix = (x: Animated.Adaptable<number>): Matrix3 => [
+  [1, 0, x],
+  [0, 1, 0],
+  [0, 0, 1],
 ];
 
-const translateYMatrix = (y: Animated.Adaptable<number>): Matrix4 => [
-  [1, 0, 0, 0],
-  [0, 1, 0, y],
-  [0, 0, 1, 0],
-  [0, 0, 0, 1],
+const translateYMatrix = (y: Animated.Adaptable<number>): Matrix3 => [
+  [1, 0, 0],
+  [0, 1, y],
+  [0, 0, 1],
 ];
 
-const scaleMatrix = (s: Animated.Adaptable<number>): Matrix4 => [
-  [s, 0, 0, 0],
-  [0, s, 0, 0],
-  [0, 0, 1, 0],
-  [0, 0, 0, 1],
+const scaleMatrix = (s: Animated.Adaptable<number>): Matrix3 => [
+  [s, 0, 0],
+  [0, s, 0],
+  [0, 0, 1],
 ];
 
-const scaleXMatrix = (s: Animated.Adaptable<number>): Matrix4 => [
-  [s, 0, 0, 0],
-  [0, 1, 0, 0],
-  [0, 0, 1, 0],
-  [0, 0, 0, 1],
+const scaleXMatrix = (s: Animated.Adaptable<number>): Matrix3 => [
+  [s, 0, 0],
+  [0, 1, 0],
+  [0, 0, 1],
 ];
 
-const scaleYMatrix = (s: Animated.Adaptable<number>): Matrix4 => [
-  [1, 0, 0, 0],
-  [0, s, 0, 0],
-  [0, 0, 1, 0],
-  [0, 0, 0, 1],
+const scaleYMatrix = (s: Animated.Adaptable<number>): Matrix3 => [
+  [1, 0, 0],
+  [0, s, 0],
+  [0, 0, 1],
 ];
 
 /*
@@ -108,51 +101,39 @@ const rotateYMatrix = (r: Animated.Adaptable<number>): Matrix4 => [
 ];
 */
 
-const rotateZMatrix = (r: Animated.Adaptable<number>): Matrix4 => [
-  [cos(r), multiply(-1, sin(r)), 0, 0],
-  [sin(r), cos(r), 0, 0],
-  [0, 0, 1, 0],
-  [0, 0, 0, 1],
+const rotateZMatrix = (r: Animated.Adaptable<number>): Matrix3 => [
+  [cos(r), multiply(-1, sin(r)), 0],
+  [sin(r), cos(r), 0],
+  [0, 0, 1],
 ];
 
-const multiplyRowByCol = (row: Row4, col: Column4) => {
+const multiplyRowByCol = (row: Row3, col: Column3) => {
   return add(
     multiply(row[0], col[0]),
     multiply(row[1], col[1]),
-    multiply(row[2], col[2]),
-    multiply(row[3], col[3])
+    multiply(row[2], col[2])
   );
 };
 
-const multiply4 = (m1: Matrix4, m2: Matrix4) => {
-  const col0 = [m2[0][0], m2[1][0], m2[2][0], m2[3][0]] as const;
-  const col1 = [m2[0][1], m2[1][1], m2[2][1], m2[3][1]] as const;
-  const col2 = [m2[0][2], m2[1][2], m2[2][2], m2[3][2]] as const;
-  const col3 = [m2[0][3], m2[1][3], m2[2][3], m2[3][3]] as const;
+const multiply4 = (m1: Matrix3, m2: Matrix3) => {
+  const col0 = [m2[0][0], m2[1][0], m2[2][0]] as const;
+  const col1 = [m2[0][1], m2[1][1], m2[2][1]] as const;
+  const col2 = [m2[0][2], m2[1][2], m2[2][2]] as const;
   return [
     [
       multiplyRowByCol(m1[0], col0),
       multiplyRowByCol(m1[0], col1),
       multiplyRowByCol(m1[0], col2),
-      multiplyRowByCol(m1[0], col3),
     ],
     [
       multiplyRowByCol(m1[1], col0),
       multiplyRowByCol(m1[1], col1),
       multiplyRowByCol(m1[1], col2),
-      multiplyRowByCol(m1[1], col3),
     ],
     [
       multiplyRowByCol(m1[2], col0),
       multiplyRowByCol(m1[2], col1),
       multiplyRowByCol(m1[2], col2),
-      multiplyRowByCol(m1[2], col3),
-    ],
-    [
-      multiplyRowByCol(m1[3], col0),
-      multiplyRowByCol(m1[3], col1),
-      multiplyRowByCol(m1[3], col2),
-      multiplyRowByCol(m1[3], col3),
     ],
   ] as const;
 };
@@ -187,8 +168,8 @@ export const accumulatedTransform = (transforms: Transforms) => {
   const row0y = matrix[1][0];
   const row1x = matrix[0][1];
   const row1y = matrix[1][1];
-  const translateX = matrix[0][3] as Animated.Node<number>;
-  const translateY = matrix[1][3] as Animated.Node<number>;
+  const translateX = matrix[0][2] as Animated.Node<number>;
+  const translateY = matrix[1][2] as Animated.Node<number>;
   const scaleXAbs = sqrt(add(pow(row0x, 2), pow(row0y, 2)));
   const scaleYAbs = sqrt(add(pow(row1x, 2), pow(row1y, 2)));
   const determinant = sub(multiply(row0x, row1y), multiply(row0y, row1x));
