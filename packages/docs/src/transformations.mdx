@@ -81,3 +81,59 @@ return (
   </Animated.View>
 )
 ```
+
+---
+
+## `scaleTranslation()`
+
+```tsx
+export declare const scaleTranslation: (tr: Vector<Animated.Adaptable<number>>, scale: Animated.Adaptable<number>) => Vector<Animated.Node<number>>;
+```
+
+Scale a translation vector. Useful to accumulate transformations.
+For instance:
+
+```tsx
+transform: [
+  ...translate(vec.add(translation, origin)),
+  { scale },
+  ...translate(vec.dot(-1, origin))
+]
+```
+
+Can be rewritten to:
+
+```tsx
+transform: [
+  ...translate(vec.add(translation, origin, scaleTranslation(vec.dot(-1, origin), scale))),
+  { scale }
+]
+```
+
+---
+
+## `rotateTranslation()`
+
+```tsx
+export declare const rotateTranslation: (tr: Vector<Animated.Adaptable<number>>, rotate: Animated.Adaptable<number>) => Vector<Animated.Node<number>>;
+```
+
+Rotate a translation vector. Useful to accumulate transformations.
+For instance:
+
+```tsx
+transform: [
+  ...translate(vec.add(translation, origin)),
+  { rotate },
+  ...translate(vec.dot(-1, origin))
+]
+```
+
+Can be rewritten to:
+
+```tsx
+transform: [
+  ...translate(vec.add(translation, origin, rotateTranslation(vec.dot(-1, origin), scale))),
+  { rotate }
+]
+```
