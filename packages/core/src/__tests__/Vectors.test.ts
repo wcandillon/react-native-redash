@@ -137,3 +137,15 @@ test("single value", () => {
   expect(vec.clamp(v2, min, max)).toEqual(r2);
   expect(vec.clamp(v3, min, max)).toEqual(r3);
 });
+
+test("trigo", () => {
+  const v1 = -1;
+  const v2 = 2;
+  const v3 = vec.create(0.3, 0.2);
+  const r1 = vec.createValue(Math.cos(v1));
+  const r2 = vec.createValue(Math.sin(v2));
+  const r3 = vec.createValue(Math.cos(0.3), Math.cos(0.2));
+  expect(vec.cos(v1)).toEqual(r1);
+  expect(vec.sin(v2)).toEqual(r2);
+  expect(vec.cos(v3)).toEqual(r3);
+});

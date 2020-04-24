@@ -6,6 +6,7 @@ const { Value, block } = Animated;
 type Dimension = "x" | "y";
 type Fn = (...args: Animated.Adaptable<number>[]) => Animated.Node<number>;
 type Adaptable = Vector | Animated.Adaptable<number>;
+type SingleArgOp<T extends Adaptable = Adaptable> = [T];
 type BinArgOp<T extends Adaptable = Adaptable> = [T, T, ...T[]];
 
 export interface Vector<
@@ -48,6 +49,8 @@ const add = (...vectors: BinArgOp) => apply(Animated.add, ...vectors);
 const sub = (...vectors: BinArgOp) => apply(Animated.sub, ...vectors);
 const dot = (...vectors: BinArgOp) => apply(Animated.multiply, ...vectors);
 const div = (...vectors: BinArgOp) => apply(Animated.divide, ...vectors);
+const cos = (...vectors: SingleArgOp) => apply(Animated.cos, ...vectors);
+const sin = (...vectors: SingleArgOp) => apply(Animated.sin, ...vectors);
 const min = (vector: Adaptable, value: Animated.Adaptable<number>) =>
   apply(Animated.min, vector, value);
 const max = (vector: Adaptable, value: Animated.Adaptable<number>) =>
@@ -78,4 +81,6 @@ export const vec = {
   apply,
   min,
   max,
+  cos,
+  sin,
 };
