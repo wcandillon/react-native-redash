@@ -9,7 +9,10 @@ test("atan2()", () => {
   expect(atan2(100, 0)[" __value"]).toBe(Math.atan2(100, 0));
   expect(atan2(50, 25)[" __value"]).toBe(Math.atan2(50, 25));
   expect(atan2(25, 50)[" __value"]).toBe(Math.atan2(25, 50));
-  expect(atan2(1, 2)[" __value"]).toBe(Math.atan2(1, 2));
+  expect(atan2(-1, 0)[" __value"]).toBe(Math.atan2(-1, 0));
+  expect(atan2(-3, -4)[" __value"]).toBe(Math.atan2(-3, -4));
+  expect(atan2(0, 3)[" __value"]).toBe(Math.atan2(0, 3));
+  expect(atan2(0, -3)[" __value"]).toBe(Math.atan2(0, -3));
 });
 
 test("round()", () => {
