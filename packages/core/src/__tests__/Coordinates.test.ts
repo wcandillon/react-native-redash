@@ -62,7 +62,7 @@ test("cartesian2Polar 1", () => {
     polar2Cartesian({ theta, radius }),
     center
   );
-  expect(x1[" __value"]).toBe(200);
+  expect(x1[" __value"]).toBe(0);
   expect(Math.round(y1[" __value"])).toBe(100);
 });
 
