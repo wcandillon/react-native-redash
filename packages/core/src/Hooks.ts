@@ -35,8 +35,10 @@ export const useVector = (x: number, y: number, deps: Dependencies = []) =>
 export const useClock = (deps: Dependencies) =>
   useMemoOne(() => new Clock(), deps);
 
-export const useValue = <V extends Atomic>(value: V, deps: Dependencies = []) =>
-  useMemoOne(() => new Value(value), deps);
+export const useValue = <V extends Atomic>(value: V) => {
+  const ref = useRef(new Value(value));
+  return ref.current;
+}
 
 export const useValues = <V extends Atomic>(
   values: V[],
