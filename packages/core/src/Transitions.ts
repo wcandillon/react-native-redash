@@ -1,9 +1,9 @@
+import { useMemo } from "react";
 import Animated, { Easing } from "react-native-reanimated";
 import { State } from "react-native-gesture-handler";
 
 import { bin } from "./Math";
 import { SpringConfig, TimingConfig } from "./Animations";
-import { useValue } from "./Hooks";
 
 const {
   Value,
@@ -98,24 +98,28 @@ export const useTransition = (
   state: boolean | number,
   config: TimingConfig = {}
 ) => {
-  const value = useValue(0);
+  const value = useMemo(() => new Value(0), []);
   useCode(() => set(value, typeof state === "boolean" ? bin(state) : state), [
     state,
     value,
   ]);
-  return withTransition(value, config);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const transition = useMemo(() => withTransition(value, config), []);
+  return transition;
 };
 
 export const useSpringTransition = (
   state: boolean | number,
   config: SpringConfig = defaultSpringConfig
 ) => {
-  const value = useValue(0);
+  const value = useMemo(() => new Value(0), []);
   useCode(() => set(value, typeof state === "boolean" ? bin(state) : state), [
     state,
     value,
   ]);
-  return withSpringTransition(value, config);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const transition = useMemo(() => withSpringTransition(value, config), []);
+  return transition;
 };
 
 export const useTimingTransition = useTransition;
