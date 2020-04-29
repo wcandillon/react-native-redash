@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useMemoOne } from "use-memo-one";
 import Animated from "react-native-reanimated";
+import { useRef } from "react";
 import {
   horizontalPanGestureHandler,
   onGestureEvent,
@@ -9,64 +9,46 @@ import {
 } from "./Gesture";
 import { vec } from "./Vectors";
 
-type Dependencies = readonly unknown[];
-
 const { Clock, Value, diff, set, useCode, debug, block } = Animated;
 
+const useLazyRef = <T>(initializer: () => T) => {
+  const ref = useRef<T>();
+  if (ref.current === undefined) {
+    ref.current = initializer();
+  }
+  return ref.current;
+};
+
 export const useGestureHandler = (
-  nativeEvent: Parameters<typeof onGestureEvent>[0],
-  deps: Dependencies = []
-) => useMemoOne(() => onGestureEvent(nativeEvent), deps);
+  nativeEvent: Parameters<typeof onGestureEvent>[0]
+) => useLazyRef(() => onGestureEvent(nativeEvent));
 
-export const usePanGestureHandler = (deps: Dependencies = []) =>
-  useMemoOne(() => panGestureHandler(), deps);
+export const usePanGestureHandler = () => useLazyRef(() => panGestureHandler());
 
-export const useVerticalPanGestureHandler = (deps: Dependencies = []) =>
-  useMemoOne(() => verticalPanGestureHandler(), deps);
+export const useVerticalPanGestureHandler = () =>
+  useLazyRef(() => verticalPanGestureHandler());
 
-export const useHorizontalPanGestureHandler = (deps: Dependencies = []) =>
-  useMemoOne(() => horizontalPanGestureHandler(), deps);
+export const useHorizontalPanGestureHandler = () =>
+  useLazyRef(() => horizontalPanGestureHandler());
 
 type Atomic = string | number | boolean;
 
-export const useVector = (x: number, y: number, deps: Dependencies = []) =>
-  useMemoOne(() => vec.createValue(x, y), deps);
+export const useVector = (x: number, y: number) =>
+  useLazyRef(() => vec.createValue(x, y));
 
-export const useClock = (deps: Dependencies) =>
-  useMemoOne(() => new Clock(), deps);
+export const useClock = () => useLazyRef(() => new Clock());
 
-export const useValue = <V extends Atomic>(value: V, deps: Dependencies = []) =>
-  useMemoOne(() => new Value(value), deps);
+export const useValue = <V extends Atomic>(value: V) =>
+  useLazyRef(() => new Value(value));
 
-export const useValues = <V extends Atomic>(
-  values: V[],
-  deps: Dependencies = []
-): Animated.Value<V>[] =>
-  useMemoOne(() => values.map((v) => new Value(v)), deps);
+export const useValues = <V extends Atomic>(values: V[]): Animated.Value<V>[] =>
+  useLazyRef(() => values.map((v) => new Value(v)));
 
-export const useNamedValues = <V extends Atomic, K extends string>(
-  values: Record<K, V>,
-  deps: Dependencies = []
-): Record<K, Animated.Value<V>> =>
-  useMemoOne(() => {
-    const result: Record<string, Animated.Value<V>> = {};
-    Object.keys(values).forEach((key) => {
-      result[key as K] = new Value(values[key as K]);
-    });
-    return result;
-  }, deps);
-
-export const useClocks = (
-  numberOfClocks: number,
-  deps: Dependencies = []
-): Animated.Clock[] =>
-  useMemoOne(
-    () => new Array(numberOfClocks).fill(0).map(() => new Clock()),
-    deps
-  );
+export const useClocks = (numberOfClocks: number): Animated.Clock[] =>
+  useLazyRef(() => new Array(numberOfClocks).fill(0).map(() => new Clock()));
 
 export const useDiff = (node: Animated.Node<number>) => {
-  const [dDiff] = useValues<number>([0], [node]);
+  const dDiff = useValue(0);
   useCode(() => set(dDiff, diff(node)), [dDiff, node]);
   return dDiff;
 };

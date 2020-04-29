@@ -2,6 +2,7 @@
   "name": "react-native-redash",
   "version": "0.0.0-development",
   "description": "Utility library for React Native Reanimated",
+  "sideEffects": false,
   "main": "lib/module/index.js",
   "scripts": {
     "lint": "eslint --ext .ts,.tsx src",
@@ -63,7 +64,6 @@
   "dependencies": {
     "abs-svg-path": "^0.1.1",
     "normalize-svg-path": "^1.0.1",
-    "parse-svg-path": "^0.1.2",
-    "use-memo-one": "^1.1.1"
+    "parse-svg-path": "^0.1.2"
   }
 }

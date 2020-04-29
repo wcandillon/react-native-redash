@@ -4,6 +4,7 @@ const {
   eq,
   set,
   cond,
+  atan,
   add,
   multiply,
   lessThan,
@@ -89,17 +90,28 @@ export const toDeg = proc(
 // https://en.wikipedia.org/wiki/Atan2
 // https://www.gamedev.net/forums/topic/441464-manually-implementing-atan2-or-atan/
 // https://developer.download.nvidia.com/cg/atan2.html
+// https://www.medcalc.org/manual/atan2_function.php
 export const atan2 = proc(
   (y: Animated.Adaptable<number>, x: Animated.Adaptable<number>) => {
-    const coeff1 = Math.PI / 4;
-    const coeff2 = 3 * coeff1;
-    const absY = abs(y);
-    const angle = cond(
-      greaterOrEq(x, 0),
-      [sub(coeff1, multiply(coeff1, divide(sub(x, absY), add(x, absY))))],
-      [sub(coeff2, multiply(coeff1, divide(add(x, absY), sub(absY, x))))]
+    const a = atan(divide(y, x));
+    const { PI } = Math;
+    return cond(
+      greaterThan(x, 0),
+      a,
+      cond(
+        and(lessThan(x, 0), greaterOrEq(y, 0)),
+        add(a, PI),
+        cond(
+          and(lessThan(x, 0), lessThan(y, 0)),
+          sub(a, PI),
+          cond(
+            and(eq(x, 0), greaterThan(y, 0)),
+            PI / 2,
+            cond(and(eq(x, 0), lessThan(y, 0)), -PI / 2, 0)
+          )
+        )
+      )
     );
-    return cond(lessThan(y, 0), multiply(angle, -1), cond(eq(y, 0), 0, angle));
   }
 );
 
