@@ -48,6 +48,10 @@ const apply = (fn: Fn, ...vectors: Adaptable[]) => ({
 const add = (...vectors: BinArgOp) => apply(Animated.add, ...vectors);
 const sub = (...vectors: BinArgOp) => apply(Animated.sub, ...vectors);
 const div = (...vectors: BinArgOp) => apply(Animated.divide, ...vectors);
+const mul = (...vectors: BinArgOp) => apply(Animated.multiply, ...vectors);
+const pow = (...vectors: [Adaptable, number]) =>
+  apply(Animated.pow, ...vectors);
+const sqrt = (...vectors: SingleArgOp) => apply(Animated.sqrt, ...vectors);
 const cos = (...vectors: SingleArgOp) => apply(Animated.cos, ...vectors);
 const sin = (...vectors: SingleArgOp) => apply(Animated.sin, ...vectors);
 const min = (vector: Adaptable, value: Animated.Adaptable<number>) =>
@@ -57,20 +61,21 @@ const max = (vector: Adaptable, value: Animated.Adaptable<number>) =>
 const clamp = (value: Adaptable, minVec: Adaptable, maxVec: Adaptable) =>
   apply(clamp1, value, minVec, maxVec);
 
-const invert = (a: Adaptable) => multiply(-1, a);
+const invert = (a: Adaptable) => mul(-1, a);
 
 const set = (a: Vector<Animated.Value<number>>, b: Adaptable) =>
   block([
     Animated.set(a.x, isAdaptable(b) ? b : b.x),
     Animated.set(a.y, isAdaptable(b) ? b : b.y),
   ]);
-                 
-const length = (v: Vector) => sqrt(add(pow(v.x, 2), pow(v.y, 2)));
-const normalize = (v: Vector) => vec.divide(v, length(v));
+
+const length = (v: Vector) =>
+  Animated.sqrt(Animated.add(Animated.pow(v.x, 2), Animated.pow(v.y, 2)));
+const normalize = (v: Vector) => div(v, length(v));
 const dot = (v1: Vector, v2: Vector) =>
-  add(multiply(v1.x, v2.x), multiply(v1.y, v2.y));
+  add(Animated.multiply(v1.x, v2.x), Animated.multiply(v1.y, v2.y));
 const cross = (v1: Vector, v2: Vector) =>
-  sub(multiply(v1.x, v2.y), multiply(v1.y, v2.x));
+  sub(Animated.multiply(v1.x, v2.y), Animated.multiply(v1.y, v2.x));
 
 export const vec = {
   create,
@@ -80,8 +85,11 @@ export const vec = {
   sub,
   dot,
   div,
-  multiply: dot,
+  mul,
+  multiply: mul,
   divide: div,
+  pow,
+  sqrt,
   set,
   clamp,
   apply,
@@ -89,4 +97,7 @@ export const vec = {
   max,
   cos,
   sin,
+  length,
+  normalize,
+  cross,
 };
