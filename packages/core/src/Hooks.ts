@@ -42,7 +42,7 @@ export const useClock = () => useLazyRef(() => new Clock());
 export const useValue = <V extends Atomic>(value: V) =>
   useLazyRef(() => new Value(value));
 
-export const useLoop = (duration = 1000, boomerang = false) => {
+export const useLoop = (duration = 1000, boomerang = true) => {
   const progress = useValue(0);
   useCode(() => set(progress, loop({ duration, boomerang })), [progress]);
   return progress;
