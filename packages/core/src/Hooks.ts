@@ -8,6 +8,7 @@ import {
   verticalPanGestureHandler,
 } from "./Gesture";
 import { vec } from "./Vectors";
+import { loop } from "./AnimationRunners";
 
 const { Clock, Value, diff, set, useCode, debug, block } = Animated;
 
@@ -40,6 +41,12 @@ export const useClock = () => useLazyRef(() => new Clock());
 
 export const useValue = <V extends Atomic>(value: V) =>
   useLazyRef(() => new Value(value));
+
+export const useLoop = (duration = 1000, boomerang = false) => {
+  const progress = useValue(0);
+  useCode(() => set(progress, loop({ duration, boomerang })), [progress]);
+  return progress;
+};
 
 export const useValues = <V extends Atomic>(values: V[]): Animated.Value<V>[] =>
   useLazyRef(() => values.map((v) => new Value(v)));
