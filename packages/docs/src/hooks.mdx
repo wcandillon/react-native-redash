@@ -13,30 +13,27 @@ The hooks provided by redash are here so you can create animation values, clocks
 ## `useValue()`
 
 ```tsx
-const useValue: <V extends string | number | boolean>(value: V, deps: Dependencies) => Animated.Value<V>;
+const useValue: <V extends string | number | boolean>(value: V) => Animated.Value<V>;
 ```
 
-Creates an animation value which identity is preserved by `deps`.
+Creates an animation value which identity is preserved during the whole component lifecycle.
+
+```tsx
+const toggle = useValue(0);
+```
 
 ---
 
 ## `useValues()`
 
 ```tsx
-const useValues: <V extends string | number | boolean>(values: V[], deps: Dependencies) => Animated.Value<V>[];
+const useValues: <V extends string | number | boolean>(values: V[]) => Animated.Value<V>[];
 ```
 
-Create animation values which lifecycle is granted by `deps`.
-For instance the code snippet below:
+Creates an animation values which identity is preserved during the whole component lifecycle.
 
 ```tsx
-const [toggle, state] = useValues([0, State.UNDETERMINED], []);
-```
-
-is a shortcut for
-
-```tsx
-const [toggle state] = useMemoOne(() => [new Value(0), new Value(State.UNDETERMINED)], []);
+const [toggle, state] = useValues([0, State.UNDETERMINED]);
 ```
 
 ---
@@ -44,40 +41,41 @@ const [toggle state] = useMemoOne(() => [new Value(0), new Value(State.UNDETERMI
 ## `useClock()`
 
 ```tsx
-const useClock: (deps: Dependencies) => Animated.Clock;
+const useClock: () => Animated.Clock;
 ```
 
-Creates a clock which identity is preserved by `deps`.
+Creates a clock which identity is preserved during the whole component lifecycle.
+
+```tsx
+const clock = useClock();
+```
 
 ---
 
 ## `useClocks()`
 
 ```tsx
-const useClocks: (numberOfClocks: number, deps: Dependencies) => Animated.Clock[];
+const useClocks: (numberOfClocks: number) => Animated.Clock[];
 ```
 
-Create a number of clocks which lifecycle is granted by `deps`. For instance the code snippet below:
+Creates clocks which identity is preserved during the whole component lifecycle.
 
 ```tsx
-const [clock1, clock2, clock3] = useClocks(3, []);
+const [clock1, clock2, clock3] = useClocks(3);
 ```
-
-is a shortcut for
-
-```tsx
-const [clock1, clock2, clock3] = useMemoOne(() => [new Clock(), new Clock(), new Clock()], []);
-```
-
 ---
 
 ## `useVector()`
 
 ```tsx
-const useVector: (x: number, y: number, deps: Dependencies) => Vector<Animated.Value>;
+const useVector: (x: number, y: number) => Vector<Animated.Value>;
 ```
 
 Creates a vector which identity is preserved by `deps`.
+
+```tsx
+const vector = useValue(width, height);
+```
 
 ---
 
@@ -85,16 +83,14 @@ Creates a vector which identity is preserved by `deps`.
 
 ```tsx
 const useGestureHandler = (
-  nativeEvent: Parameters<typeof onGestureEvent>[0],
-  deps: Dependencies
-)
+  nativeEvent: Parameters<typeof onGestureEvent>[0])
 ```
 
 Example:
 
 ```tsx
-const state = useValue(State.UNDETERMINED, []);
-const gestureHandler = useGestureHandler({ state }, [state]);
+const state = useValue(State.UNDETERMINED);
+const gestureHandler = useGestureHandler({ state });
 return (
   <TapGestureHandler {...gestureHandler}>
   //...
@@ -107,9 +103,7 @@ return (
 ## `usePanGestureHandler()`
 
 ```tsx
-const usePanGestureHandler = (
-  deps: Dependencies
-) => {
+const usePanGestureHandler = () => {
   position: Vector<Animated.Value<number>>,
   translation: Vector<Animated.Value<number>>,
   velocity: Vector<Animated.Value<number>>,
@@ -122,7 +116,7 @@ const usePanGestureHandler = (
 Example:
 
 ```tsx
-const {gestureHandler, state, translation} = usePanGestureHandler([]);
+const {gestureHandler, state, translation} = usePanGestureHandler();
 return (
   <PanGestureHandler {...gestureHandler}>
     <Animated.View style={{ flex: 1, backgroundColor: "cyan", transform: [{ translateX: translation.x }] }} />
@@ -135,9 +129,7 @@ return (
 ## `useVerticalPanGestureHandler()`
 
 ```tsx
-const useVerticalPanGestureHandler = (
-  deps: Dependencies
-) => {
+const useVerticalPanGestureHandler = () => {
   translationY: Animated.Value<number>,
   velocityY: Animated.Value<number>,
   state: Animated.Value<State>,
@@ -148,7 +140,7 @@ const useVerticalPanGestureHandler = (
 Example:
 
 ```tsx
-const {gestureHandler, state, translationY} = useVerticalPanGestureHandler([]);
+const {gestureHandler, state, translationY} = useVerticalPanGestureHandler();
 return (
   <PanGestureHandler {...gestureHandler}>
     <Animated.View style={{ flex: 1, backgroundColor: "cyan", transform: [{ translateY: translationY }] }} />
@@ -161,9 +153,7 @@ return (
 ## `usePanHorizontalGestureHandler()`
 
 ```tsx
-const useHorizontalPanGestureHandler = (
-  deps: Dependencies
-) => {
+const useHorizontalPanGestureHandler = () => {
   translationX: Animated.Value<number>,
   velocityX: Animated.Value<number>,
   state: Animated.Value<State>,
@@ -174,7 +164,7 @@ const useHorizontalPanGestureHandler = (
 Example:
 
 ```tsx
-const {gestureHandler, state, translationX} = useHorizontalPanGestureHandler([]);
+const {gestureHandler, state, translationX} = useHorizontalPanGestureHandler();
 return (
   <PanGestureHandler {...gestureHandler}>
     <Animated.View style={{ flex: 1, backgroundColor: "cyan", transform: [{ translateX: translationX }] }} />
@@ -196,7 +186,7 @@ Returns a difference between the node value from the last frame and the current 
 Examples:
 
 ```tsx
-const [state, x, y] = useValues([State.UNDETERMINED, 0, 0, 0, 0], []);
+const [state, x, y] = useValues([State.UNDETERMINED, 0, 0, 0, 0]);
 const deltaX = useDiff(x);
 const deltaY = useDiff(y);
 ```

@@ -63,7 +63,6 @@
   "dependencies": {
     "abs-svg-path": "^0.1.1",
     "normalize-svg-path": "^1.0.1",
-    "parse-svg-path": "^0.1.2",
-    "use-memo-one": "^1.1.1"
+    "parse-svg-path": "^0.1.2"
   }
 }
