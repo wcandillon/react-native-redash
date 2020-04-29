@@ -1,4 +1,4 @@
-import { useMemo } from "react-native";
+import { useMemo } from "react";
 import Animated, { Easing } from "react-native-reanimated";
 import { State } from "react-native-gesture-handler";
 
