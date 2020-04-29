@@ -16,6 +16,7 @@ const translateZ: (perspective: Animated.Adaptable<number>, z: Animated.Adaptabl
 ```
 
 Convert a translateZ transformation into a scale transformation.
+This function only works if there are no transformations of origin.
 Example usage with `transform`.
 
 ```tsx
@@ -47,39 +48,96 @@ Example:
 
 ---
 
-## `accumulateTransform()`
+## `processTransform()`
 
 ```tsx
-interface AccumulatedTransform {
+interface AnimatedTransform2d {
   scale: Animated.Node<number>;
   scaleX: Animated.Node<number>;
   scaleY: Animated.Node<number>;
+  skewX: Animated.Node<number>;
+  skewY: Animated.Node<number>;
   translateX: Animated.Node<number>;
   translateY: Animated.Node<number>;
   rotateZ: Animated.Node<number>;
 }
 
-const accumulateTransform: (transform: AnimatedTransform[]) => AccumulatedTransform;
+const processTransform: (transform: AnimatedTransform2d[]) => Matrix3;
 ```
 
-Given a set of 2d transformations, returns the accumlated transformation.
-This is useful to keep the state of a complex 2d transformation into a set of animation value.
-This function works well with `PinchGestureHandler` or `RotationGestureHandler` for instance.
-
-Example: 
+Given a set of 2d transformations, a 3x3 matrix of animated nodes.
+The Matrix is are formated using the row-major-indices.
+See example below.
 
 ```tsx
-const { rotateZ, translateX } = accumulatedTransform([
+const m = processTransform([
   { translateX: 100 },
   { translateX: -CARD_WIDTH / 2 },
   { rotateZ: -Math.PI / 6 },
   { translateX: CARD_WIDTH / 2 },
 ]);
+const [tx, ty] = [m[0][2], m[1][2]];
+```
+
+## `decompose2d()`
+
+```tsx
+const decompose2d: (matrix3: Matrix3) => AnimatedTransform2d;
+```
+
+Given any 3x3 matrix, this function decompose it into a `translate, rotate, scale, rotate` transform.
+See example below.
+
+Example:
+
+```tsx
+const { rotateZ, translateX } = decompose2d(processTransform([
+  [1.25, tan(Math.PI/12), 50],
+  [tan(Math.PI/12), 1.25, 50],
+  [0, 0, 1]
+]));
+const transform = [
+  { translateX },
+  { translateY },
+  { rotate: skewX },
+  { rotateZ: skewX },
+  { scaleX },
+  { scaleY },
+  { rotateZ }
+]
 return (
-  <Animated.View style={{ transform: [{ rotateZ }, { translateX }]}}>
+  <Animated.View style={{ transform }}>
     <Card />
   </Animated.View>
-)
+);
+```
+
+Example with decompose2d:
+
+```tsx
+const { rotateZ, translateX } = decompose2d(processTransform([
+  { translateX: 100 },
+  { translateX: -CARD_WIDTH / 2 },
+  { rotateZ: -Math.PI / 6 },
+  { translateX: CARD_WIDTH / 2 },
+  { skewX: -Math.PI / 9 },
+  { scale: 1.25 },
+  { skewY: -Math.PI / 12 },
+]));
+const transform = [
+  { translateX },
+  { translateY },
+  { rotate: skewX },
+  { rotateZ: skewX },
+  { scaleX },
+  { scaleY },
+  { rotateZ }
+]
+return (
+  <Animated.View style={{ transform }}>
+    <Card />
+  </Animated.View>
+);
 ```
 
 ---
