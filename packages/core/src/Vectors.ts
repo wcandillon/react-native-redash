@@ -61,7 +61,7 @@ const max = (vector: Adaptable, value: Animated.Adaptable<number>) =>
 const clamp = (value: Adaptable, minVec: Adaptable, maxVec: Adaptable) =>
   apply(clamp1, value, minVec, maxVec);
 
-const invert = (a: Adaptable) => mul(-1, a);
+const minus = (a: Adaptable) => mul(-1, a);
 
 const set = (a: Vector<Animated.Value<number>>, b: Adaptable) =>
   block([
@@ -80,7 +80,7 @@ const cross = (v1: Vector, v2: Vector) =>
 export const vec = {
   create,
   createValue,
-  invert,
+  minus,
   add,
   sub,
   dot,
