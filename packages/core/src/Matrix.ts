@@ -15,13 +15,13 @@ const {
   tan,
 } = Animated;
 
-type Vec3 = readonly [
+export type Vec3 = readonly [
   Animated.Adaptable<number>,
   Animated.Adaptable<number>,
   Animated.Adaptable<number>
 ];
 
-type Matrix3 = readonly [Vec3, Vec3, Vec3];
+export type Matrix3 = readonly [Vec3, Vec3, Vec3];
 
 type TransformName =
   | "translateX"
@@ -102,21 +102,28 @@ const rotateZMatrix = (r: Animated.Adaptable<number>): Matrix3 => [
   [0, 0, 1],
 ];
 
-const dot = (row: Vec3, col: Vec3) =>
+export const dot3 = (row: Vec3, col: Vec3) =>
   add(
     multiply(row[0], col[0]),
     multiply(row[1], col[1]),
     multiply(row[2], col[2])
   );
 
-const multiply3 = (m1: Matrix3, m2: Matrix3) => {
+
+export const matrixVecMul = (m: Matrix3, v: Vec3) => [
+  dot3(m[0], v),
+  dot3(m[1], v),
+  dot3(m[2], v),
+];
+
+export const multiply3 = (m1: Matrix3, m2: Matrix3) => {
   const col0 = [m2[0][0], m2[1][0], m2[2][0]] as const;
   const col1 = [m2[0][1], m2[1][1], m2[2][1]] as const;
   const col2 = [m2[0][2], m2[1][2], m2[2][2]] as const;
   return [
-    [dot(m1[0], col0), dot(m1[0], col1), dot(m1[0], col2)],
-    [dot(m1[1], col0), dot(m1[1], col1), dot(m1[1], col2)],
-    [dot(m1[2], col0), dot(m1[2], col1), dot(m1[2], col2)],
+    [dot3(m1[0], col0), dot3(m1[0], col1), dot3(m1[0], col2)],
+    [dot3(m1[1], col0), dot3(m1[1], col1), dot3(m1[1], col2)],
+    [dot3(m1[2], col0), dot3(m1[2], col1), dot3(m1[2], col2)],
   ] as const;
 };
 
