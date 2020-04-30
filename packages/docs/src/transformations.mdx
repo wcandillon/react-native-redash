@@ -91,7 +91,7 @@ See example below.
 Example:
 
 ```tsx
-const { rotateZ, translateX } = decompose2d(processTransform([
+const { rotateZ, translateX, translateY, skewX, scaleX, scaleY } = decompose2d(processTransform([
   [1.25, tan(Math.PI/12), 50],
   [tan(Math.PI/12), 1.25, 50],
   [0, 0, 1]
@@ -99,7 +99,6 @@ const { rotateZ, translateX } = decompose2d(processTransform([
 const transform = [
   { translateX },
   { translateY },
-  { rotate: skewX },
   { rotateZ: skewX },
   { scaleX },
   { scaleY },
@@ -115,7 +114,7 @@ return (
 Example with decompose2d:
 
 ```tsx
-const { rotateZ, translateX } = decompose2d(processTransform([
+const { rotateZ, translateX, translateY, skewX, scaleX, scaleY } = decompose2d(processTransform([
   { translateX: 100 },
   { translateX: -CARD_WIDTH / 2 },
   { rotateZ: -Math.PI / 6 },
@@ -127,7 +126,6 @@ const { rotateZ, translateX } = decompose2d(processTransform([
 const transform = [
   { translateX },
   { translateY },
-  { rotate: skewX },
   { rotateZ: skewX },
   { scaleX },
   { scaleY },
