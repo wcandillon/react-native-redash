@@ -44,10 +44,11 @@ export const max = (...args: Animated.Adaptable<number>[]) =>
 export const mix = proc(
   (
     value: Animated.Adaptable<number>,
-    origin: Animated.Adaptable<number>,
-    destination: Animated.Adaptable<number>
-  ) => add(origin, multiply(value, sub(destination, origin)))
+    x: Animated.Adaptable<number>,
+    y: Animated.Adaptable<number>
+  ) => add(x, multiply(value, sub(y, x)))
 );
+// x + (value * (y - x))
 
 export const clamp = proc(
   (
