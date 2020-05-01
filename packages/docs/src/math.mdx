@@ -18,16 +18,17 @@ This can be useful in reanimated since 0 and 1 are used for conditional statemen
 
 ---
 
-## `mix`
+## `mix()`
 
 ```tsx
-const mix: (value: Animated.Adaptable<number>, origin: Animated.Adaptable<number>, destination: Animated.Adaptable<number>) => Animated.Node<number>;
+const mix: (value: Animated.Adaptable<number>, x: Animated.Adaptable<number>, y: Animated.Adaptable<number>) => Animated.Node<number>;
 ```
 
-Interpolate the node from 0 to 1 without clamping.
+`mix()` performs a linear interpolation between x and y using a to weight between them. The return value is computed as `x * (1 - value) + y * value`.
+
 ---
 
-## `fract`
+## `fract()`
 
 ```tsx
 const fract: (x: Animated.Adaptable<number>) => Animated.Node<number>;
