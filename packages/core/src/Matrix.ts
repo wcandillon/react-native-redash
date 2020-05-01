@@ -109,7 +109,6 @@ export const dot3 = (row: Vec3, col: Vec3) =>
     multiply(row[2], col[2])
   );
 
-
 export const matrixVecMul = (m: Matrix3, v: Vec3) => [
   dot3(m[0], v),
   dot3(m[1], v),
