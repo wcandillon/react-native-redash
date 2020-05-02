@@ -109,11 +109,8 @@ export const dot3 = (row: Vec3, col: Vec3) =>
     multiply(row[2], col[2])
   );
 
-export const matrixVecMul = (m: Matrix3, v: Vec3) => [
-  dot3(m[0], v),
-  dot3(m[1], v),
-  dot3(m[2], v),
-] as const;
+export const matrixVecMul = (m: Matrix3, v: Vec3) =>
+  [dot3(m[0], v), dot3(m[1], v), dot3(m[2], v)] as const;
 
 export const multiply3 = (m1: Matrix3, m2: Matrix3) => {
   const col0 = [m2[0][0], m2[1][0], m2[2][0]] as const;
