@@ -16,7 +16,7 @@ const translateZ: (perspective: Animated.Adaptable<number>, z: Animated.Adaptabl
 ```
 
 Convert a translateZ transformation into a scale transformation.
-This function only works if there are no transformations of origin.
+This function is based on [Weak perspective projection](https://en.wikipedia.org/wiki/3D_projection#Weak_perspective_projection) and is not appropriate for every 3D transformations.
 Example usage with `transform`.
 
 ```tsx
