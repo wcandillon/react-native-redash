@@ -262,6 +262,24 @@ export const panGestureHandler = () => {
   };
 };
 
+export const rotationGestureHandler = () => {
+  const anchor = vec.create(0, 0);
+  const rotation = new Value(0);
+  const state = new Value(State.UNDETERMINED);
+  const gestureHandler = onGestureEvent({
+    anchorX: anchor.x,
+    anchorY: anchor.y,
+    rotation,
+    state,
+  });
+  return {
+    rotation,
+    state,
+    gestureHandler,
+    anchor
+  };
+};
+
 export const horizontalPanGestureHandler = () => {
   const x = new Value(0);
   const translationX = new Value(0);
