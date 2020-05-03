@@ -109,7 +109,7 @@ export const dot3 = (row: Vec3, col: Vec3) =>
     multiply(row[2], col[2])
   );
 
-export const matrixVecMul = (m: Matrix3, v: Vec3) =>
+export const matrixVecMul3 = (m: Matrix3, v: Vec3) =>
   [dot3(m[0], v), dot3(m[1], v), dot3(m[2], v)] as const;
 
 export const multiply3 = (m1: Matrix3, m2: Matrix3) => {
@@ -123,7 +123,7 @@ export const multiply3 = (m1: Matrix3, m2: Matrix3) => {
   ] as const;
 };
 
-export const processTransform = (transforms: Transforms) =>
+export const processTransform2d = (transforms: Transforms) =>
   transforms.reduce((acc, transform) => {
     const key = Object.keys(transform)[0] as TransformName;
     const value = (transform as Pick<Transformations, typeof key>)[key];
