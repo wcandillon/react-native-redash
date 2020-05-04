@@ -48,7 +48,7 @@ Example:
 
 ---
 
-## `processTransform()`
+## `processTransform2d()`
 
 ```tsx
 interface AnimatedTransform2d {
@@ -62,7 +62,7 @@ interface AnimatedTransform2d {
   rotateZ: Animated.Node<number>;
 }
 
-const processTransform: (transform: AnimatedTransform2d[]) => Matrix3;
+const processTransform2d: (transform: AnimatedTransform2d[]) => Matrix3;
 ```
 
 Given a set of 2d transformations, a 3x3 matrix of animated nodes.
@@ -70,7 +70,7 @@ The Matrix is are formated using the row-major-indices.
 See example below.
 
 ```tsx
-const m = processTransform([
+const m = processTransform2d([
   { translateX: 100 },
   { translateX: -CARD_WIDTH / 2 },
   { rotateZ: -Math.PI / 6 },
@@ -91,7 +91,7 @@ See example below.
 Example:
 
 ```tsx
-const { rotateZ, translateX, translateY, skewX, scaleX, scaleY } = decompose2d(processTransform([
+const { rotateZ, translateX, translateY, skewX, scaleX, scaleY } = decompose2d(processTransform2d([
   [1.25, tan(Math.PI/12), 50],
   [tan(Math.PI/12), 1.25, 50],
   [0, 0, 1]
@@ -114,7 +114,7 @@ return (
 Example with decompose2d:
 
 ```tsx
-const { rotateZ, translateX, translateY, skewX, scaleX, scaleY } = decompose2d(processTransform([
+const { rotateZ, translateX, translateY, skewX, scaleX, scaleY } = decompose2d(processTransform2d([
   { translateX: 100 },
   { translateX: -CARD_WIDTH / 2 },
   { rotateZ: -Math.PI / 6 },

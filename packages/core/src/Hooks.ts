@@ -5,6 +5,8 @@ import {
   horizontalPanGestureHandler,
   onGestureEvent,
   panGestureHandler,
+  pinchGestureHandler,
+  rotationGestureHandler,
   verticalPanGestureHandler,
 } from "./Gesture";
 import { vec } from "./Vectors";
@@ -25,6 +27,10 @@ export const useGestureHandler = (
 ) => useLazyRef(() => onGestureEvent(nativeEvent));
 
 export const usePanGestureHandler = () => useLazyRef(() => panGestureHandler());
+export const useRotationGestureHandler = () =>
+  useLazyRef(() => rotationGestureHandler());
+export const usePinchGestureHandler = () =>
+  useLazyRef(() => pinchGestureHandler());
 
 export const useVerticalPanGestureHandler = () =>
   useLazyRef(() => verticalPanGestureHandler());
