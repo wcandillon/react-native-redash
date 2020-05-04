@@ -1,7 +1,7 @@
 import Animated from "react-native-reanimated";
 
 import { Vector, vec } from "./Vectors";
-import { Transforms } from "./Matrix3";
+import { Transforms2d } from "./Matrix3";
 
 const { divide, sub, multiply, add, cos, sin } = Animated;
 
@@ -17,8 +17,8 @@ export const translate = ({ x: translateX, y: translateY }: Vector) => [
 
 export const transformOrigin = (
   { x, y }: Vector,
-  ...transformations: Transforms
-): Transforms => [
+  ...transformations: Transforms2d
+): Transforms2d => [
   { translateX: x },
   { translateY: y },
   ...transformations,

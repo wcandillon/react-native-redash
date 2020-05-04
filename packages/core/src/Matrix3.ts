@@ -24,7 +24,7 @@ export type Vec3 = readonly [
 
 export type Matrix3 = readonly [Vec3, Vec3, Vec3];
 
-type TransformName =
+type Transform2dName =
   | "translateX"
   | "translateY"
   | "scale"
@@ -34,8 +34,10 @@ type TransformName =
   | "scaleY"
   | "rotateZ"
   | "rotate";
-type Transformations = { [Name in TransformName]: Animated.Adaptable<number> };
-export type Transforms = (
+type Transformations = {
+  [Name in Transform2dName]: Animated.Adaptable<number>;
+};
+export type Transforms2d = (
   | Pick<Transformations, "translateX">
   | Pick<Transformations, "translateY">
   | Pick<Transformations, "scale">
@@ -124,9 +126,9 @@ export const multiply3 = (m1: Matrix3, m2: Matrix3) => {
   ] as const;
 };
 
-export const processTransform2d = (transforms: Transforms) =>
+export const processTransform2d = (transforms: Transforms2d) =>
   transforms.reduce((acc, transform) => {
-    const key = Object.keys(transform)[0] as TransformName;
+    const key = Object.keys(transform)[0] as Transform2dName;
     const value = (transform as Pick<Transformations, typeof key>)[key];
     if (key === "translateX") {
       return multiply3(acc, translateXMatrix(value));
