@@ -86,10 +86,10 @@ test("divide", () => {
 test("invert", () => {
   const a = vec.create(1, 1);
   const r1 = vec.createValue(-1, -1);
-  expect(vec.invert(a)).toEqual(r1);
+  expect(vec.minus(a)).toEqual(r1);
   const b = vec.create(-1, -1);
   const r2 = vec.createValue(1, 1);
-  expect(vec.invert(b)).toEqual(r2);
+  expect(vec.minus(b)).toEqual(r2);
 });
 
 test("clamp", () => {
