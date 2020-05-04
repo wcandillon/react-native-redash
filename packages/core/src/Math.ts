@@ -41,6 +41,8 @@ export const min = (...args: Animated.Adaptable<number>[]) =>
 export const max = (...args: Animated.Adaptable<number>[]) =>
   args.reduce((acc, arg) => max2(acc, arg));
 
+export const minus = (x: Animated.Node<number>) => multiply(-1, x);
+
 export const avg = (
   ...v: [
     Animated.Adaptable<number>,
