@@ -10,6 +10,6 @@ export * from "./SVG";
 export * from "./Animations";
 export * from "./Transitions";
 export * from "./Transformations";
-export * from "./Matrix";
+export * from "./Matrix3";
 export * from "./Vectors";
 export * from "./Hooks";

@@ -1,7 +1,7 @@
 import Animated from "react-native-reanimated";
 
 import { Vector, vec } from "./Vectors";
-import { Transforms } from "./Matrix";
+import { Transforms } from "./Matrix3";
 
 const { divide, sub, multiply, add, cos, sin } = Animated;
 
