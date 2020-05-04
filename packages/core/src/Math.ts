@@ -41,6 +41,14 @@ export const min = (...args: Animated.Adaptable<number>[]) =>
 export const max = (...args: Animated.Adaptable<number>[]) =>
   args.reduce((acc, arg) => max2(acc, arg));
 
+export const avg = (
+  ...v: [
+    Animated.Adaptable<number>,
+    Animated.Adaptable<number>,
+    ...Animated.Adaptable<number>[]
+  ]
+) => divide(add(...v), v.length);
+
 export const mix = proc(
   (
     value: Animated.Adaptable<number>,
@@ -48,7 +56,6 @@ export const mix = proc(
     y: Animated.Adaptable<number>
   ) => add(x, multiply(value, sub(y, x)))
 );
-// x + (value * (y - x))
 
 export const clamp = proc(
   (

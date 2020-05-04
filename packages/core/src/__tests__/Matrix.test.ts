@@ -1,4 +1,4 @@
-import { decompose2d, processTransform } from "../Matrix";
+import { decompose2d, processTransform2d } from "../Matrix";
 import { vec } from "../Vectors";
 import {
   rotateTranslation,
@@ -14,7 +14,7 @@ test("accumulatedTransform()", () => {
   const origin = vec.create(5, 5);
   const scale = 2.3;
   const { translateX, translateY, scale: scaleOffset } = decompose2d(
-    processTransform([
+    processTransform2d([
       { translateX: tr.x },
       { translateY: tr.y },
       { translateX: origin.x },
@@ -40,7 +40,7 @@ test("accumulatedTransform() 1", () => {
   const tr = vec.create(10, 10);
   const origin = vec.create(5, 5);
   const { translateX, translateY, scale } = decompose2d(
-    processTransform([
+    processTransform2d([
       ...translate(tr),
       ...transformOrigin(origin, { scale: 2.3 }),
     ])
@@ -54,7 +54,7 @@ test("accumulatedTransform() 2", () => {
   const tr = vec.create(10, 10);
   const origin = vec.create(-5, 0);
   const { translateX, translateY, scale, rotateZ, skewX } = decompose2d(
-    processTransform([
+    processTransform2d([
       ...translate(tr),
       ...transformOrigin(origin, { rotateZ: Math.PI / 6 }),
     ])
@@ -84,7 +84,7 @@ test("accumulatedTransform() 3", () => {
   const tr = vec.create(10, 10);
   const origin = vec.create(0, 0);
   const { translateX, translateY, scale, skewX, rotateZ } = decompose2d(
-    processTransform([
+    processTransform2d([
       ...translate(tr),
       ...transformOrigin(origin, { rotateZ: Math.PI / 6 }),
     ])
