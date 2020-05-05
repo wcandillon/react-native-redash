@@ -31,6 +31,8 @@ export type Transforms2d = (
   | Pick<Transformations, "scale">
   | Pick<Transformations, "scaleX">
   | Pick<Transformations, "scaleY">
+  | Pick<Transformations, "skewX">
+  | Pick<Transformations, "skewY">
   | Pick<Transformations, "rotateZ">
   | Pick<Transformations, "rotate">
 )[];
