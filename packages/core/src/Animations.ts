@@ -1,6 +1,7 @@
 import Animated, { block, defined } from "react-native-reanimated";
 
 import { max, min } from "./Math";
+import { Matrix3, Transforms2d, decompose2d } from "./Matrix3";
 
 const {
   Value,
@@ -21,6 +22,37 @@ const {
 
 export type SpringConfig = Partial<Omit<Animated.SpringConfig, "toValue">>;
 export type TimingConfig = Partial<Omit<Animated.TimingConfig, "toValue">>;
+
+export const mix = proc(
+  (
+    value: Animated.Adaptable<number>,
+    x: Animated.Adaptable<number>,
+    y: Animated.Adaptable<number>
+  ) => add(x, multiply(value, sub(y, x)))
+);
+
+export const tween2d = (
+  value: Animated.Node<number>,
+  t1: Matrix3 | Transforms2d,
+  t2: Matrix3 | Transforms2d
+) => {
+  const d1 = decompose2d(t1);
+  const d2 = decompose2d(t2);
+  const translateX = mix(value, d1[0].translateX, d2[0].translateX);
+  const translateY = mix(value, d1[1].translateY, d2[1].translateY);
+  const skewX = mix(value, d1[2].rotateZ, d2[2].rotateZ);
+  const scaleX = mix(value, d1[3].scaleX, d2[3].scaleX);
+  const scaleY = mix(value, d1[4].scaleY, d2[4].scaleY);
+  const rotateZ = mix(value, d1[5].rotateZ, d2[5].rotateZ);
+  return [
+    { translateX },
+    { translateY },
+    { rotateZ: skewX },
+    { scaleX },
+    { scaleY },
+    { rotateZ },
+  ] as const;
+};
 
 // currently diffClamp() from reanimated seems currently buggy because of proc()
 export const diff = (v: Animated.Node<number>) => {

@@ -1,7 +1,8 @@
 import Animated from "react-native-reanimated";
 import { processColor } from "react-native";
 
-import { clamp, fract, mix } from "./Math";
+import { mix } from "./Animations";
+import { clamp, fract } from "./Math";
 
 const {
   add,

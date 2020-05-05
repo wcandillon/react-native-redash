@@ -1,4 +1,5 @@
-import { atan2, mix, round } from "../Math";
+import { atan2, round } from "../Math";
+import { mix } from "../Animations";
 
 jest.mock("react-native-reanimated");
 

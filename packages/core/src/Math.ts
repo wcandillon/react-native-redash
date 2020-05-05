@@ -51,14 +51,6 @@ export const avg = (
   ]
 ) => divide(add(...v), v.length);
 
-export const mix = proc(
-  (
-    value: Animated.Adaptable<number>,
-    x: Animated.Adaptable<number>,
-    y: Animated.Adaptable<number>
-  ) => add(x, multiply(value, sub(y, x)))
-);
-
 export const clamp = proc(
   (
     value: Animated.Adaptable<number>,
