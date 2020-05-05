@@ -77,6 +77,14 @@ export const snapPoint = (
   ) as Animated.Node<number>;
 };
 
+export const mix = proc(
+  (
+    value: Animated.Adaptable<number>,
+    x: Animated.Adaptable<number>,
+    y: Animated.Adaptable<number>
+  ) => add(x, multiply(value, sub(y, x)))
+);
+
 export const addTo = proc(
   (value: Animated.Value<number>, node: Animated.Adaptable<number>) =>
     set(value, add(value, node))
