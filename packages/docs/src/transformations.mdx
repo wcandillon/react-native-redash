@@ -51,21 +51,10 @@ Example:
 ## `processTransform2d()`
 
 ```tsx
-interface AnimatedTransform2d {
-  scale: Animated.Node<number>;
-  scaleX: Animated.Node<number>;
-  scaleY: Animated.Node<number>;
-  skewX: Animated.Node<number>;
-  skewY: Animated.Node<number>;
-  translateX: Animated.Node<number>;
-  translateY: Animated.Node<number>;
-  rotateZ: Animated.Node<number>;
-}
-
-const processTransform2d: (transform: AnimatedTransform2d[]) => Matrix3;
+const processTransform2d: (transform: AnimatedTransform2d) => Matrix3;
 ```
 
-Given a set of 2d transformations, a 3x3 matrix of animated nodes.
+Given a set of 2d transformations, returns a 3x3 matrix of animated nodes.
 The Matrix is are formated using the row-major-indices.
 See example below.
 
@@ -76,34 +65,27 @@ const m = processTransform2d([
   { rotateZ: -Math.PI / 6 },
   { translateX: CARD_WIDTH / 2 },
 ]);
-const [tx, ty] = [m[0][2], m[1][2]];
+const [translateX, translateY] = vec.create(m[0][2], m[1][2]);
 ```
 
 ## `decompose2d()`
 
 ```tsx
-const decompose2d: (matrix3: Matrix3) => AnimatedTransform2d;
+const decompose2d: (matrix3: Matrix3 | AnimatedTransform2d) => AnimatedTransform2d;
 ```
 
-Given any 3x3 matrix, this function decompose it into a `translate, rotate, scale, rotate` transform.
+Given any 3x3 matrix or a 2d transform array, this function decompose it into a `translate, rotate, scale, rotate` transform.
+It can be useful to interpolate between any 2d transforms or to keep offset values of complex transformations associated to gestures.
 See example below.
 
-Example:
+Simple:
 
 ```tsx
-const { rotateZ, translateX, translateY, skewX, scaleX, scaleY } = decompose2d(processTransform2d([
+const transform = decompose2d([
   [1.25, tan(Math.PI/12), 50],
   [tan(Math.PI/12), 1.25, 50],
   [0, 0, 1]
-]));
-const transform = [
-  { translateX },
-  { translateY },
-  { rotateZ: skewX },
-  { scaleX },
-  { scaleY },
-  { rotateZ }
-]
+]);
 return (
   <Animated.View style={{ transform }}>
     <Card />
@@ -111,28 +93,44 @@ return (
 );
 ```
 
-Example with decompose2d:
+Example with a 3x3 matrix:
 
 ```tsx
-const { rotateZ, translateX, translateY, skewX, scaleX, scaleY } = decompose2d(processTransform2d([
-  { translateX: 100 },
-  { translateX: -CARD_WIDTH / 2 },
-  { rotateZ: -Math.PI / 6 },
-  { translateX: CARD_WIDTH / 2 },
-  { skewX: -Math.PI / 9 },
-  { scale: 1.25 },
-  { skewY: -Math.PI / 12 },
-]));
-const transform = [
+const transform = decompose2d([
+  [1.5, Math.tan(Math.PI / 6), 50],
+  [Math.tan(Math.PI / 6), 1.5, 50],
+  [0, 0, 1]
+]);
+return (
+  <Animated.View style={{ transform }}>
+    <Card />
+  </Animated.View>
+);
+```
+
+Each transform is decomposed into a translation, rotation, scale, and a rotation:
+
+```tsx
+const transform = decompose2d([
+  [1.25, tan(Math.PI/12), 50],
+  [tan(Math.PI/12), 1.25, 50],
+  [0, 0, 1]
+]);
+const { translateX } = transform[0];
+const { translateY } = transform[1];
+const { skewX } = transform[2];
+const { scaleX } = transform[3];
+const { scaleY } = transform[4];
+const { rotateZ } = transform[5];
+return (
+  <Animated.View style={{ transform: [
   { translateX },
   { translateY },
   { rotateZ: skewX },
   { scaleX },
   { scaleY },
   { rotateZ }
-]
-return (
-  <Animated.View style={{ transform }}>
+] }}>
     <Card />
   </Animated.View>
 );
