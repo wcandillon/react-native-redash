@@ -1,5 +1,5 @@
-import Animated from "react-native-reanimated";
-import { atan2 } from "./Math";
+import Animated, { interpolate } from "react-native-reanimated";
+import { atan2, mix } from "./Math";
 import { Vector } from "./Vectors";
 
 const { add, multiply, sqrt, cos, sin, sub, divide, pow, tan } = Animated;
@@ -198,6 +198,29 @@ const adjugate = (m: Matrix3) => {
       sub(multiply(m[0][1], m[2][0]), multiply(m[0][0], m[2][1])),
       sub(multiply(m[0][0], m[1][1]), multiply(m[0][1], m[1][0])),
     ],
+  ] as const;
+};
+
+export const tween = (
+  value: Animated.Node<number>,
+  t1: Matrix3 | Transforms2d,
+  t2: Matrix3 | Transforms2d
+) => {
+  const d1 = decompose2d(t1);
+  const d2 = decompose2d(t2);
+  const translateX = mix(value, d1[0].translateX, d2[0].translateX);
+  const translateY = mix(value, d1[1].translateY, d2[1].translateY);
+  const skewX = mix(value, d1[2].rotateZ, d2[2].rotateZ);
+  const scaleX = mix(value, d1[3].scaleX, d2[3].scaleX);
+  const scaleY = mix(value, d1[4].scaleY, d2[4].scaleY);
+  const rotateZ = mix(value, d1[5].rotateZ, d2[5].rotateZ);
+  return [
+    { translateX },
+    { translateY },
+    { rotateZ: skewX },
+    { scaleX },
+    { scaleY },
+    { rotateZ },
   ] as const;
 };
 
