@@ -2,19 +2,7 @@ import Animated from "react-native-reanimated";
 import { atan2 } from "./Math";
 import { Vector } from "./Vectors";
 
-const {
-  add,
-  multiply,
-  sqrt,
-  cos,
-  sin,
-  sub,
-  divide,
-  pow,
-  cond,
-  eq,
-  tan,
-} = Animated;
+const { add, multiply, sqrt, cos, sin, sub, divide, pow, tan } = Animated;
 
 export type Vec3 = readonly [
   Animated.Adaptable<number>,
@@ -157,8 +145,12 @@ export const processTransform2d = (transforms: Transforms2d) =>
     return exhaustiveCheck(key);
   }, identityMatrix);
 
+const isMatrix3 = (arg: Matrix3 | Transforms2d): arg is Matrix3 =>
+  arg.length === 3 && arg[0] instanceof Array;
+
 // https://math.stackexchange.com/questions/13150/extracting-rotation-scale-values-from-2d-transformation-matrix
-export const decompose2d = (m: Matrix3) => {
+export const decompose2d = (arg: Matrix3 | Transforms2d) => {
+  const m = isMatrix3(arg) ? arg : processTransform2d(arg);
   const a = m[0][0];
   const b = m[1][0];
   const c = m[0][1];
@@ -177,15 +169,14 @@ export const decompose2d = (m: Matrix3) => {
   const a2 = atan2(H, E);
   const theta = divide(sub(a2, a1), 2);
   const phi = divide(add(a2, a1), 2);
-  return {
-    translateX,
-    translateY,
-    rotateZ: multiply(-1, phi),
-    scaleX,
-    scaleY,
-    scale: cond(eq(scaleX, scaleY), scaleX, 1),
-    skewX: multiply(-1, theta),
-  };
+  return [
+    { translateX },
+    { translateY },
+    { rotateZ: multiply(-1, theta) },
+    { scaleX },
+    { scaleY },
+    { rotateZ: multiply(-1, phi) },
+  ] as const;
 };
 
 const adjugate = (m: Matrix3) => {
