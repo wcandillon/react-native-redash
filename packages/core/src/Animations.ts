@@ -31,6 +31,13 @@ export const mix = proc(
   ) => add(x, multiply(value, sub(y, x)))
 );
 
+export const step = proc((value: Animated.Adaptable<number>, edge: Animated.Adaptable<number>) => lessThan(value, edge);
+
+export const smoothstep = proc((value: Animated.Adaptable<number>, edge0: Animated.Adaptable<number>, edge1: Animated.Adaptable<number>) => {
+  const t = clamp(divide(sub(x, edge0), sub(edge1, edge0)), 0, 1);
+  return multiply(t, t, sub(3, multiply(2, t));
+};
+
 export const tween2d = (
   value: Animated.Node<number>,
   t1: Matrix3 | Transforms2d,
