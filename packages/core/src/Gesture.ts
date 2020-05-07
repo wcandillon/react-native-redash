@@ -73,7 +73,11 @@ export const withOffset = (
 ) =>
   cond(
     eq(state, State.END),
-    [set(offset, add(offset, value)), offset],
+    [
+      set(offset, add(offset, value)),
+      set(state, State.UNDETERMINED),
+      offset,
+    ],
     add(offset, value)
   );
 
