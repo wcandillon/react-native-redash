@@ -67,7 +67,7 @@ export const withScaleOffset = (
   );
 
 export const withOffset = (
-  value: Animated.Node<number>,
+  value: Animated.Value<number>,
   state: Animated.Node<State>,
   offset: Animated.Value<number> = new Value(0)
 ) =>
