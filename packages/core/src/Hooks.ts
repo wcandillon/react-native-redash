@@ -47,17 +47,17 @@ export const useVector = (
 type P = Parameters<typeof vec.createValue>;
 type R = Vector<Animated.Value<number>>;
 type UseVectors = {
-  (v: [P]): [R];
-  (v: [P, P]): [R, R];
-  (v: [P, P, P]): [R, R, R];
-  (v: [P, P, P, P]): [R, R, R, R];
-  (v: [P, P, P, P, P]): [R, R, R, R, R];
-  (v: [P, P, P, P, P, P]): [R, R, R, R, R, R];
-  (v: P[]): R[];
+  (...v: [P]): [R];
+  (...v: [P, P]): [R, R];
+  (...v: [P, P, P]): [R, R, R];
+  (...v: [P, P, P, P]): [R, R, R, R];
+  (...v: [P, P, P, P, P]): [R, R, R, R, R];
+  (...v: [P, P, P, P, P, P]): [R, R, R, R, R, R];
+  (...v: P[]): R[];
 };
 
 export const useVectors = (((
-  defaultValues: Parameters<typeof vec.createValue>[]
+  ...defaultValues: Parameters<typeof vec.createValue>[]
 ) =>
   useLazyRef(() =>
     defaultValues.map((values) => vec.createValue(...values))
