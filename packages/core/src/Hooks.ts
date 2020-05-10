@@ -44,23 +44,49 @@ export const useVector = (
   ...defaultValues: Parameters<typeof vec.createValue>
 ) => useLazyRef(() => vec.createValue(...defaultValues));
 
-type P = Parameters<typeof vec.createValue>;
-type R = Vector<Animated.Value<number>>;
+type P = Parameters<typeof vec.createValue> | number;
 type UseVectors = {
-  (...v: [P]): [R];
-  (...v: [P, P]): [R, R];
-  (...v: [P, P, P]): [R, R, R];
-  (...v: [P, P, P, P]): [R, R, R, R];
-  (...v: [P, P, P, P, P]): [R, R, R, R, R];
-  (...v: [P, P, P, P, P, P]): [R, R, R, R, R, R];
-  (...v: P[]): R[];
+  (...v: [P]): [Vector<Animated.Value<number>>];
+  (...v: [P, P]): [
+    Vector<Animated.Value<number>>,
+    Vector<Animated.Value<number>>
+  ];
+  (...v: [P, P, P]): [
+    Vector<Animated.Value<number>>,
+    Vector<Animated.Value<number>>,
+    Vector<Animated.Value<number>>
+  ];
+  (...v: [P, P, P, P]): [
+    Vector<Animated.Value<number>>,
+    Vector<Animated.Value<number>>,
+    Vector<Animated.Value<number>>,
+    Vector<Animated.Value<number>>
+  ];
+  (...v: [P, P, P, P, P]): [
+    Vector<Animated.Value<number>>,
+    Vector<Animated.Value<number>>,
+    Vector<Animated.Value<number>>,
+    Vector<Animated.Value<number>>,
+    Vector<Animated.Value<number>>
+  ];
+  (...v: [P, P, P, P, P, P]): [
+    Vector<Animated.Value<number>>,
+    Vector<Animated.Value<number>>,
+    Vector<Animated.Value<number>>,
+    Vector<Animated.Value<number>>,
+    Vector<Animated.Value<number>>,
+    Vector<Animated.Value<number>>
+  ];
+  (...v: P[]): Vector<Animated.Value<number>>[];
 };
 
 export const useVectors = (((
   ...defaultValues: Parameters<typeof vec.createValue>[]
 ) =>
   useLazyRef(() =>
-    defaultValues.map((values) => vec.createValue(...values))
+    defaultValues.map((values) =>
+      vec.createValue(...(typeof values === "number" ? [values] : values))
+    )
   )) as unknown) as UseVectors;
 
 export const useClock = () => useLazyRef(() => new Clock());
