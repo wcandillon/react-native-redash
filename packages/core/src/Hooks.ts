@@ -9,7 +9,7 @@ import {
   rotationGestureHandler,
   verticalPanGestureHandler,
 } from "./Gesture";
-import { vec } from "./Vectors";
+import { Vector, vec } from "./Vectors";
 import { loop } from "./AnimationRunners";
 
 const { Clock, Value, diff, set, useCode, debug, block } = Animated;
@@ -40,8 +40,28 @@ export const useHorizontalPanGestureHandler = () =>
 
 type Atomic = string | number | boolean;
 
-export const useVector = (x: number, y: number) =>
-  useLazyRef(() => vec.createValue(x, y));
+export const useVector = (
+  ...defaultValues: Parameters<typeof vec.createValue>
+) => useLazyRef(() => vec.createValue(...defaultValues));
+
+type P = Parameters<typeof vec.createValue>;
+type R = Vector<Animated.Value<number>>;
+type UseVectors = {
+  (v: [P]): [R];
+  (v: [P, P]): [R, R];
+  (v: [P, P, P]): [R, R, R];
+  (v: [P, P, P, P]): [R, R, R, R];
+  (v: [P, P, P, P, P]): [R, R, R, R, R];
+  (v: [P, P, P, P, P, P]): [R, R, R, R, R, R];
+  (v: P[]): R[];
+};
+
+export const useVectors = (((
+  defaultValues: Parameters<typeof vec.createValue>[]
+) =>
+  useLazyRef(() =>
+    defaultValues.map((values) => vec.createValue(...values))
+  )) as unknown) as UseVectors;
 
 export const useClock = () => useLazyRef(() => new Clock());
 
@@ -98,8 +118,8 @@ type UseValues = {
   <V extends Atomic>(values: V[]): Animated.Value<V>[];
 };
 
-export const useValues = <V extends Atomic>(...values: [V, ...V[]]) =>
-  useLazyRef(() => values.map((v) => new Value(v)) as unknown) as UseValues;
+export const useValues = ((<V extends Atomic>(...values: [V, ...V[]]) =>
+  useLazyRef(() => values.map((v) => new Value(v)))) as unknown) as UseValues;
 
 export const useClocks = (numberOfClocks: number): Animated.Clock[] =>
   useLazyRef(() => new Array(numberOfClocks).fill(0).map(() => new Clock()));
