@@ -1,6 +1,6 @@
 import Animated, { block, defined } from "react-native-reanimated";
 
-import { max, min } from "./Math";
+import { clamp, max, min } from "./Math";
 import { Matrix3, Transforms2d, decompose2d } from "./Matrix3";
 
 const {
@@ -29,6 +29,22 @@ export const mix = proc(
     x: Animated.Adaptable<number>,
     y: Animated.Adaptable<number>
   ) => add(x, multiply(value, sub(y, x)))
+);
+
+export const step = proc(
+  (value: Animated.Adaptable<number>, edge: Animated.Adaptable<number>) =>
+    lessThan(value, edge)
+);
+
+export const smoothstep = proc(
+  (
+    value: Animated.Adaptable<number>,
+    edge0: Animated.Adaptable<number>,
+    edge1: Animated.Adaptable<number>
+  ) => {
+    const t = clamp(divide(sub(value, edge0), sub(edge1, edge0)), 0, 1);
+    return multiply(t, t, sub(3, multiply(2, t)));
+  }
 );
 
 export const tween2d = (

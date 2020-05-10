@@ -25,15 +25,10 @@ const {
 
 export const bin = (value: boolean): 0 | 1 => (value ? 1 : 0);
 
-export const fract = (x: Animated.Node<number>) => sub(x, floor(x));
+export const fract = (x: Animated.Adaptable<number>) => sub(x, floor(x));
 
-export const inc = proc((value: Animated.Value<number>) =>
-  set(value, add(value, 1))
-);
-
-export const dec = proc((value: Animated.Value<number>) =>
-  set(value, sub(value, 1))
-);
+export const sign = (x: Animated.Adaptable<number>) =>
+  cond(lessThan(x, 0), -1, cond(eq(x, 0), 0, 1));
 
 export const min = (...args: Animated.Adaptable<number>[]) =>
   args.reduce((acc, arg) => min2(acc, arg));
@@ -142,4 +137,12 @@ export const round = proc(
     const p = pow(10, precision);
     return divide(reRound(multiply(value, p)), p);
   }
+);
+
+export const inc = proc((value: Animated.Value<number>) =>
+  set(value, add(value, 1))
+);
+
+export const dec = proc((value: Animated.Value<number>) =>
+  set(value, sub(value, 1))
 );
