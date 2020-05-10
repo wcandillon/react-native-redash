@@ -27,7 +27,8 @@ export const bin = (value: boolean): 0 | 1 => (value ? 1 : 0);
 
 export const fract = (x: Animated.Adaptable<number>) => sub(x, floor(x));
 
-export const sign = (x: Animated.Adaptable<number>) => cond(lessThan(x, 0), -1, cond(eq(x, 0), 0, 1));
+export const sign = (x: Animated.Adaptable<number>) =>
+  cond(lessThan(x, 0), -1, cond(eq(x, 0), 0, 1));
 
 export const min = (...args: Animated.Adaptable<number>[]) =>
   args.reduce((acc, arg) => min2(acc, arg));
