@@ -263,7 +263,7 @@ export const panGestureHandler = () => {
 };
 
 export const pinchGestureHandler = () => {
-  const focal = vec.create(0, 0);
+  const focal = vec.createValue(0, 0);
   const scale = new Value(1);
   const numberOfPointers = new Value(0);
   const state = new Value(State.UNDETERMINED);
@@ -284,7 +284,7 @@ export const pinchGestureHandler = () => {
 };
 
 export const rotationGestureHandler = () => {
-  const anchor = vec.create(0, 0);
+  const anchor = vec.createValue(0, 0);
   const rotation = new Value(0);
   const state = new Value(State.UNDETERMINED);
   const gestureHandler = onGestureEvent({
