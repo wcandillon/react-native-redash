@@ -115,7 +115,7 @@ type UseValues = {
     Animated.Value<V4>,
     Animated.Value<V5>
   ];
-  <V extends Atomic>(values: V[]): Animated.Value<V>[];
+  <V extends Atomic>(...values: V[]): Animated.Value<V>[];
 };
 
 export const useValues = ((<V extends Atomic>(...values: [V, ...V[]]) =>
