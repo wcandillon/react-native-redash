@@ -1,4 +1,4 @@
-import Animated from "react-native-reanimated";
+import Animated, { Clock } from "react-native-reanimated";
 
 import { clamp as clamp1 } from "./Math";
 
@@ -28,6 +28,8 @@ const create: Create = <T extends Animated.Adaptable<number>>(
   x: x ?? 0,
   y: y ?? x ?? 0,
 });
+
+const createClock = () => create(new Clock(), new Clock());
 
 const createValue = (x = 0, y?: number) =>
   create(new Value(x), new Value(y ?? x));
@@ -69,6 +71,9 @@ const set = (a: Vector<Animated.Value<number>>, b: Adaptable) =>
     Animated.set(a.y, isAdaptable(b) ? b : b.y),
   ]);
 
+const debug = (label: string, v: Vector<Animated.Node<number>>) =>
+  block([Animated.debug(`${label}.x`, v.x), Animated.debug(`${label}.y`, v.y)]);
+
 const length = (v: Vector) =>
   Animated.sqrt(Animated.add(Animated.pow(v.x, 2), Animated.pow(v.y, 2)));
 const normalize = (v: Vector) => div(v, length(v));
@@ -78,6 +83,7 @@ const cross = (v1: Vector, v2: Vector) =>
   sub(Animated.multiply(v1.x, v2.y), Animated.multiply(v1.y, v2.x));
 
 export const vec = {
+  debug,
   create,
   createValue,
   minus,
@@ -100,4 +106,5 @@ export const vec = {
   length,
   normalize,
   cross,
+  createClock,
 };
