@@ -261,6 +261,7 @@ export const tapGestureHandler = () => {
     gestureHandler,
     position,
     absolutePosition,
+    state,
   };
 };
 
