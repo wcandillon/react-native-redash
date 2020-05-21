@@ -1,4 +1,4 @@
-import Animated, { diff } from "react-native-reanimated";
+import Animated, { diff, lessThan, or } from "react-native-reanimated";
 import {
   FlingGestureHandlerEventExtra,
   ForceTouchGestureHandlerEventExtra,
@@ -246,6 +246,24 @@ export const onGestureEvent = (
   };
 };
 
+export const tapGestureHandler = () => {
+  const state = new Value(State.UNDETERMINED);
+  const position = vec.createValue(0);
+  const absolutePosition = vec.createValue(0);
+  const gestureHandler = onGestureEvent({
+    state,
+    x: position.x,
+    y: position.y,
+    absoluteX: absolutePosition.x,
+    absoluteY: absolutePosition.y,
+  });
+  return {
+    gestureHandler,
+    position,
+    absolutePosition,
+  };
+};
+
 export const panGestureHandler = () => {
   const position = vec.createValue(0);
   const translation = vec.createValue(0);
@@ -305,45 +323,6 @@ export const rotationGestureHandler = () => {
     state,
     gestureHandler,
     anchor,
-  };
-};
-
-export const horizontalPanGestureHandler = () => {
-  const x = new Value(0);
-  const translationX = new Value(0);
-  const velocityX = new Value(0);
-  const state = new Value(State.UNDETERMINED);
-  const gestureHandler = onGestureEvent({
-    translationX,
-    velocityX,
-    state,
-  });
-  return {
-    x,
-    translationX,
-    state,
-    velocityX,
-    gestureHandler,
-  };
-};
-
-export const verticalPanGestureHandler = () => {
-  const y = new Value(0);
-  const translationY = new Value(0);
-  const velocityY = new Value(0);
-  const state = new Value(State.UNDETERMINED);
-  const gestureHandler = onGestureEvent({
-    y,
-    translationY,
-    velocityY,
-    state,
-  });
-  return {
-    y,
-    translationY,
-    state,
-    velocityY,
-    gestureHandler,
   };
 };
 

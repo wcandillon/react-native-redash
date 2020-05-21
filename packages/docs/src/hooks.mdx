@@ -126,50 +126,28 @@ return (
 
 ---
 
-## `useVerticalPanGestureHandler()`
+## `usePinchGestureHandler()`
 
 ```tsx
-const useVerticalPanGestureHandler = () => {
-  translationY: Animated.Value<number>,
-  velocityY: Animated.Value<number>,
-  state: Animated.Value<State>,
-  gestureHandler: Animated.Node<number>
-};
-```
-
-Example:
-
-```tsx
-const {gestureHandler, state, translationY} = useVerticalPanGestureHandler();
+const {gestureHandler, state, scale, focal} = usePanGestureHandler();
 return (
-  <PanGestureHandler {...gestureHandler}>
-    <Animated.View style={{ flex: 1, backgroundColor: "cyan", transform: [{ translateY: translationY }] }} />
-  </PanGestureHandler>
-)
+  <PinchGestureHandler {...gestureHandler}>
+    <Image style={{ transform: [{ scale }] }} {...{source}} />
+  </PinchGestureHandler>
+);
 ```
 
 ---
 
-## `usePanHorizontalGestureHandler()`
+## `useTapGestureHandler()`
 
 ```tsx
-const useHorizontalPanGestureHandler = () => {
-  translationX: Animated.Value<number>,
-  velocityX: Animated.Value<number>,
-  state: Animated.Value<State>,
-  gestureHandler: Animated.Node<number>
-};
-```
-
-Example:
-
-```tsx
-const {gestureHandler, state, translationX} = useHorizontalPanGestureHandler();
+const {gestureHandler, position, absolutePosition} = useTapGestureHandler();
 return (
-  <PanGestureHandler {...gestureHandler}>
-    <Animated.View style={{ flex: 1, backgroundColor: "cyan", transform: [{ translateX: translationX }] }} />
-  </PanGestureHandler>
-)
+  <TapGestureHandler {...gestureHandler}>
+    <Text>Tap me!</Text>
+  </TapGestureHandler>
+);
 ```
 
 ---

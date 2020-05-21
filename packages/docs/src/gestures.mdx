@@ -90,7 +90,43 @@ at `BEGAN` but rather in `ACTIVE`. See https://github.com/kmagiera/react-native-
 ## `pinchActive()`
 
 ```tsx
-const pinchActive:  (state: Animated.Node<State>) => Animated.Node<1 | 0>;
+const pinchActive:  (state: Animated.Node<State>, numberOfPointers: Animated.Node<number>) => Animated.Node<1 | 0>;
 ```
 
 Returns one if the gesture is active (and doesn't overlap with `pinchBegan`).
+
+--
+
+## `pinchEnd()`
+
+```tsx
+const pinchEnd:  (state: Animated.Node<State>, numberOfPointers: Animated.Node<number>) => Animated.Node<1 | 0>;
+```
+
+Returns one if the gesture has ended. On iOS, this is equivalent to `eq(state, State.END)`.
+On Android, this function returns 1 if the gesture has ended or if it is active but the number of pointers is less than 2.
+
+
+--
+
+## `panGestureHandler()`
+
+```tsx
+const panGestureHandler = () => { gestureHandler, translation, velocity, state }
+```
+
+--
+
+## `pinchGestureHandler()`
+
+```tsx
+const pinchGestureHandler = () => { gestureHandler, scale, focal, state }
+```
+
+--
+
+## `tapGestureHandler()`
+
+```tsx
+const tapGestureHandler = () => { gestureHandler, state, position, absolutePosition }
+```
