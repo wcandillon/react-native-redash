@@ -55,6 +55,11 @@ export const pinchActive = proc(
     )
 );
 
+export const pinchEnd = proc(
+  (state: Animated.Node<State>, numberOfPointers: Animated.Node<number>) =>
+   Platform.OS === "android" ? lessThan(numberOfPointers, 2) : eq(state, State.ACTIVE)
+);
+
 export const withScaleOffset = (
   value: Animated.Node<number>,
   state: Animated.Node<State>,
