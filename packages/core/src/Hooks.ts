@@ -2,12 +2,11 @@
 import Animated from "react-native-reanimated";
 import { useRef } from "react";
 import {
-  horizontalPanGestureHandler,
   onGestureEvent,
   panGestureHandler,
   pinchGestureHandler,
   rotationGestureHandler,
-  verticalPanGestureHandler,
+  tapGestureHandler,
 } from "./Gesture";
 import { Vector, vec } from "./Vectors";
 import { loop } from "./AnimationRunners";
@@ -31,12 +30,7 @@ export const useRotationGestureHandler = () =>
   useLazyRef(() => rotationGestureHandler());
 export const usePinchGestureHandler = () =>
   useLazyRef(() => pinchGestureHandler());
-
-export const useVerticalPanGestureHandler = () =>
-  useLazyRef(() => verticalPanGestureHandler());
-
-export const useHorizontalPanGestureHandler = () =>
-  useLazyRef(() => horizontalPanGestureHandler());
+export const useTapGestureHandler = () => useLazyRef(() => tapGestureHandler());
 
 type Atomic = string | number | boolean;
 
