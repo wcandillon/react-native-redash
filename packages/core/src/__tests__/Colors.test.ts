@@ -52,7 +52,7 @@ test("red", () => {
   expect(red(processColor("#00ff0000"))).toBe(0);
 });
 
-test("opacity", () => {
+test("opacity 2", () => {
   const round = (v: number) => Math.round(v * 10) / 10;
   expect(opacity(0xff000000)).toBe(1);
   expect(opacity(0x00000000)).toBe(0);

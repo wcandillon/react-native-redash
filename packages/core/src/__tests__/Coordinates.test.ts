@@ -39,13 +39,7 @@ test("cartesian2Canvas 2", () => {
   expect(point.y[" __value"]).toBe(0);
 });
 
-test("canvas2Cartesian 3", () => {
-  const point = cartesian2Canvas({ x: 100, y: -100 }, { x: 500, y: 200 });
-  expect(point.x[" __value"]).toBe(600);
-  expect(point.y[" __value"]).toBe(300);
-});
-
-test("canvas2Cartesian 3", () => {
+test("cartesian2Canvas 3", () => {
   const point = cartesian2Canvas({ x: 100, y: -100 }, { x: 500, y: 200 });
   expect(point.x[" __value"]).toBe(600);
   expect(point.y[" __value"]).toBe(300);

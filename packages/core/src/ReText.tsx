@@ -9,7 +9,7 @@ interface TextProps {
   style?: TextStyle;
 }
 
-export default (props: TextProps) => {
+const ReText = (props: TextProps) => {
   const { text, style } = { style: {}, ...props };
   return (
     <AnimatedTextInput
@@ -19,3 +19,5 @@ export default (props: TextProps) => {
     />
   );
 };
+
+export default ReText;

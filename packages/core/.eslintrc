@@ -10,7 +10,8 @@
           ".tsx"
         ]
       }
-    ]
+    ],
+    "import/no-named-as-default-member": 0
   },
   "env": {
     "jest": true

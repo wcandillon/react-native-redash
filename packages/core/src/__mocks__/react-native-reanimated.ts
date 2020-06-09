@@ -36,7 +36,7 @@ class AnimatedValue {
     this[" __value"] = val;
   }
 }
-export default {
+const Reanimated = {
   Value: AnimatedValue,
   Node: AnimatedValue,
   block: (arr) => arr[arr.length - 1],
@@ -118,3 +118,5 @@ export default {
   },
   Extrapolate,
 };
+
+export default Reanimated;
