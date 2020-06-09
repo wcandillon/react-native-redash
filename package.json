@@ -21,7 +21,8 @@
     "url": "https://github.com/wcandillon/redash/issues"
   },
   "homepage": "https://github.com/wcandillon/redash#readme",
-  "workspaces": [
-    "packages/*"
-  ]
+  "workspaces": {
+    "packages": ["packages/*"],
+    "nohoist": ["**"]
+  }
 }

@@ -85,7 +85,7 @@ test("accumulatedTransform() 2", () => {
     rotateTranslation(vec.multiply(-1, origin), Math.PI / 6)
   );
   expect(translateX[" __value"]).toBe(t.x[" __value"]);
-  expect(t.y[" __value"]);
+  expect(translateY[" __value"]).toBe(t.y[" __value"]);
   expect(scaleX[" __value"]).toBe(1);
   expect(scaleY[" __value"]).toBe(1);
   expect(rotateZ[" __value"] + skewX[" __value"]).toBeCloseTo(Math.PI / 6, 15);

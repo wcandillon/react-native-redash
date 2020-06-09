@@ -332,7 +332,7 @@ export const debugGestureState = (
   state: Animated.Node<State>
 ) => {
   const d = (value: string): Animated.Node<number> =>
-    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     debug(label, new Value(value));
   return onChange(

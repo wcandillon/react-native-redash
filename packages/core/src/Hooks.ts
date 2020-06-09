@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import Animated from "react-native-reanimated";
 import { useRef } from "react";
 import {
