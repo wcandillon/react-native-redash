@@ -4,11 +4,19 @@ export const snapPoint = (
   points
 ) => {
   "worklet";
-  const point = (value + (0.2 * velocity));
-  const deltas = points.map(p => Math.abs(point - p));
-  const minDelta = Math.min(...deltas);
-  const index = points.map((p, i) => p === minDelta ? i : -1);
-  return points[index];
+  const futurePoint = (value + (0.2 * velocity));
+  return points.map(point => ({
+    point,
+    delta: Math.abs(futurePoint - point)
+  })).reduce((acc, p) => {
+    if (!acc) {
+      return p;
+    }
+    if (p.delta < acc.delta) {
+      return p;
+    }
+    return acc;
+  }).point;
 };
 
 export function withDecay(userConfig, callback) {
