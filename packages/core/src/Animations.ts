@@ -5,18 +5,10 @@ export const snapPoint = (
 ) => {
   "worklet";
   const point = (value + (0.2 * velocity));
-  const diffPoint = (p) => Math.abs(point - p);
-  const deltas = points.map((p) => diffPoint(p));
+  const deltas = points.map(p => Math.abs(point - p));
   const minDelta = Math.min(...deltas);
-  return points.reduce(
-    (acc, p) => {
-      if (diffPoint(p) === minDelta) {
-        return p;
-      } else {
-        return acc;
-      }
-    }
-  );
+  const index = points.map((p, i) => p === minDelta ? i : -1);
+  return points[index];
 };
 
 export function withDecay(userConfig, callback) {
