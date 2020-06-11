@@ -25,7 +25,7 @@
     "react": "*",
     "react-native": "*",
     "react-native-gesture-handler": "*",
-    "react-native-reanimated": "*"
+    "react-native-reanimated": ">=2"
   },
   "devDependencies": {
     "@react-native-community/bob": "^0.4.1",

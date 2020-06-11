@@ -1,32 +1,30 @@
 import { processColor } from "react-native";
-import Animated from "react-native-reanimated";
-import { blue, green, hsv2rgb, mixColor, opacity, red } from "../Colors";
+import { blue, green, hsv2rgb, mixColor, opacity, red, color } from "../Colors";
 
-const { color, Value } = Animated;
 jest.mock("react-native-reanimated");
 
 test("white", () => {
-  expect(color(255, 255, 255, 1)[" __value"]).toBe(processColor("#ffffff"));
+  expect(color(255, 255, 255, 1)).toBe(processColor("#ffffff"));
 });
 
 test("black", () => {
-  expect(color(0, 0, 0)[" __value"]).toBe(processColor("black"));
+  expect(color(0, 0, 0)).toBe(processColor("black"));
 });
 
 test("blue 1", () => {
-  expect(color(0, 255, 255, 1)[" __value"]).toBe(processColor("#00ffffff"));
+  expect(color(0, 255, 255, 1)).toBe(processColor("#00ffffff"));
 });
 
 test("blue 2", () => {
-  expect(color(0, 255, 255)[" __value"]).toBe(processColor("#00ffff"));
+  expect(color(0, 255, 255)).toBe(processColor("#00ffff"));
 });
 
 test("green 1", () => {
-  expect(color(0, 255, 128)[" __value"]).toBe(processColor("#00ff80"));
+  expect(color(0, 255, 128)).toBe(processColor("#00ff80"));
 });
 
 test("opacity", () => {
-  expect(color(0, 0, 0, 0.5)[" __value"]).toBe(
+  expect(color(0, 0, 0, 0.5)).toBe(
     processColor("rgba(0, 0, 0, 0.5)")
   );
 });
@@ -65,40 +63,40 @@ test("opacity 2", () => {
 });
 
 test("simple interpolation 1", () => {
-  expect(mixColor(new Value(0), "white", "black")[" __value"]).toBe(
+  expect(mixColor(0, "white", "black")).toBe(
     processColor("#ffffff")
   );
 });
 
 test("simple interpolation 2", () => {
-  expect(mixColor(new Value(1), "white", "black")[" __value"]).toBe(
+  expect(mixColor(1, "white", "black")).toBe(
     processColor("#000000")
   );
 });
 
 test("simple interpolation 3", () => {
-  expect(mixColor(new Value(0.5), 0x00ff00, 0x0000ff)[" __value"]).toBe(
+  expect(mixColor(0.5, 0x00ff00, 0x0000ff)).toBe(
     0x008080
   );
 });
 
 test("hsv2rgb 1", () => {
   const { r, g, b } = hsv2rgb(0, 0, 1);
-  expect(r[" __value"]).toBe(255);
-  expect(g[" __value"]).toBe(255);
-  expect(b[" __value"]).toBe(255);
+  expect(r).toBe(255);
+  expect(g).toBe(255);
+  expect(b).toBe(255);
 });
 
 test("hsv2rgb 2", () => {
   const { r, g, b } = hsv2rgb(0.5, 0.5, 0.5);
-  expect(r[" __value"]).toBe(64);
-  expect(g[" __value"]).toBe(128);
-  expect(b[" __value"]).toBe(128);
+  expect(r).toBe(64);
+  expect(g).toBe(128);
+  expect(b).toBe(128);
 });
 
 test("hsv2rgb 3", () => {
   const { r, g, b } = hsv2rgb(0.5, 0.5, 1);
-  expect(r[" __value"]).toBe(128);
-  expect(g[" __value"]).toBe(255);
-  expect(b[" __value"]).toBe(255);
+  expect(r).toBe(128);
+  expect(g).toBe(255);
+  expect(b).toBe(255);
 });

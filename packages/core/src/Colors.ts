@@ -1,35 +1,51 @@
-import Animated from "react-native-reanimated";
-import { processColor } from "react-native";
-
-import { mix } from "./Animations";
-import { clamp, fract } from "./Math";
-
-const {
-  add,
-  multiply,
-  abs,
-  round,
+import { Platform } from "react-native";
+import {
   interpolate,
-  sub,
-  proc,
-  color,
   Extrapolate,
-  greaterThan,
-  cond,
-} = Animated;
+  processColor,
+} from "react-native-reanimated";
 
-type Color = Animated.Adaptable<string> | Animated.Adaptable<number>;
+import { clamp, fract, mix } from "./Math";
 
-export const opacity = (c: number) => ((c >> 24) & 255) / 255;
-export const red = (c: number) => (c >> 16) & 255;
-export const green = (c: number) => (c >> 8) & 255;
-export const blue = (c: number) => c & 255;
+export const opacity = (c) => {
+  "worklet";
+  return ((c >> 24) & 255) / 255;
+};
 
-export const hsv2rgb = (
-  h: Animated.Adaptable<number>,
-  s: Animated.Adaptable<number>,
-  v: Animated.Adaptable<number>
-) => {
+export const red = (c) => {
+  "worklet";
+  return (c >> 16) & 255;
+};
+
+export const green = (c) => {
+  "worklet";
+  return (c >> 8) & 255;
+};
+
+export const blue = (c) => {
+  "worklet";
+  return c & 255;
+};
+
+export const color = (r, g, b, a = 1) => {
+  "worklet";
+  const color =
+    16777216 * Math.round(a * 255) +
+    65536 * r +
+    256 * g +
+    b;
+  if (Platform.OS === "android") {
+    // on Android color is represented as signed 32 bit int
+    if (color < (1 << 31) >>> 0) {
+      return (color);
+    }
+    return (color - 2 ** 32);
+  }
+  return (color);
+};
+
+export const hsv2rgb = (h, s, v) => {
+  "worklet";
   // vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
   const K = {
     x: 1,
@@ -39,44 +55,34 @@ export const hsv2rgb = (
   };
   // vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
   const p = {
-    x: abs(sub(multiply(fract(add(h, K.x)), 6), K.w)),
-    y: abs(sub(multiply(fract(add(h, K.y)), 6), K.w)),
-    z: abs(sub(multiply(fract(add(h, K.z)), 6), K.w)),
+    x: Math.abs(fract(h + K.x) * 6 - K.w),
+    y: Math.abs(fract(h + K.y) * 6 - K.w),
+    z: Math.abs(fract(h + K.z) * 6 - K.w),
   };
   // return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
   const rgb = {
-    x: multiply(v, mix(s, K.x, clamp(sub(p.x, K.x), 0, 1))),
-    y: multiply(v, mix(s, K.x, clamp(sub(p.y, K.x), 0, 1))),
-    z: multiply(v, mix(s, K.x, clamp(sub(p.z, K.x), 0, 1))),
+    x: v * mix(s, K.x, clamp(p.x - K.x, 0, 1)),
+    y: v * mix(s, K.x, clamp(p.y - K.x, 0, 1)),
+    z: v * mix(s, K.x, clamp(p.z - K.x, 0, 1)),
   };
   return {
-    r: round(multiply(rgb.x, 255)),
-    g: round(multiply(rgb.y, 255)),
-    b: round(multiply(rgb.z, 255)),
+    r: Math.round(rgb.x * 255),
+    g: Math.round(rgb.y * 255),
+    b: Math.round(rgb.z * 255),
   };
 };
 
-export const hsv2color = proc(
-  (
-    h: Animated.Adaptable<number>,
-    s: Animated.Adaptable<number>,
-    v: Animated.Adaptable<number>
-  ) => {
-    const { r, g, b } = hsv2rgb(h, s, v);
-    return color(r, g, b);
-  }
-);
+export const hsv2color = (h, s, v) => {
+  "worklet";
+  const { r, g, b } = hsv2rgb(h, s, v);
+  return color(r, g, b, 1);
+};
 
-export const colorForBackground = proc(
-  (
-    r: Animated.Adaptable<number>,
-    g: Animated.Adaptable<number>,
-    b: Animated.Adaptable<number>
-  ) => {
-    const L = add(multiply(0.299, r), multiply(0.587, g), multiply(0.114, b));
-    return cond(greaterThan(L, 186), color(0, 0, 0), color(255, 255, 255));
-  }
-);
+export const colorForBackground = (r, g, b) => {
+  "worklet";
+  const L = 0.299 * r + 0.587 * g + 0.114 * b;
+  return L > 186 ? 0x000000ff : 0xffffffff;
+};
 
 const rgbToHsv = (c: number) => {
   const r = red(c) / 255;
@@ -110,77 +116,74 @@ const rgbToHsv = (c: number) => {
   return { h, s, v };
 };
 
-const interpolateColorsHSV = (
-  animationValue: Animated.Adaptable<number>,
-  inputRange: readonly Animated.Adaptable<number>[],
-  colors: number[]
-): Animated.Node<number> => {
+const interpolateColorsHSV = (value, inputRange, colors) => {
+  "worklet";
   const colorsAsHSV = colors.map((c) => rgbToHsv(c));
-  const h = interpolate(animationValue, {
+  const h = interpolate(
+    value,
     inputRange,
-    outputRange: colorsAsHSV.map((c) => c.h),
-    extrapolate: Extrapolate.CLAMP,
-  });
-  const s = interpolate(animationValue, {
+    colorsAsHSV.map((c) => c.h),
+    Extrapolate.CLAMP
+  );
+  const s = interpolate(
+    value,
     inputRange,
-    outputRange: colorsAsHSV.map((c) => c.s),
-    extrapolate: Extrapolate.CLAMP,
-  });
-  const v = interpolate(animationValue, {
+    colorsAsHSV.map((c) => c.s),
+    Extrapolate.CLAMP
+  );
+  const v = interpolate(
+    value,
     inputRange,
-    outputRange: colorsAsHSV.map((c) => c.v),
-    extrapolate: Extrapolate.CLAMP,
-  });
+    colorsAsHSV.map((c) => c.v),
+    Extrapolate.CLAMP
+  );
   return hsv2color(h, s, v);
 };
 
-const interpolateColorsRGB = (
-  animationValue: Animated.Adaptable<number>,
-  inputRange: readonly Animated.Adaptable<number>[],
-  colors: number[]
-) => {
-  const r = round(
-    interpolate(animationValue, {
+const interpolateColorsRGB = (value, inputRange, colors) => {
+  "worklet";
+  const r = Math.round(
+    interpolate(
+      value,
       inputRange,
-      outputRange: colors.map((c) => red(c)),
-      extrapolate: Extrapolate.CLAMP,
-    })
+      colors.map((c) => red(c)),
+      Extrapolate.CLAMP
+    )
   );
-  const g = round(
-    interpolate(animationValue, {
-      inputRange,
-      outputRange: colors.map((c) => green(c)),
-      extrapolate: Extrapolate.CLAMP,
-    })
-  );
-  const b = round(
-    interpolate(animationValue, {
-      inputRange,
-      outputRange: colors.map((c) => blue(c)),
-      extrapolate: Extrapolate.CLAMP,
-    })
-  );
-  const a = interpolate(animationValue, {
-    inputRange,
-    outputRange: colors.map((c) => opacity(c)),
-    extrapolate: Extrapolate.CLAMP,
-  });
 
+  const g = Math.round(
+    interpolate(
+      value,
+      inputRange,
+      colors.map((c) => green(c)),
+      Extrapolate.CLAMP
+    )
+  );
+  const b = Math.round(
+    interpolate(
+      value,
+      inputRange,
+      colors.map((c) => blue(c)),
+      Extrapolate.CLAMP
+    )
+  );
+  const a = interpolate(
+    value,
+    inputRange,
+    colors.map((c) => opacity(c)),
+    Extrapolate.CLAMP
+  );
   return color(r, g, b, a);
 };
 
-interface ColorInterpolationConfig {
-  inputRange: readonly Animated.Adaptable<number>[];
-  outputRange: Color[];
-}
-
 export const interpolateColor = (
-  value: Animated.Adaptable<number>,
-  config: ColorInterpolationConfig,
-  colorSpace: "hsv" | "rgb" = "rgb"
-): Animated.Node<number> => {
-  const { inputRange } = config;
-  const outputRange = config.outputRange.map((c) =>
+  value,
+  inputRange,
+  rawOutputRange,
+  colorSpace
+) => {
+  "worklet";
+  const outputRange = rawOutputRange.map((c) =>
     typeof c === "number" ? c : processColor(c)
   );
   if (colorSpace === "hsv") {
@@ -189,17 +192,7 @@ export const interpolateColor = (
   return interpolateColorsRGB(value, inputRange, outputRange);
 };
 
-export const mixColor = (
-  value: Animated.Adaptable<number>,
-  color1: Color,
-  color2: Color,
-  colorSpace: "hsv" | "rgb" = "rgb"
-) =>
-  interpolateColor(
-    value,
-    {
-      inputRange: [0, 1],
-      outputRange: [color1, color2],
-    },
-    colorSpace
-  );
+export const mixColor = (value, color1, color2, colorSpace = "rgb") => {
+  "worklet";
+  return interpolateColor(value, [0, 1], [color1, color2], colorSpace);
+};

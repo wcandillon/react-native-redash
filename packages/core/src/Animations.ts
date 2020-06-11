@@ -1,151 +1,87 @@
-import Animated, { block, defined } from "react-native-reanimated";
-
-import { clamp, max, min } from "./Math";
-import { Matrix3, Transforms2d, decompose2d } from "./Matrix3";
-
-const {
-  Value,
-  set,
-  add,
-  multiply,
-  cond,
-  eq,
-  abs,
-  sub,
-  not,
-  lessThan,
-  greaterThan,
-  divide,
-  modulo,
-  proc,
-} = Animated;
-
-export type SpringConfig = Partial<Omit<Animated.SpringConfig, "toValue">>;
-export type TimingConfig = Partial<Omit<Animated.TimingConfig, "toValue">>;
-
-export const mix = proc(
-  (
-    value: Animated.Adaptable<number>,
-    x: Animated.Adaptable<number>,
-    y: Animated.Adaptable<number>
-  ) => add(x, multiply(value, sub(y, x)))
-);
-
-export const step = proc(
-  (value: Animated.Adaptable<number>, edge: Animated.Adaptable<number>) =>
-    lessThan(value, edge)
-);
-
-export const smoothstep = proc(
-  (
-    value: Animated.Adaptable<number>,
-    edge0: Animated.Adaptable<number>,
-    edge1: Animated.Adaptable<number>
-  ) => {
-    const t = clamp(divide(sub(value, edge0), sub(edge1, edge0)), 0, 1);
-    return multiply(t, t, sub(3, multiply(2, t)));
-  }
-);
-
-export const tween2d = (
-  value: Animated.Node<number>,
-  t1: Matrix3 | Transforms2d,
-  t2: Matrix3 | Transforms2d
-) => {
-  const d1 = decompose2d(t1);
-  const d2 = decompose2d(t2);
-  const translateX = mix(value, d1[0].translateX, d2[0].translateX);
-  const translateY = mix(value, d1[1].translateY, d2[1].translateY);
-  const skewX = mix(value, d1[2].rotateZ, d2[2].rotateZ);
-  const scaleX = mix(value, d1[3].scaleX, d2[3].scaleX);
-  const scaleY = mix(value, d1[4].scaleY, d2[4].scaleY);
-  const rotateZ = mix(value, d1[5].rotateZ, d2[5].rotateZ);
-  return [
-    { translateX },
-    { translateY },
-    { rotateZ: skewX },
-    { scaleX },
-    { scaleY },
-    { rotateZ },
-  ] as const;
-};
-
-// currently diffClamp() from reanimated seems currently buggy because of proc()
-export const diff = (v: Animated.Node<number>) => {
-  const stash = new Value(0);
-  const prev = new Value<number>();
-  return block([
-    set(stash, cond(defined(prev), sub(v, prev), 0)),
-    set(prev, v),
-    stash,
-  ]);
-};
-
-export const diffClamp = (
-  a: Animated.Node<number>,
-  minVal: Animated.Adaptable<number>,
-  maxVal: Animated.Adaptable<number>
-) => {
-  const value = new Value<number>();
-  return set(
-    value,
-    min(max(add(cond(defined(value), value, a), diff(a)), minVal), maxVal)
-  );
-};
-
-export const moving = (
-  position: Animated.Node<number>,
-  minPositionDelta = 1e-3,
-  emptyFrameThreshold = 5
-) => {
-  const delta = diff(position);
-  const noMovementFrames = new Value(0);
-  return cond(
-    lessThan(abs(delta), minPositionDelta),
-    [
-      set(noMovementFrames, add(noMovementFrames, 1)),
-      not(greaterThan(noMovementFrames, emptyFrameThreshold)),
-    ],
-    [set(noMovementFrames, 0), 1]
-  );
-};
-
 export const snapPoint = (
-  value: Animated.Adaptable<number>,
-  velocity: Animated.Adaptable<number>,
-  points: Animated.Adaptable<number>[]
+  value,
+  velocity,
+  points
 ) => {
-  const point = add(value, multiply(0.2, velocity));
-  const diffPoint = (p: Animated.Adaptable<number>) => abs(sub(point, p));
+  "worklet";
+  const point = (value + (0.2 * velocity));
+  const diffPoint = (p) => Math.abs(point - p);
   const deltas = points.map((p) => diffPoint(p));
-  const minDelta = min(...deltas);
+  const minDelta = Math.min(...deltas);
   return points.reduce(
-    (acc, p) => cond(eq(diffPoint(p), minDelta), p, acc),
-    new Value()
-  ) as Animated.Node<number>;
+    (acc, p) => {
+      if (diffPoint(p) === minDelta) {
+        return p;
+      } else {
+        return acc;
+      }
+    }
+  );
 };
 
-export const addTo = proc(
-  (value: Animated.Value<number>, node: Animated.Adaptable<number>) =>
-    set(value, add(value, node))
-);
+export function withDecay(userConfig, callback) {
+  "worklet";
 
-export const subTo = proc(
-  (value: Animated.Value<number>, node: Animated.Adaptable<number>) =>
-    set(value, sub(value, node))
-);
+  // TODO: not sure what should I return here
+  // if (!_WORKLET) {
+  //   return toValue;
+  // }
 
-export const multiplyTo = proc(
-  (value: Animated.Value<number>, node: Animated.Adaptable<number>) =>
-    set(value, multiply(value, node))
-);
+  const config = {
+    deceleration: 0.998,
+  };
+  if (userConfig) {
+    Object.keys(userConfig).forEach((key) => (config[key] = userConfig[key]));
+  }
 
-export const divideTo = proc(
-  (value: Animated.Value<number>, node: Animated.Adaptable<number>) =>
-    set(value, divide(value, node))
-);
+  const VELOCITY_EPS = 5;
 
-export const moduloTo = proc(
-  (value: Animated.Value<number>, node: Animated.Adaptable<number>) =>
-    set(value, modulo(value, node))
-);
+  function decay(animation, now) {
+    const { lastTimestamp, initialVelocity, current, velocity } = animation;
+
+    const deltaTime = Math.min(now - lastTimestamp, 64);
+    animation.lastTimestamp = now;
+
+    const kv = Math.pow(config.deceleration, deltaTime);
+    const kx = (config.deceleration * (1 - kv)) / (1 - config.deceleration);
+
+    const v0 = velocity / 1000;
+    const v = v0 * kv * 1000;
+    const x = current + v0 * kx;
+
+    animation.current = x;
+    animation.velocity = v;
+
+    let toValueIsReached = null;
+
+    if (Array.isArray(config.clamp)) {
+      if (initialVelocity < 0 && animation.current <= config.clamp[0]) {
+        toValueIsReached = config.clamp[0];
+      } else if (initialVelocity > 0 && animation.current >= config.clamp[1]) {
+        toValueIsReached = config.clamp[1];
+      }
+    }
+
+    if (Math.abs(v) < VELOCITY_EPS || toValueIsReached !== null) {
+      if (toValueIsReached !== null) {
+        console.log(toValueIsReached);
+        animation.current = toValueIsReached;
+      }
+
+      return true;
+    }
+  }
+
+  function start(animation, value, now, _previousAnimation) {
+    animation.current = value;
+    animation.lastTimestamp = now;
+    animation.initialVelocity = config.velocity;
+  }
+
+  return {
+    animation: decay,
+    start,
+    velocity: config.velocity || 0,
+    callback,
+  };
+}
