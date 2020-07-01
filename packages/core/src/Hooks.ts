@@ -6,6 +6,7 @@ import {
   pinchGestureHandler,
   rotationGestureHandler,
   tapGestureHandler,
+  scrollHandler,
 } from "./Gesture";
 import { Vector, vec } from "./Vectors";
 import { loop } from "./AnimationRunners";
@@ -30,6 +31,7 @@ export const useRotationGestureHandler = () =>
 export const usePinchGestureHandler = () =>
   useLazyRef(() => pinchGestureHandler());
 export const useTapGestureHandler = () => useLazyRef(() => tapGestureHandler());
+export const useScrollHandler = () => useLazyRef(() => scrollHandler());
 
 type Atomic = string | number | boolean;
 
