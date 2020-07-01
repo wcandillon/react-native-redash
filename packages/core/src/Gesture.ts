@@ -334,8 +334,10 @@ export const scrollHandler = () => {
   return {
     x,
     y,
-    onScroll,
-    scrollEventThrottle: 1,
+    scrollHandler: {
+      onScroll,
+      scrollEventThrottle: 1,
+    },
   };
 };
 
