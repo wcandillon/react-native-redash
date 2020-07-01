@@ -327,6 +327,18 @@ export const rotationGestureHandler = () => {
   };
 };
 
+export const scrollHandler = () => {
+  const x = new Value(0);
+  const y = new Value(0);
+  const onScroll = onScrollEvent({ x, y });
+  return {
+    x,
+    y,
+    onScroll,
+    scrollEventThrottle: 1,
+  };
+};
+
 export const debugGestureState = (
   label: string,
   state: Animated.Node<State>
