@@ -1,21 +1,31 @@
 export const bin = (value: boolean): 0 | 1 => (value ? 1 : 0);
 
-export const mix = (value, x, y) => {
+export const mix = (value: number, x: number, y: number) => {
   "worklet";
   return x + value * (y - x);
 };
 
-export const fract = (x) => {
+export const fract = (x: number) => {
   "worklet";
   return x - Math.floor(x);
 };
 
-export const clamp = (value, lowerBound, upperBound) => {
+export const clamp = (
+  value: number,
+  lowerBound: number,
+  upperBound: number
+) => {
   "worklet";
   return Math.min(Math.max(lowerBound, value), upperBound);
 };
 
-export const cubicBezier = (t, from, c1, c2, to) => {
+export const cubicBezier = (
+  t: number,
+  from: number,
+  c1: number,
+  c2: number,
+  to: number
+) => {
   "worklet";
   const term = 1 - t;
   const a = 1 * term ** 3 * t ** 0 * from;
@@ -25,7 +35,7 @@ export const cubicBezier = (t, from, c1, c2, to) => {
   return a + b + c + d;
 };
 
-export const round = (value, precision = 0) => {
+export const round = (value: number, precision = 0) => {
   "worklet";
   const p = Math.pow(10, precision);
   return Math.round(value * p) / p;

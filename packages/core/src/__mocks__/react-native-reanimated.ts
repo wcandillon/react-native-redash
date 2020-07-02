@@ -6,7 +6,11 @@ export enum Extrapolate {
   IDENTITY = "identity",
 }
 
-export const interpolate = (v: number, inputRange, outputRange) => {
+export const interpolate = (
+  v: number,
+  inputRange: number[],
+  outputRange: number[]
+) => {
   const [inS, inE] = [inputRange[0], inputRange[1]];
   const [outS, outE] = [outputRange[0], outputRange[1]];
   const value = v;

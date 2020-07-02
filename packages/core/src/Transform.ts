@@ -1,9 +1,8 @@
-import { useAnimatedStyle } from "react-native-reanimated";
+import Animated, { useAnimatedStyle } from "react-native-reanimated";
 
-import { Transforms2d } from "./Matrix3";
 import { Vector } from "./Vector";
 
-export const useTranslate = (vector: Vector) =>
+export const useTranslate = (vector: Vector<Animated.SharedValue<number>>) =>
   useAnimatedStyle(() => {
     return {
       transform: [
@@ -13,7 +12,7 @@ export const useTranslate = (vector: Vector) =>
     };
   });
 
-export const translateZ = (perspective, z) => {
+export const translateZ = (perspective: number, z: number) => {
   "worklet";
   return { scale: perspective / (perspective - z) };
 };
@@ -23,18 +22,21 @@ export const translate = ({ x: translateX, y: translateY }: Vector) => {
   return [{ translateX }, { translateY }];
 };
 
-export const transformOrigin = ({ x, y }, ...transformations): Transforms2d => {
+export const transformOrigin = (
+  v: Vector,
+  transformations: Animated.AnimatedTransform[]
+) => {
   "worklet";
   return [
-    { translateX: x },
-    { translateY: y },
+    { translateX: v.x },
+    { translateY: v.y },
     ...transformations,
-    { translateX: -x },
-    { translateY: -y },
+    { translateX: -v.x },
+    { translateY: -v.y },
   ];
 };
 
-export const rotateTranslation = (tr, rotate) => {
+export const rotateTranslation = (tr: Vector, rotate: number) => {
   "worklet";
   return {
     x: tr.x * Math.cos(rotate) - tr.y * Math.sin(rotate),
@@ -42,7 +44,10 @@ export const rotateTranslation = (tr, rotate) => {
   };
 };
 
-export const scaleTranslation = (tr, scale) => {
+export const scaleTranslation = (tr: Vector, scale: number) => {
   "worklet";
-  return vec.multiply(tr, scale);
+  return {
+    x: tr.x * scale,
+    y: tr.y * scale,
+  };
 };

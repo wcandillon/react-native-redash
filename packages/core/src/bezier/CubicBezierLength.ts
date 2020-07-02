@@ -1,7 +1,4 @@
-interface Point {
-  x: number;
-  y: number;
-}
+import { Vector } from "../Vector";
 
 type CtrlPoint = [number, number, number, number];
 
@@ -761,15 +758,13 @@ const getArcLength = (xs: CtrlPoint, ys: CtrlPoint, t = 1, n = 20) => {
   return z * sum;
 };
 
-const cubicBezierLength = (
-  p0: Point,
-  p1: Point,
-  p2: Point,
-  p3: Point
+export const cubicBezierLength = (
+  p0: Vector,
+  p1: Vector,
+  p2: Vector,
+  p3: Vector
 ): number => {
   const xs: CtrlPoint = [p0.x, p1.x, p2.x, p3.x];
   const ys: CtrlPoint = [p0.y, p1.y, p2.y, p3.y];
   return getArcLength(xs, ys);
 };
-
-export default cubicBezierLength;

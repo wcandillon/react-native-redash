@@ -4,7 +4,7 @@ import Animated, { useAnimatedProps } from "react-native-reanimated";
 import { TextInput } from "react-native-gesture-handler";
 
 interface TextProps {
-  text: any;
+  text: Animated.SharedValue<string>;
   style?: TextStyle;
 }
 

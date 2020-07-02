@@ -1,4 +1,3 @@
-/* eslint-disable no-bitwise */
 import { Platform } from "react-native";
 import {
   interpolate,
@@ -34,7 +33,7 @@ export const blue = (c: number) => {
   return c & 255;
 };
 
-const color = (r: number, g: number, b: number, alpha = 1) => {
+export const color = (r: number, g: number, b: number, alpha = 1) => {
   "worklet";
   const a = Math.round(alpha * 255);
   const result =
