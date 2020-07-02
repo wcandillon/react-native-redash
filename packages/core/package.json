@@ -9,7 +9,8 @@
     "tsc": "tsc --noEmit",
     "test": "jest",
     "prepare": "bob build",
-    "semantic-release": "semantic-release"
+    "semantic-release": "semantic-release",
+    "postinstall": "patch-package"
   },
   "repository": {
     "type": "git",
@@ -36,12 +37,13 @@
     "babel-jest": "^24.9.0",
     "babel-preset-expo": "^8.0.0",
     "eslint": "^6.7.2",
-    "eslint-config-react-native-wcandillon": "3.0.1",
+    "eslint-config-react-native-wcandillon": "3.3.0",
     "jest": "^24.9.0",
+    "patch-package": "^6.2.2",
     "react": "^16.8.6",
     "react-native": "^0.61.0",
     "react-native-gesture-handler": "~1.5.0",
-    "react-native-reanimated": "^1.7.0",
+    "react-native-reanimated": "2.0.0-alpha.3",
     "semantic-release": "^15.13.3",
     "semantic-release-cli": "^4.1.2",
     "typescript": "^3.6.2"

@@ -1,3 +1,4 @@
+/* eslint-disable no-bitwise */
 import { Platform } from "react-native";
 import {
   interpolate,
@@ -7,45 +8,48 @@ import {
 
 import { clamp, fract, mix } from "./Math";
 
-export const opacity = (c) => {
+export type Color = string | number;
+export enum ColorSpace {
+  RGB,
+  HSV,
+}
+
+export const opacity = (c: number) => {
   "worklet";
   return ((c >> 24) & 255) / 255;
 };
 
-export const red = (c) => {
+export const red = (c: number) => {
   "worklet";
   return (c >> 16) & 255;
 };
 
-export const green = (c) => {
+export const green = (c: number) => {
   "worklet";
   return (c >> 8) & 255;
 };
 
-export const blue = (c) => {
+export const blue = (c: number) => {
   "worklet";
   return c & 255;
 };
 
-export const color = (r, g, b, a = 1) => {
+const color = (r: number, g: number, b: number, alpha = 1) => {
   "worklet";
-  const color =
-    16777216 * Math.round(a * 255) +
-    65536 * r +
-    256 * g +
-    b;
+  const a = Math.round(alpha * 255);
+  const result =
+    ((a * 1) << 24) +
+    ((Math.round(r) * 1) << 16) +
+    ((Math.round(g) * 1) << 8) +
+    Math.round(b);
   if (Platform.OS === "android") {
     // on Android color is represented as signed 32 bit int
-    if (color < (1 << 31) >>> 0) {
-      return (color);
-    }
-    return (color - 2 ** 32);
+    return result < (1 << 31) >>> 0 ? color : result - Math.pow(2, 32);
   }
-  return (color);
+  return result;
 };
 
-export const hsv2rgb = (h, s, v) => {
-  "worklet";
+export const hsv2rgb = (h: number, s: number, v: number) => {
   // vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
   const K = {
     x: 1,
@@ -72,13 +76,12 @@ export const hsv2rgb = (h, s, v) => {
   };
 };
 
-export const hsv2color = (h, s, v) => {
-  "worklet";
+export const hsv2color = (h: number, s: number, v: number) => {
   const { r, g, b } = hsv2rgb(h, s, v);
-  return color(r, g, b, 1);
+  return color(r, g, b);
 };
 
-export const colorForBackground = (r, g, b) => {
+export const colorForBackground = (r: number, g: number, b: number) => {
   "worklet";
   const L = 0.299 * r + 0.587 * g + 0.114 * b;
   return L > 186 ? 0x000000ff : 0xffffffff;
@@ -116,7 +119,11 @@ const rgbToHsv = (c: number) => {
   return { h, s, v };
 };
 
-const interpolateColorsHSV = (value, inputRange, colors) => {
+const interpolateColorsHSV = (
+  value: number,
+  inputRange: number[],
+  colors: number[]
+) => {
   "worklet";
   const colorsAsHSV = colors.map((c) => rgbToHsv(c));
   const h = interpolate(
@@ -140,7 +147,11 @@ const interpolateColorsHSV = (value, inputRange, colors) => {
   return hsv2color(h, s, v);
 };
 
-const interpolateColorsRGB = (value, inputRange, colors) => {
+const interpolateColorsRGB = (
+  value: number,
+  inputRange: number[],
+  colors: number[]
+) => {
   "worklet";
   const r = Math.round(
     interpolate(
@@ -173,26 +184,32 @@ const interpolateColorsRGB = (value, inputRange, colors) => {
     colors.map((c) => opacity(c)),
     Extrapolate.CLAMP
   );
+  console.log({ r, g, b, a });
   return color(r, g, b, a);
 };
 
 export const interpolateColor = (
-  value,
-  inputRange,
-  rawOutputRange,
-  colorSpace
+  value: number,
+  inputRange: number[],
+  rawOutputRange: Color[],
+  colorSpace: ColorSpace = ColorSpace.RGB
 ) => {
   "worklet";
   const outputRange = rawOutputRange.map((c) =>
     typeof c === "number" ? c : processColor(c)
   );
-  if (colorSpace === "hsv") {
+  if (colorSpace === ColorSpace.HSV) {
     return interpolateColorsHSV(value, inputRange, outputRange);
   }
   return interpolateColorsRGB(value, inputRange, outputRange);
 };
 
-export const mixColor = (value, color1, color2, colorSpace = "rgb") => {
+export const mixColor = (
+  value: number,
+  color1: Color,
+  color2: Color,
+  colorSpace: ColorSpace = ColorSpace.RGB
+) => {
   "worklet";
   return interpolateColor(value, [0, 1], [color1, color2], colorSpace);
 };

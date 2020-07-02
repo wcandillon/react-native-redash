@@ -1,41 +1,48 @@
-export const canvas2Cartesian = ({ x, y }, center) => {
+import { Vector } from "./Vector";
+
+export interface PolarPoint {
+  theta: number;
+  radius: number;
+}
+
+export const canvas2Cartesian = (v: Vector, center: Vector) => {
   "worklet";
   return {
-    x: x - center.x,
-    y: -1 * (y - center.y),
+    x: v.x - center.x,
+    y: -1 * (v.y - center.y),
   };
 };
 
-export const cartesian2Canvas = ({ x, y }, center) => {
+export const cartesian2Canvas = (v: Vector, center: Vector) => {
   "worklet";
   return {
-    x: x + center.x,
-    y: -1 * y + center.y,
+    x: v.x + center.x,
+    y: -1 * v.y + center.y,
   };
 };
 
-export const cartesian2Polar = ({ x, y }) => {
+export const cartesian2Polar = (v: Vector) => {
   "worklet";
   return {
-    theta: Math.atan2(y, x),
-    radius: Math.sqrt(x ** 2 + y ** 2),
+    theta: Math.atan2(v.y, v.x),
+    radius: Math.sqrt(v.x ** 2 + v.y ** 2),
   };
 };
 
-export const polar2Cartesian = ({ theta, radius }) => {
+export const polar2Cartesian = (p: PolarPoint) => {
   "worklet";
   return {
-    x: radius * Math.cos(theta),
-    y: radius * Math.sin(theta),
+    x: p.radius * Math.cos(p.theta),
+    y: p.radius * Math.sin(p.theta),
   };
 };
 
-export const polar2Canvas = ({ theta, radius }, center) => {
+export const polar2Canvas = (p: PolarPoint, center: Vector) => {
   "worklet";
-  return cartesian2Canvas(polar2Cartesian({ theta, radius }), center);
+  return cartesian2Canvas(polar2Cartesian(p), center);
 };
 
-export const canvas2Polar = ({ x, y }, center) => {
+export const canvas2Polar = (v: Vector, center: Vector) => {
   "worklet";
-  return cartesian2Polar(canvas2Cartesian({ x, y }, center));
+  return cartesian2Polar(canvas2Cartesian(v, center));
 };

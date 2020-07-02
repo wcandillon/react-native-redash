@@ -1,7 +1,4 @@
-  
-export type Vec3 = readonly [
-  number, number,number
-];
+export type Vec3 = readonly [number, number, number];
 
 export type Matrix3 = readonly [Vec3, Vec3, Vec3];
 
@@ -16,7 +13,7 @@ type Transform2dName =
   | "rotateZ"
   | "rotate";
 
-  type Transformations = {
+type Transformations = {
   [Name in Transform2dName]: number;
 };
 

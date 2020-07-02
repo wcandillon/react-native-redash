@@ -1,9 +1,7 @@
 import {
   canvas2Cartesian,
-  canvas2Polar,
   cartesian2Canvas,
   cartesian2Polar,
-  polar2Canvas,
   polar2Cartesian,
 } from "../Coordinates";
 

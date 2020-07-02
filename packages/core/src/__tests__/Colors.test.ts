@@ -24,9 +24,7 @@ test("green 1", () => {
 });
 
 test("opacity", () => {
-  expect(color(0, 0, 0, 0.5)).toBe(
-    processColor("rgba(0, 0, 0, 0.5)")
-  );
+  expect(color(0, 0, 0, 0.5)).toBe(processColor("rgba(0, 0, 0, 0.5)"));
 });
 
 test("blue", () => {
@@ -63,21 +61,15 @@ test("opacity 2", () => {
 });
 
 test("simple interpolation 1", () => {
-  expect(mixColor(0, "white", "black")).toBe(
-    processColor("#ffffff")
-  );
+  expect(mixColor(0, "white", "black")).toBe(processColor("#ffffff"));
 });
 
 test("simple interpolation 2", () => {
-  expect(mixColor(1, "white", "black")).toBe(
-    processColor("#000000")
-  );
+  expect(mixColor(1, "white", "black")).toBe(processColor("#000000"));
 });
 
 test("simple interpolation 3", () => {
-  expect(mixColor(0.5, 0x00ff00, 0x0000ff)).toBe(
-    0x008080
-  );
+  expect(mixColor(0.5, 0x00ff00, 0x0000ff)).toBe(0x008080);
 });
 
 test("hsv2rgb 1", () => {
