@@ -33,6 +33,19 @@ export const blue = (c: number) => {
   return c & 255;
 };
 
+export const color2 = (r, g, b, a = 1) => {
+  "worklet";
+  const color = 16777216 * Math.round(a * 255) + 65536 * r + 256 * g + b;
+  if (Platform.OS === "android") {
+    // on Android color is represented as signed 32 bit int
+    if (color < (1 << 31) >>> 0) {
+      return color;
+    }
+    return color - 2 ** 32;
+  }
+  return color;
+};
+
 export const color = (r: number, g: number, b: number, alpha = 1) => {
   "worklet";
   const a = Math.round(alpha * 255);

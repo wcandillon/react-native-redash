@@ -13,3 +13,20 @@ export const useVector = (
   const y = useSharedValue(y1 ?? x1);
   return { x, y };
 };
+
+type Create = {
+  (): Vector<0>;
+  <T extends Animated.Adaptable<number>>(x: T, y?: T): Vector<T>;
+};
+
+const create: Create = <T extends Animated.Adaptable<number>>(
+  x?: T,
+  y?: T
+) => ({
+  x: x ?? 0,
+  y: y ?? x ?? 0,
+});
+
+export const vec = {
+  create,
+};
