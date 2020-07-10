@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import Animated, { Easing } from "react-native-reanimated";
 import { State } from "react-native-gesture-handler";
 
@@ -14,6 +14,7 @@ const {
   Clock,
   spring,
   startClock,
+  stopClock,
   timing,
   neq,
   useCode,
@@ -47,12 +48,17 @@ export const withTransition = (
       set(state.time, 0),
       set(state.finished, 0),
       set(config.toValue, value),
+      startClock(clock),
     ]),
     cond(
       eq(gestureState, State.ACTIVE),
       [set(state.position, value)],
       timing(clock, state, config)
     ),
+    cond(state.finished, stopClock(clock)),
+    Animated.call([], () => {
+      console.log('ev')
+    }),
     state.position,
   ]);
 };
@@ -82,12 +88,20 @@ export const withSpringTransition = (
   };
   return block([
     startClock(clock),
+    cond(neq(config.toValue, value), [
+      set(state.finished, 0),
+      startClock(clock)
+    ]),
     set(config.toValue, value),
     cond(
       eq(gestureState, State.ACTIVE),
       [set(state.velocity, velocity), set(state.position, value)],
       spring(clock, state, config)
     ),
+    cond(state.finished, stopClock(clock)),
+    Animated.call([], () => {
+      console.log('ev')
+    }),
     state.position,
   ]);
 };
@@ -98,11 +112,10 @@ export const useTransition = (
   state: boolean | number,
   config: TimingConfig = {}
 ) => {
-  const value = useMemo(() => new Value(0), []);
-  useCode(() => set(value, typeof state === "boolean" ? bin(state) : state), [
-    state,
-    value,
-  ]);
+  const value: Animated.Value<number> = useMemo(() => new Value(0), []);
+  useEffect(() => {
+    value.setValue(typeof state === "boolean" ? (state ? 1 : 0) : state)
+  }, [state]);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const transition = useMemo(() => withTransition(value, config), []);
   return transition;
@@ -112,11 +125,12 @@ export const useSpringTransition = (
   state: boolean | number,
   config: SpringConfig = defaultSpringConfig
 ) => {
-  const value = useMemo(() => new Value(0), []);
-  useCode(() => set(value, typeof state === "boolean" ? bin(state) : state), [
-    state,
-    value,
-  ]);
+  const value: Animated.Value<number> = useMemo(() => new Value(0), []);
+
+  useEffect(() => {
+    value.setValue(typeof state === "boolean" ? (state ? 1 : 0) : state)
+  }, [state]);
+
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const transition = useMemo(() => withSpringTransition(value, config), []);
   return transition;
