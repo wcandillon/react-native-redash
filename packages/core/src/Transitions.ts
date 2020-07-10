@@ -85,7 +85,7 @@ export const withSpringTransition = (
     startClock(clock),
     cond(neq(config.toValue, value), [
       set(state.finished, 0),
-      startClock(clock)
+      startClock(clock),
     ]),
     set(config.toValue, value),
     cond(
@@ -106,7 +106,7 @@ export const useTransition = (
 ) => {
   const value: Animated.Value<number> = useMemo(() => new Value(0), []);
   useEffect(() => {
-    value.setValue(typeof state === "boolean" ? (state ? 1 : 0) : state)
+    value.setValue(typeof state === "boolean" ? (state ? 1 : 0) : state);
   }, [value, state]);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const transition = useMemo(() => withTransition(value, config), []);
@@ -120,7 +120,7 @@ export const useSpringTransition = (
   const value: Animated.Value<number> = useMemo(() => new Value(0), []);
 
   useEffect(() => {
-    value.setValue(typeof state === "boolean" ? (state ? 1 : 0) : state)
+    value.setValue(typeof state === "boolean" ? (state ? 1 : 0) : state);
   }, [value, state]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
