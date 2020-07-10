@@ -2,7 +2,6 @@ import { useMemo, useEffect } from "react";
 import Animated, { Easing } from "react-native-reanimated";
 import { State } from "react-native-gesture-handler";
 
-import { bin } from "./Math";
 import { SpringConfig, TimingConfig } from "./Animations";
 
 const {
@@ -17,7 +16,6 @@ const {
   stopClock,
   timing,
   neq,
-  useCode,
   SpringUtils,
 } = Animated;
 
@@ -109,7 +107,7 @@ export const useTransition = (
   const value: Animated.Value<number> = useMemo(() => new Value(0), []);
   useEffect(() => {
     value.setValue(typeof state === "boolean" ? (state ? 1 : 0) : state)
-  }, [state]);
+  }, [value, state]);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const transition = useMemo(() => withTransition(value, config), []);
   return transition;
@@ -123,7 +121,7 @@ export const useSpringTransition = (
 
   useEffect(() => {
     value.setValue(typeof state === "boolean" ? (state ? 1 : 0) : state)
-  }, [state]);
+  }, [value, state]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const transition = useMemo(() => withSpringTransition(value, config), []);
