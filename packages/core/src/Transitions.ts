@@ -56,9 +56,6 @@ export const withTransition = (
       timing(clock, state, config)
     ),
     cond(state.finished, stopClock(clock)),
-    Animated.call([], () => {
-      console.log('ev')
-    }),
     state.position,
   ]);
 };
@@ -99,9 +96,6 @@ export const withSpringTransition = (
       spring(clock, state, config)
     ),
     cond(state.finished, stopClock(clock)),
-    Animated.call([], () => {
-      console.log('ev')
-    }),
     state.position,
   ]);
 };
