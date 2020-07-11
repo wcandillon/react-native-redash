@@ -10,8 +10,8 @@ import {
   State,
   TapGestureHandlerEventExtra,
 } from "react-native-gesture-handler";
-
 import { Platform } from "react-native";
+
 import { snapPoint } from "./Animations";
 import { vec } from "./Vectors";
 

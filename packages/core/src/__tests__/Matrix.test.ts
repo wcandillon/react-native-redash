@@ -1,3 +1,4 @@
+/* eslint-disable prefer-destructuring */
 import { decompose2d, processTransform2d } from "../Matrix3";
 import { vec } from "../Vectors";
 import {

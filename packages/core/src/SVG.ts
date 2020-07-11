@@ -2,6 +2,7 @@ import Animated from "react-native-reanimated";
 import parseSVG from "parse-svg-path";
 import absSVG from "abs-svg-path";
 import normalizeSVG from "normalize-svg-path";
+
 import { get } from "./Array";
 import { string } from "./String";
 import { cubicBezier } from "./Math";
@@ -169,7 +170,7 @@ export const interpolatePath = (
   const paths = outputRange.map((path) =>
     typeof path === "string" ? parsePath(path) : path
   );
-  const path = paths[0];
+  const [path] = paths;
   const commands = path.segments.map((_, index) => {
     const interpolatePoint = (point: BezierPoint) =>
       interpolate(value, {

@@ -1,4 +1,6 @@
+/* eslint-disable prefer-destructuring */
 import Animated from "react-native-reanimated";
+
 import { atan2 } from "./Math";
 import { Vector } from "./Vectors";
 
