@@ -33,7 +33,7 @@ const useValues: <V extends string | number | boolean>(values: V[]) => Animated.
 Creates an animation values which identity is preserved during the whole component lifecycle.
 
 ```tsx
-const [toggle, state] = useValues([0, State.UNDETERMINED]);
+const [toggle, state] = useValues(0, State.UNDETERMINED);
 ```
 
 ---
@@ -164,7 +164,7 @@ Returns a difference between the node value from the last frame and the current 
 Examples:
 
 ```tsx
-const [state, x, y] = useValues([State.UNDETERMINED, 0, 0, 0, 0]);
+const [state, x, y] = useValues(State.UNDETERMINED, 0, 0);
 const deltaX = useDiff(x);
 const deltaY = useDiff(y);
 ```
