@@ -1,5 +1,6 @@
 import Animated from "react-native-reanimated";
 import { useRef } from "react";
+
 import {
   onGestureEvent,
   panGestureHandler,
@@ -13,31 +14,38 @@ import { loop } from "./AnimationRunners";
 
 const { Clock, Value, diff, set, useCode, debug, block } = Animated;
 
-const useLazyRef = <T>(initializer: () => T) => {
-  const ref = useRef<T>();
+export const useConst = <T>(initialValue: T | (() => T)): T => {
+  const ref = useRef<{ value: T }>();
   if (ref.current === undefined) {
-    ref.current = initializer();
+    // Box the value in an object so we can tell if it's initialized even if the initializer
+    // returns/is undefined
+    ref.current = {
+      value:
+        typeof initialValue === "function"
+          ? (initialValue as Function)()
+          : initialValue,
+    };
   }
-  return ref.current;
+  return ref.current.value;
 };
 
 export const useGestureHandler = (
   nativeEvent: Parameters<typeof onGestureEvent>[0]
-) => useLazyRef(() => onGestureEvent(nativeEvent));
+) => useConst(() => onGestureEvent(nativeEvent));
 
-export const usePanGestureHandler = () => useLazyRef(() => panGestureHandler());
+export const usePanGestureHandler = () => useConst(() => panGestureHandler());
 export const useRotationGestureHandler = () =>
-  useLazyRef(() => rotationGestureHandler());
+  useConst(() => rotationGestureHandler());
 export const usePinchGestureHandler = () =>
-  useLazyRef(() => pinchGestureHandler());
-export const useTapGestureHandler = () => useLazyRef(() => tapGestureHandler());
-export const useScrollHandler = () => useLazyRef(() => scrollHandler());
+  useConst(() => pinchGestureHandler());
+export const useTapGestureHandler = () => useConst(() => tapGestureHandler());
+export const useScrollHandler = () => useConst(() => scrollHandler());
 
 type Atomic = string | number | boolean;
 
 export const useVector = (
   ...defaultValues: Parameters<typeof vec.createValue>
-) => useLazyRef(() => vec.createValue(...defaultValues));
+) => useConst(() => vec.createValue(...defaultValues));
 
 type P = Parameters<typeof vec.createValue>;
 type R = Vector<Animated.Value<number>>;
@@ -54,14 +62,14 @@ type UseVectors = {
 export const useVectors = (((
   ...defaultValues: Parameters<typeof vec.createValue>[]
 ) =>
-  useLazyRef(() =>
+  useConst(() =>
     defaultValues.map((values) => vec.createValue(...values))
   )) as unknown) as UseVectors;
 
-export const useClock = () => useLazyRef(() => new Clock());
+export const useClock = () => useConst(() => new Clock());
 
 export const useValue = <V extends Atomic>(value: V) =>
-  useLazyRef(() => new Value(value));
+  useConst(() => new Value(value));
 
 export const useLoop = (duration = 1000, boomerang = true) => {
   const progress = useValue(0);
@@ -114,10 +122,10 @@ type UseValues = {
 };
 
 export const useValues = ((<V extends Atomic>(...values: [V, ...V[]]) =>
-  useLazyRef(() => values.map((v) => new Value(v)))) as unknown) as UseValues;
+  useConst(() => values.map((v) => new Value(v)))) as unknown) as UseValues;
 
 export const useClocks = (numberOfClocks: number): Animated.Clock[] =>
-  useLazyRef(() => new Array(numberOfClocks).fill(0).map(() => new Clock()));
+  useConst(() => new Array(numberOfClocks).fill(0).map(() => new Clock()));
 
 export const useDiff = (node: Animated.Node<number>) => {
   const dDiff = useValue(0);

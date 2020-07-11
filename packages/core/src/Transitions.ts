@@ -1,8 +1,9 @@
-import { useMemo, useEffect } from "react";
+import { useEffect } from "react";
 import Animated, { Easing } from "react-native-reanimated";
 import { State } from "react-native-gesture-handler";
 
 import { SpringConfig, TimingConfig } from "./Animations";
+import { useConst } from "./Hooks";
 
 const {
   Value,
@@ -104,12 +105,11 @@ export const useTransition = (
   state: boolean | number,
   config: TimingConfig = {}
 ) => {
-  const value: Animated.Value<number> = useMemo(() => new Value(0), []);
+  const value: Animated.Value<number> = useConst(() => new Value(0));
   useEffect(() => {
     value.setValue(typeof state === "boolean" ? (state ? 1 : 0) : state);
   }, [value, state]);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const transition = useMemo(() => withTransition(value, config), []);
+  const transition = useConst(() => withTransition(value, config));
   return transition;
 };
 
@@ -117,14 +117,13 @@ export const useSpringTransition = (
   state: boolean | number,
   config: SpringConfig = defaultSpringConfig
 ) => {
-  const value: Animated.Value<number> = useMemo(() => new Value(0), []);
+  const value: Animated.Value<number> = useConst(() => new Value(0));
 
   useEffect(() => {
     value.setValue(typeof state === "boolean" ? (state ? 1 : 0) : state);
   }, [value, state]);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const transition = useMemo(() => withSpringTransition(value, config), []);
+  const transition = useConst(() => withSpringTransition(value, config));
   return transition;
 };
 

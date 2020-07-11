@@ -1,4 +1,5 @@
 import Animated, { Easing } from "react-native-reanimated";
+
 import { SpringConfig } from "./Animations";
 
 const {
