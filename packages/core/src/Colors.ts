@@ -1,5 +1,5 @@
 import Animated from "react-native-reanimated";
-import { processColor } from "react-native";
+import { processColor, ColorValue } from "react-native";
 
 import { mix } from "./Animations";
 import { clamp, fract } from "./Math";
@@ -114,7 +114,7 @@ const interpolateColorsHSV = (
   animationValue: Animated.Adaptable<number>,
   inputRange: readonly Animated.Adaptable<number>[],
   colors: number[]
-): Animated.Node<number> => {
+): Animated.Node<ColorValue> => {
   const colorsAsHSV = colors.map((c) => rgbToHsv(c));
   const h = interpolate(animationValue, {
     inputRange,
@@ -178,7 +178,7 @@ export const interpolateColor = (
   value: Animated.Adaptable<number>,
   config: ColorInterpolationConfig,
   colorSpace: "hsv" | "rgb" = "rgb"
-): Animated.Node<number> => {
+): Animated.Node<ColorValue> => {
   const { inputRange } = config;
   const outputRange = config.outputRange.map((c) =>
     typeof c === "number" ? c : processColor(c)
