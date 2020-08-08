@@ -71,10 +71,14 @@ const animate = <T extends Animation>({
 
 export interface TimingParams {
   clock?: Animated.Clock;
-  from?: Animated.Adaptable<number>;
-  to?: Animated.Adaptable<number>;
   duration?: Animated.Adaptable<number>;
   easing?: Animated.EasingFunction;
+  finished?: Animated.Value<number>;
+  frameTime?: Animated.Value<number>;
+  from?: Animated.Adaptable<number>;
+  position?: Animated.Value<number>;
+  time?: Animated.Value<number>;
+  to?: Animated.Adaptable<number>;
 }
 
 export const timing = (params: TimingParams) => {
@@ -88,10 +92,10 @@ export const timing = (params: TimingParams) => {
   };
 
   const state: Animated.TimingState = {
-    finished: new Value(0),
-    position: new Value(0),
-    time: new Value(0),
-    frameTime: new Value(0),
+    finished: params.finished||new Value(0),
+    position: params.position||new Value(0),
+    time: params.time||new Value(0),
+    frameTime: params.frameTime||new Value(0),
   };
 
   const config = {
