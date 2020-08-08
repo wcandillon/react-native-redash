@@ -92,10 +92,10 @@ export const timing = (params: TimingParams) => {
   };
 
   const state: Animated.TimingState = {
-    finished: params.finished||new Value(0),
-    position: params.position||new Value(0),
-    time: params.time||new Value(0),
-    frameTime: params.frameTime||new Value(0),
+    finished: params.finished || new Value(0),
+    position: params.position || new Value(0),
+    time: params.time || new Value(0),
+    frameTime: params.frameTime || new Value(0),
   };
 
   const config = {
