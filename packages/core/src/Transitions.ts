@@ -22,11 +22,8 @@ const {
 
 const defaultSpringConfig = SpringUtils.makeDefaultConfig();
 
-export const withTransition = (
-  value: Animated.Node<number>,
-  timingConfig: TimingConfig = {},
-  gestureState: Animated.Value<State> = new Value(State.UNDETERMINED)
-) => {
+export const withTransition = (value: Animated.Node<number>, timingConfig: TimingConfig = {}) => {
+  const init = new Value(0);
   const clock = new Clock();
   const state = {
     finished: new Value(0),
@@ -36,12 +33,12 @@ export const withTransition = (
   };
   const config = {
     toValue: new Value(0),
-    duration: 250,
+    duration: 150,
     easing: Easing.linear,
     ...timingConfig,
   };
   return block([
-    startClock(clock),
+    cond(not(init), [set(init, 1), set(state.position, value)]),
     cond(neq(config.toValue, value), [
       set(state.frameTime, 0),
       set(state.time, 0),
@@ -49,11 +46,7 @@ export const withTransition = (
       set(config.toValue, value),
       startClock(clock),
     ]),
-    cond(
-      eq(gestureState, State.ACTIVE),
-      [set(state.position, value)],
-      timing(clock, state, config)
-    ),
+    timing(clock, state, config),
     cond(state.finished, stopClock(clock)),
     state.position,
   ]);
@@ -63,8 +56,8 @@ export const withSpringTransition = (
   value: Animated.Node<number>,
   springConfig: SpringConfig = defaultSpringConfig,
   velocity: Animated.Adaptable<number> = 0,
-  gestureState: Animated.Value<State> = new Value(State.UNDETERMINED)
 ) => {
+  const init = new Value(0);
   const clock = new Clock();
   const state = {
     finished: new Value(0),
@@ -83,17 +76,15 @@ export const withSpringTransition = (
     ...springConfig,
   };
   return block([
-    startClock(clock),
+    cond(not(init), [set(init, 1), set(state.position, value)]),
     cond(neq(config.toValue, value), [
+      set(state.velocity, velocity),
+      set(state.time, 0),
       set(state.finished, 0),
+      set(config.toValue, value),
       startClock(clock),
     ]),
-    set(config.toValue, value),
-    cond(
-      eq(gestureState, State.ACTIVE),
-      [set(state.velocity, velocity), set(state.position, value)],
-      spring(clock, state, config)
-    ),
+    spring(clock, state, config),
     cond(state.finished, stopClock(clock)),
     state.position,
   ]);
