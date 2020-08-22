@@ -71,6 +71,26 @@ export const useClock = () => useConst(() => new Clock());
 export const useValue = <V extends Atomic>(value: V) =>
   useConst(() => new Value(value));
 
+export const usePhysicsState = () => ({
+  time: useValue(0),
+  position: useValue(0),
+  velocity: useValue(0),
+  finished: useValue(0),
+});
+
+export const useSpringConfig = (
+  config: Partial<Omit<Animated.SpringConfig, "toValue">>
+) => ({
+  toValue: useValue(0),
+  damping: 15,
+  mass: 1,
+  stiffness: 150,
+  overshootClamping: false,
+  restSpeedThreshold: 1,
+  restDisplacementThreshold: 1,
+  ...config,
+});
+
 export const useLoop = (duration = 1000, boomerang = true) => {
   const progress = useValue(0);
   useCode(() => set(progress, loop({ duration, boomerang })), [progress]);
