@@ -1,6 +1,5 @@
 import { useEffect } from "react";
-import Animated, { Easing } from "react-native-reanimated";
-import { State } from "react-native-gesture-handler";
+import Animated, { Easing, not } from "react-native-reanimated";
 
 import { SpringConfig, TimingConfig } from "./Animations";
 import { useConst } from "./Hooks";
@@ -8,7 +7,6 @@ import { useConst } from "./Hooks";
 const {
   Value,
   cond,
-  eq,
   block,
   set,
   Clock,
@@ -22,7 +20,10 @@ const {
 
 const defaultSpringConfig = SpringUtils.makeDefaultConfig();
 
-export const withTransition = (value: Animated.Node<number>, timingConfig: TimingConfig = {}) => {
+export const withTransition = (
+  value: Animated.Node<number>,
+  timingConfig: TimingConfig = {}
+) => {
   const init = new Value(0);
   const clock = new Clock();
   const state = {
@@ -55,7 +56,7 @@ export const withTransition = (value: Animated.Node<number>, timingConfig: Timin
 export const withSpringTransition = (
   value: Animated.Node<number>,
   springConfig: SpringConfig = defaultSpringConfig,
-  velocity: Animated.Adaptable<number> = 0,
+  velocity: Animated.Adaptable<number> = 0
 ) => {
   const init = new Value(0);
   const clock = new Clock();
