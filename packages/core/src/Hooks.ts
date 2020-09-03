@@ -160,3 +160,52 @@ export const useDebug = (values: { [key: string]: Animated.Node<number> }) => {
     values,
   ]);
 };
+
+/**
+ * Any change in the value that occurred will be applied to the same Animated.Value returned
+ * @param value
+ * @returns Is mutable Animated.Value
+ */
+export const useMutableValue = <V extends Atomic>(
+  value: V
+): Animated.Value<V> => {
+  const valueRef = useRef(value);
+  const animValue = useConst(() => new Value(value));
+
+  useCode(() => {
+    if (valueRef.current === value) {
+      return false;
+    }
+    valueRef.current = value;
+
+    return set(animValue, value) as Animated.Node<number>;
+  }, [value]);
+
+  return animValue;
+};
+
+/**
+ * Any change in the values that occurred will be applied to the same Animated.Value returned
+ * @param values
+ * @returns Is array of mutable Animated.Value
+ */
+export const useMutableValues = (<V extends Atomic>(
+  ...values: [V, ...V[]]
+): unknown => {
+  const valueRef = useRef(values);
+  const animValues = useConst(() => values.map((v) => new Value(v)));
+
+  useCode(() => {
+    if (
+      valueRef.current.length === values.length &&
+      valueRef.current.findIndex((v, i) => v !== values[i]) === -1
+    ) {
+      return false;
+    }
+    valueRef.current = values;
+
+    return block(values.map((v: Atomic, i: number) => set(animValues[i], v)));
+  }, values);
+
+  return animValues;
+}) as UseValues;
