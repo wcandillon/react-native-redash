@@ -74,15 +74,19 @@ export const withScaleOffset = (
   );
 
 export const withOffset = (
-  value: Animated.Node<number>,
+  value: Animated.Value<number>,
   state: Animated.Node<State>,
   offset: Animated.Value<number> = new Value(0)
 ) =>
-  cond(
-    eq(state, State.END),
-    [set(offset, add(offset, value)), offset],
-    add(offset, value)
-  );
+  block([
+    onChange(state, [
+      cond(eq(state, State.END), [
+        set(offset, add(offset, value)),
+        set(value, 0),
+      ]),
+    ]),
+    add(offset, value),
+  ]);
 
 interface PrivateSpringConfig extends Animated.SpringConfig {
   toValue: Animated.Value<number>;
