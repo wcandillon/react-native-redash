@@ -130,28 +130,26 @@ export const decay = (params: DecayParams) => {
     from: 0,
     ...params,
   };
-
   const state: Animated.DecayState = {
     finished: new Value(0),
     position: new Value(0),
     time: new Value(0),
     velocity: new Value(0),
   };
-
   const config: Animated.DecayConfig = {
     deceleration,
   };
-
   return block([
-    cond(not(clockRunning(clock)), [set(state.velocity, velocity)]),
-    animate<DecayAnimation>({
-      clock,
-      fn: reDecay,
-      state,
-      config,
-      from,
-    }),
-  ] as ReadonlyArray<Animated.Node<number>>);
+    cond(not(clockRunning(clock)), [
+      set(state.finished, 0),
+      set(state.position, from),
+      set(state.velocity, velocity),
+      set(state.time, 0),
+      startClock(clock),
+    ]),
+    reDecay(clock, state, config),
+    state.position,
+  ]);
 };
 
 export interface SpringParams {
