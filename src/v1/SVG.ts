@@ -2,6 +2,7 @@ import Animated from "react-native-reanimated";
 import parseSVG from "parse-svg-path";
 import absSVG from "abs-svg-path";
 import normalizeSVG from "normalize-svg-path";
+import interpolateNode from "react-native-reanimated/src/derived/interpolate";
 
 import { get } from "./Array";
 import { string } from "./String";
@@ -15,7 +16,6 @@ const {
   greaterOrEq,
   and,
   cond,
-  interpolate,
   multiply,
   lessThan,
   concat,
@@ -153,7 +153,7 @@ export const getPointAtLength = (
   const p1y = get(path.p1y, index);
   const p2y = get(path.p2y, index);
   const p3y = get(path.p3y, index);
-  const t = interpolate(length, {
+  const t = interpolateNode(length, {
     inputRange: [start, end],
     outputRange: [0, 1],
   });
@@ -173,7 +173,7 @@ export const interpolatePath = (
   const [path] = paths;
   const commands = path.segments.map((_, index) => {
     const interpolatePoint = (point: BezierPoint) =>
-      interpolate(value, {
+      interpolateNode(value, {
         inputRange,
         outputRange: paths.map((p) => p[point][index]),
         ...config,

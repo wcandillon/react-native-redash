@@ -1,6 +1,6 @@
 /* eslint-disable no-nested-ternary */
 import { useEffect } from "react";
-import Animated, { Easing, not } from "react-native-reanimated";
+import Animated, { not, add } from "react-native-reanimated";
 
 import { SpringConfig, TimingConfig } from "./Animations";
 import { useConst } from "./Hooks";
@@ -36,7 +36,7 @@ export const withTransition = (
   const config = {
     toValue: new Value(0),
     duration: 150,
-    easing: Easing.linear,
+    easing: (v: Animated.Adaptable<number>) => add(v, 0),
     ...timingConfig,
   };
   return block([
