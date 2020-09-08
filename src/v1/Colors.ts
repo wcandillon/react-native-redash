@@ -9,7 +9,7 @@ const {
   multiply,
   abs,
   round,
-  interpolate,
+  interpolateNode,
   sub,
   proc,
   color,
@@ -116,17 +116,17 @@ const interpolateColorsHSV = (
   colors: number[]
 ): Animated.Node<number> => {
   const colorsAsHSV = colors.map((c) => rgbToHsv(c));
-  const h = interpolate(animationValue, {
+  const h = interpolateNode(animationValue, {
     inputRange,
     outputRange: colorsAsHSV.map((c) => c.h),
     extrapolate: Extrapolate.CLAMP,
   });
-  const s = interpolate(animationValue, {
+  const s = interpolateNode(animationValue, {
     inputRange,
     outputRange: colorsAsHSV.map((c) => c.s),
     extrapolate: Extrapolate.CLAMP,
   });
-  const v = interpolate(animationValue, {
+  const v = interpolateNode(animationValue, {
     inputRange,
     outputRange: colorsAsHSV.map((c) => c.v),
     extrapolate: Extrapolate.CLAMP,
@@ -140,27 +140,27 @@ const interpolateColorsRGB = (
   colors: number[]
 ) => {
   const r = round(
-    interpolate(animationValue, {
+    interpolateNode(animationValue, {
       inputRange,
       outputRange: colors.map((c) => red(c)),
       extrapolate: Extrapolate.CLAMP,
     })
   );
   const g = round(
-    interpolate(animationValue, {
+    interpolateNode(animationValue, {
       inputRange,
       outputRange: colors.map((c) => green(c)),
       extrapolate: Extrapolate.CLAMP,
     })
   );
   const b = round(
-    interpolate(animationValue, {
+    interpolateNode(animationValue, {
       inputRange,
       outputRange: colors.map((c) => blue(c)),
       extrapolate: Extrapolate.CLAMP,
     })
   );
-  const a = interpolate(animationValue, {
+  const a = interpolateNode(animationValue, {
     inputRange,
     outputRange: colors.map((c) => opacity(c)),
     extrapolate: Extrapolate.CLAMP,

@@ -98,7 +98,7 @@ const Reanimated = {
     }
     return new AnimatedValue(color);
   },
-  interpolate: (
+  interpolateNode: (
     v: Animated.Value<number>,
     { inputRange, outputRange }: InterpolationConfig
   ) => {
