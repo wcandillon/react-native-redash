@@ -1,6 +1,6 @@
 {
   "name": "react-native-redash",
-  "version": "15.0.1-rc",
+  "version": "15.0.3-rc",
   "description": "Utility library for React Native Reanimated",
   "sideEffects": false,
   "main": "lib/module/index.js",
