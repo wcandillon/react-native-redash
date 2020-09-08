@@ -13,4 +13,4 @@ yarn add react-native-redash
 
 ## Documentation
 
-[https://wcandillon.github.io/react-native-redash](https://wcandillon.github.io/react-native-redash)
+[https://wcandillon.github.io/react-native-redash-v1-docs/](https://wcandillon.github.io/react-native-redash-v1-docs/)
