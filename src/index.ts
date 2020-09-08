@@ -4,4 +4,3 @@ export * from "./Transitions";
 export * from "./Math";
 export * from "./Vector";
 export { default as ReText } from "./ReText";
-import "./v1";
