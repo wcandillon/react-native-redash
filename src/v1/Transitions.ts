@@ -1,6 +1,6 @@
 /* eslint-disable no-nested-ternary */
 import { useEffect } from "react";
-import Animated, { not } from "react-native-reanimated";
+import Animated, { not, add } from "react-native-reanimated";
 
 import { SpringConfig, TimingConfig } from "./Animations";
 import { useConst } from "./Hooks";
@@ -36,6 +36,7 @@ export const withTransition = (
   const config = {
     toValue: new Value(0),
     duration: 150,
+    easing: (v: Animated.Adaptable<number>) => add(v, 0),
     ...timingConfig,
   };
   return block([
@@ -47,8 +48,7 @@ export const withTransition = (
       set(config.toValue, value),
       startClock(clock),
     ]),
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    timing(clock, state, config as any),
+    timing(clock, state, config),
     cond(state.finished, stopClock(clock)),
     state.position,
   ]);

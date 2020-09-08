@@ -1,9 +1,9 @@
 import Animated from "react-native-reanimated";
 import { processColor } from "react-native";
+import interpolateNode from "react-native-reanimated/src/derived/interpolate";
 
 import { mix } from "./Animations";
 import { clamp, fract } from "./Math";
-import { interpolateNode } from "./interpolate";
 
 const {
   add,

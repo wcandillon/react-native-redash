@@ -1,4 +1,4 @@
-import Animated from "react-native-reanimated";
+import Animated, { add } from "react-native-reanimated";
 
 import { SpringConfig } from "./Animations";
 
@@ -74,8 +74,7 @@ export interface TimingParams {
   from?: Animated.Adaptable<number>;
   to?: Animated.Adaptable<number>;
   duration?: Animated.Adaptable<number>;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  easing?: any;
+  easing?: (v: Animated.Adaptable<number>) => Animated.Node<number>;
 }
 
 export const timing = (params: TimingParams) => {
@@ -84,6 +83,7 @@ export const timing = (params: TimingParams) => {
     duration: 250,
     from: 0,
     to: 1,
+    easing: (v: Animated.Adaptable<number>) => add(v, 0),
     ...params,
   };
 
@@ -208,8 +208,7 @@ export const delay = (node: Animated.Node<number>, duration: number) => {
 
 export interface LoopProps {
   clock?: Animated.Clock;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  easing?: any;
+  easing?: (v: Animated.Adaptable<number>) => Animated.Node<number>;
   duration?: number;
   boomerang?: boolean;
   autoStart?: boolean;
@@ -221,6 +220,7 @@ export const loop = (loopConfig: LoopProps) => {
     duration: 250,
     boomerang: false,
     autoStart: true,
+    easing: (v: Animated.Adaptable<number>) => add(v, 0),
     ...loopConfig,
   };
   const state = {
