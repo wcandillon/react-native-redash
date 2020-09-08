@@ -3,17 +3,16 @@ import { processColor } from "react-native";
 
 import { mix } from "./Animations";
 import { clamp, fract } from "./Math";
+import { interpolateNode } from "./interpolate";
 
 const {
   add,
   multiply,
   abs,
   round,
-  interpolateNode,
   sub,
   proc,
   color,
-  Extrapolate,
   greaterThan,
   cond,
 } = Animated;
@@ -119,17 +118,14 @@ const interpolateColorsHSV = (
   const h = interpolateNode(animationValue, {
     inputRange,
     outputRange: colorsAsHSV.map((c) => c.h),
-    extrapolate: Extrapolate.CLAMP,
   });
   const s = interpolateNode(animationValue, {
     inputRange,
     outputRange: colorsAsHSV.map((c) => c.s),
-    extrapolate: Extrapolate.CLAMP,
   });
   const v = interpolateNode(animationValue, {
     inputRange,
     outputRange: colorsAsHSV.map((c) => c.v),
-    extrapolate: Extrapolate.CLAMP,
   });
   return hsv2color(h, s, v);
 };
@@ -143,27 +139,23 @@ const interpolateColorsRGB = (
     interpolateNode(animationValue, {
       inputRange,
       outputRange: colors.map((c) => red(c)),
-      extrapolate: Extrapolate.CLAMP,
     })
   );
   const g = round(
     interpolateNode(animationValue, {
       inputRange,
       outputRange: colors.map((c) => green(c)),
-      extrapolate: Extrapolate.CLAMP,
     })
   );
   const b = round(
     interpolateNode(animationValue, {
       inputRange,
       outputRange: colors.map((c) => blue(c)),
-      extrapolate: Extrapolate.CLAMP,
     })
   );
   const a = interpolateNode(animationValue, {
     inputRange,
     outputRange: colors.map((c) => opacity(c)),
-    extrapolate: Extrapolate.CLAMP,
   });
 
   return color(r, g, b, a);
