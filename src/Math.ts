@@ -29,6 +29,7 @@ export const between = (
   upperBound: number,
   inclusive = true
 ) => {
+  "worklet";
   if (inclusive) {
     return value >= lowerBound && value <= upperBound;
   }
