@@ -5,8 +5,8 @@ import { TextInput } from "react-native-gesture-handler";
 
 const styles = StyleSheet.create({
   baseStyle: {
-    color: "black" 
-  }
+    color: "black",
+  },
 });
 
 interface TextProps {
@@ -27,7 +27,7 @@ const ReText = (props: TextProps) => {
       underlineColorAndroid="transparent"
       editable={false}
       value={text.value}
-      style={[baseStyle, style]}
+      style={[styles.baseStyle, style]}
       {...{ animatedProps }}
     />
   );
