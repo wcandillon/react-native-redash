@@ -174,15 +174,15 @@ export const interpolatePath = <T extends number[]>(
 
 export const move = (x: number, y: number) => {
   "worklet";
-  return { type: SVGCommand.MOVE, x, y };
+  return { type: SVGCommand.MOVE as const, x, y };
 };
 
 export const curve = (c: Omit<Curve, "type">) => {
   "worklet";
-  return { type: SVGCommand.CURVE, c1: c.c1, c2: c.c2, to: c.to };
+  return { type: SVGCommand.CURVE as const, c1: c.c1, c2: c.c2, to: c.to };
 };
 
 export const close = () => {
   "worklet";
-  return { type: SVGCommand.CLOSE };
+  return { type: SVGCommand.CLOSE as const };
 };
