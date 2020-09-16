@@ -1,7 +1,13 @@
 import * as React from "react";
-import { TextStyle, TextProps as RNTextProps } from "react-native";
+import { TextStyle, TextProps as RNTextProps, StyleSheet } from "react-native";
 import Animated, { useAnimatedProps } from "react-native-reanimated";
 import { TextInput } from "react-native-gesture-handler";
+
+const styles = StyleSheet.create({
+  baseStyle: {
+    color: "black",
+  },
+});
 
 interface TextProps {
   text: Animated.SharedValue<string>;
@@ -21,7 +27,8 @@ const ReText = (props: TextProps) => {
       underlineColorAndroid="transparent"
       editable={false}
       value={text.value}
-      {...{ style, animatedProps }}
+      style={[styles.baseStyle, style]}
+      {...{ animatedProps }}
     />
   );
 };
