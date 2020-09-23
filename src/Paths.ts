@@ -3,7 +3,7 @@ import parseSVG from "parse-svg-path";
 import absSVG from "abs-svg-path";
 import normalizeSVG from "normalize-svg-path";
 
-import { Vector } from "react-native-redash";
+import { Vector } from "./Vectors";
 
 type SVGCloseCommand = ["Z"];
 type SVGMoveCommand = ["M", number, number];
@@ -206,7 +206,7 @@ export const interpolatePath = (
 export const mixPath = (value: number, paths: [SVGSegment[], SVGSegment[]]) => {
   "worklet";
   return interpolatePath(value, [0, 1], paths);
-}
+};
 
 export const move = (x: number, y: number) => {
   "worklet";
