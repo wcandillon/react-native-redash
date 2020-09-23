@@ -203,9 +203,9 @@ export const interpolatePath = (
   return serialize(path);
 };
 
-export const mixPath = (value: number, paths: [SVGSegment[], SVGSegment[]]) => {
+export const mixPath = (value: number, p1: SVGSegment[], p2: SVGSegment[]) => {
   "worklet";
-  return interpolatePath(value, [0, 1], paths);
+  return interpolatePath(value, [0, 1], [p1, p2]);
 };
 
 export const move = (x: number, y: number) => {
