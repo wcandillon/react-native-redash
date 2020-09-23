@@ -152,8 +152,9 @@ export const cubicBezierYForX = (
   const pb = 3 * a.x - 6 * b.x + 3 * c.x;
   const pc = -3 * a.x + 3 * b.x;
   const pd = a.x - x;
-  const [t] = solveCubic(pa, pb, pc, pd).filter(
+  // eslint-disable-next-line prefer-destructuring
+  const t = solveCubic(pa, pb, pc, pd).filter(
     (root) => root >= 0 && root <= 1
-  );
+  )[0];
   return cubicBezier(t, a.y, b.y, c.y, d.y);
 };
