@@ -1,6 +1,16 @@
 import { interpolate } from "react-native-reanimated";
+import parseSVG from "parse-svg-path";
+import absSVG from "abs-svg-path";
+import normalizeSVG from "normalize-svg-path";
 
 import { Vector } from "./Vectors";
+
+type SVGCloseCommand = ["Z"];
+type SVGMoveCommand = ["M", number, number];
+type SVGCurveCommand = ["C", number, number, number, number, number, number];
+type SVGNormalizedCommands = [
+  SVGMoveCommand | SVGCurveCommand | SVGCloseCommand
+];
 
 export enum SVGCommand {
   MOVE,
@@ -78,17 +88,38 @@ export const serialize = (path: SVGSegment[]) => {
     .reduce((acc, c) => acc + c);
 };
 
-interface PathInterpolation<T extends number[]> {
-  inputRange: T;
-  outputRange: { [K in keyof T]: SVGSegment[] };
-}
+export const parse = (d: string): SVGSegment[] => {
+  const segments: SVGNormalizedCommands = normalizeSVG(absSVG(parseSVG(d)));
+  return segments.map((segment) => {
+    if (segment[0] === "M") {
+      return move(segment[1], segment[2]);
+    } else if (segment[0] === "Z") {
+      return close();
+    } else {
+      return curve({
+        c1: {
+          x: segment[1],
+          y: segment[2],
+        },
+        c2: {
+          x: segment[3],
+          y: segment[4],
+        },
+        to: {
+          x: segment[5],
+          y: segment[6],
+        },
+      });
+    }
+  });
+};
 
-export const interpolatePath = <T extends number[]>(
+export const interpolatePath = (
   value: number,
-  config: PathInterpolation<T>
+  inputRange: number[],
+  outputRange: SVGSegment[][]
 ) => {
   "worklet";
-  const { inputRange, outputRange } = config;
   const path = outputRange[0].map((segment, index) => {
     if (isMove(segment)) {
       const points = outputRange.map((p) => {
@@ -170,6 +201,11 @@ export const interpolatePath = <T extends number[]>(
     return segment;
   });
   return serialize(path);
+};
+
+export const mixPath = (value: number, paths: [SVGSegment[], SVGSegment[]]) => {
+  "worklet";
+  return interpolatePath(value, [0, 1], paths);
 };
 
 export const move = (x: number, y: number) => {

@@ -40,7 +40,7 @@ export const blue = (c: number) => {
   return c & 255;
 };
 
-export const color = (r: number, g: number, b: number, alpha = 1) => {
+export const color = (r: number, g: number, b: number, alpha = 1): Color => {
   "worklet";
   if (Platform.OS === "web" || !_WORKLET) {
     return `rgba(${r}, ${g}, ${b}, ${alpha})`;
@@ -86,7 +86,7 @@ export const hsv2rgb = (h: number, s: number, v: number) => {
   };
 };
 
-export const hsv2color = (h: number, s: number, v: number) => {
+export const hsv2color = (h: number, s: number, v: number): Color => {
   "worklet";
   const { r, g, b } = hsv2rgb(h, s, v);
   return color(r, g, b);
@@ -203,7 +203,7 @@ export const interpolateColor = (
   inputRange: number[],
   rawOutputRange: Color[],
   colorSpace: ColorSpace = ColorSpace.RGB
-) => {
+): Color => {
   "worklet";
   const outputRange = rawOutputRange.map((c) =>
     typeof c === "number" ? c : processColor(c)
@@ -220,7 +220,7 @@ export const mixColor = (
   color1: Color,
   color2: Color,
   colorSpace: ColorSpace = ColorSpace.RGB
-) => {
+): Color => {
   "worklet";
   return interpolateColor(value, [0, 1], [color1, color2], colorSpace);
 };

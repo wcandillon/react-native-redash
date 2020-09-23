@@ -19,7 +19,8 @@ const {
   cond,
 } = Animated;
 
-type Color = Animated.Adaptable<string> | Animated.Adaptable<number>;
+// type Color = Animated.Adaptable<string> | Animated.Adaptable<number>;
+type StaticColor = string | number;
 
 export const opacity = (c: number) => ((c >> 24) & 255) / 255;
 export const red = (c: number) => (c >> 16) & 255;
@@ -172,7 +173,7 @@ const interpolateColorsRGB = (
 
 interface ColorInterpolationConfig {
   inputRange: readonly Animated.Adaptable<number>[];
-  outputRange: Color[];
+  outputRange: StaticColor[];
 }
 
 export const interpolateColor = (
@@ -182,7 +183,7 @@ export const interpolateColor = (
 ): Animated.Node<number> => {
   const { inputRange } = config;
   const outputRange = config.outputRange.map((c) =>
-    typeof c === "number" ? c : processColor(c)
+    typeof c === "number" ? c : (processColor(c) as number)
   );
   if (colorSpace === "hsv") {
     return interpolateColorsHSV(value, inputRange, outputRange);
@@ -192,8 +193,8 @@ export const interpolateColor = (
 
 export const mixColor = (
   value: Animated.Adaptable<number>,
-  color1: Color,
-  color2: Color,
+  color1: StaticColor,
+  color2: StaticColor,
   colorSpace: "hsv" | "rgb" = "rgb"
 ) =>
   interpolateColor(
