@@ -8,7 +8,9 @@ import {
   between,
   toRad,
   toDeg,
+  cubicBezierYForX,
 } from "../Math";
+import { vec } from "../Vectors";
 
 test("bin()", () => {
   expect(bin(true)).toBe(1);
@@ -57,4 +59,24 @@ test("toRad()", () => {
   expect(toRad(180)).toBe(Math.PI);
   expect(toDeg(Math.PI)).toBe(180);
   expect(toDeg(Math.PI / 4)).toBe(45);
+});
+
+test("cubicBezierYForX()", () => {
+  const x = 198;
+  const y = 94;
+  const a = vec.create(20, 250);
+  const b = vec.create(30, 20);
+  const c = vec.create(203, 221);
+  const d = vec.create(220, 20);
+  expect(Math.round(cubicBezierYForX(x, a, b, c, d))).toBe(y);
+});
+
+test("cubicBezierYForX2()", () => {
+  const x = 116;
+  const y = 139;
+  const a = vec.create(59, 218);
+  const b = vec.create(131, 39);
+  const c = vec.create(204, 223);
+  const d = vec.create(227, 89);
+  expect(Math.round(cubicBezierYForX(x, a, b, c, d))).toBe(y);
 });
