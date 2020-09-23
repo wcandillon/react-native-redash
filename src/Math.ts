@@ -76,7 +76,7 @@ const cuberoot = (x: number) => {
   return x < 0 ? -y : y;
 };
 
-export const solveCubic = (a: number, b: number, c: number, d: number) => {
+const solveCubic = (a: number, b: number, c: number, d: number) => {
   "worklet";
   if (Math.abs(a) < 1e-8) {
     // Quadratic case, ax^2+bx+c=0

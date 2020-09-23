@@ -8,7 +8,6 @@ import {
   between,
   toRad,
   toDeg,
-  solveCubic,
   cubicBezierYForX,
 } from "../Math";
 import { vec } from "../Vectors";
@@ -62,24 +61,6 @@ test("toRad()", () => {
   expect(toDeg(Math.PI / 4)).toBe(45);
 });
 
-test("solveCubic()", () => {
-  const x = 198;
-  const y = 94;
-  const a = vec.create(20, 250);
-  const b = vec.create(30, 20);
-  const c = vec.create(203, 221);
-  const d = vec.create(220, 20);
-  const pa = -a.x + 3 * b.x - 3 * c.x + d.x;
-  const pb = 3 * a.x - 6 * b.x + 3 * c.x;
-  const pc = -3 * a.x + 3 * b.x;
-  const pd = a.x - x;
-  const [t] = solveCubic(pa, pb, pc, pd).filter(
-    (root) => root >= 0 && root <= 1
-  );
-  expect(round(t, 2)).toBe(0.82);
-  expect(Math.round(cubicBezier(t, a.y, b.y, c.y, d.y))).toBe(y);
-});
-
 test("cubicBezierYForX()", () => {
   const x = 198;
   const y = 94;
@@ -87,5 +68,15 @@ test("cubicBezierYForX()", () => {
   const b = vec.create(30, 20);
   const c = vec.create(203, 221);
   const d = vec.create(220, 20);
+  expect(Math.round(cubicBezierYForX(x, a, b, c, d))).toBe(y);
+});
+
+test("cubicBezierYForX2()", () => {
+  const x = 116;
+  const y = 139;
+  const a = vec.create(59, 218);
+  const b = vec.create(131, 39);
+  const c = vec.create(204, 223);
+  const d = vec.create(227, 89);
   expect(Math.round(cubicBezierYForX(x, a, b, c, d))).toBe(y);
 });
