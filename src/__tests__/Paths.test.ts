@@ -22,5 +22,5 @@ test("getYForX2()", () => {
   const p1 = parse(d);
   expect(getYForX(p1, 358.7)).toBe(42.927607556166095);
   expect(getYForX(p1, 358.8)).toBe(42.90651208682783);
-  expect(getYForX(p1, 359)).toBe(42.87906543969966);
+  expect(getYForX(p1, 359)).toBe(42.87906473089976);
 });
