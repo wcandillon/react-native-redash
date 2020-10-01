@@ -1,5 +1,9 @@
 import { Vector } from "./Vectors";
 
+/**
+ * @summary Convert a boolean value into a number.
+ * This can be useful in reanimated since 0 and 1 are used for conditional statements.
+ */
 export const bin = (value: boolean): 0 | 1 => {
   "worklet";
   return value ? 1 : 0;
@@ -15,16 +19,25 @@ export const lerp = (x: number, y: number, value: number) => {
   return (1 - value) * x + value * y;
 };
 
+/**
+ * @summary Transforms an angle from radians to degrees.
+ */
 export const toDeg = (rad: number) => {
   "worklet";
   return (rad * 180) / Math.PI;
 };
 
+/**
+ * @summary Transforms an angle from degrees to radians.
+ */
 export const toRad = (deg: number) => {
   "worklet";
   return (deg * Math.PI) / 180;
 };
 
+/**
+ * @summary Returns true if node is within lowerBound and upperBound.
+ */
 export const between = (
   value: number,
   lowerBound: number,
@@ -38,6 +51,13 @@ export const between = (
   return value > lowerBound && value < upperBound;
 };
 
+/**
+ *  @summary Clamps a node with a lower and upper bound.
+ *  @example
+    clamp(-1, 0, 100); // 0
+    clamp(1, 0, 100); // 1
+    clamp(101, 0, 100); // 100
+  */
 export const clamp = (
   value: number,
   lowerBound: number,
@@ -47,6 +67,11 @@ export const clamp = (
   return Math.min(Math.max(lowerBound, value), upperBound);
 };
 
+/**
+ * @description Returns the coordinate of a cubic bezier curve. t is the length of the curve from 0 to 1.
+ * cubicBezier(0, p0, p1, p2, p3) equals p0 and cubicBezier(1, p0, p1, p2, p3) equals p3.
+ * p0 and p3 are respectively the starting and ending point of the curve. p1 and p2 are the control points.
+ */
 export const cubicBezier = (
   t: number,
   from: number,
@@ -63,6 +88,9 @@ export const cubicBezier = (
   return a + b + c + d;
 };
 
+/**
+ * @summary Computes animation node rounded to precision.
+ */
 export const round = (value: number, precision = 0) => {
   "worklet";
   const p = Math.pow(10, precision);
@@ -140,6 +168,17 @@ const solveCubic = (a: number, b: number, c: number, d: number) => {
   return roots;
 };
 
+/**
+ *  @summary Given a cubic Bèzier curve, return the y value for x.
+ *  @example
+    const x = 116;
+    const from = vec.create(59, 218);
+    const c1 = vec.create(131, 39);
+    const c2 = vec.create(204, 223);
+    const to = vec.create(227, 89);
+    // y= 139
+    const y = cubicBezierYForX(x, from, c1, c2, to)));
+  */
 export const cubicBezierYForX = (
   x: number,
   a: Vector,
