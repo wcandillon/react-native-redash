@@ -1,4 +1,4 @@
-import { Extrapolate, interpolate } from "react-native-reanimated";
+import Animated, { interpolate } from "react-native-reanimated";
 import parseSVG from "parse-svg-path";
 import absSVG from "abs-svg-path";
 import normalizeSVG from "normalize-svg-path";
@@ -127,7 +127,7 @@ export const interpolatePath = (
   value: number,
   inputRange: number[],
   outputRange: Path[],
-  extrapolate = Extrapolate.CLAMP
+  extrapolate = Animated.Extrapolate.CLAMP
 ) => {
   "worklet";
   const path = outputRange[0].map((segment, index) => {
@@ -225,7 +225,7 @@ export const mixPath = (
   value: number,
   p1: Path,
   p2: Path,
-  extrapolate = Extrapolate.CLAMP
+  extrapolate = Animated.Extrapolate.CLAMP
 ) => {
   "worklet";
   return interpolatePath(value, [0, 1], [p1, p2], extrapolate);
