@@ -1,4 +1,4 @@
-import { interpolate } from "react-native-reanimated";
+import { Extrapolate, interpolate } from "react-native-reanimated";
 import parseSVG from "parse-svg-path";
 import absSVG from "abs-svg-path";
 import normalizeSVG from "normalize-svg-path";
@@ -126,7 +126,8 @@ export const parse = (d: string): Path => {
 export const interpolatePath = (
   value: number,
   inputRange: number[],
-  outputRange: Path[]
+  outputRange: Path[],
+  extrapolate = Extrapolate.CLAMP
 ) => {
   "worklet";
   const path = outputRange[0].map((segment, index) => {
@@ -146,12 +147,14 @@ export const interpolatePath = (
         x: interpolate(
           value,
           inputRange,
-          points.map((p) => p.x)
+          points.map((p) => p.x),
+          extrapolate
         ),
         y: interpolate(
           value,
           inputRange,
-          points.map((p) => p.y)
+          points.map((p) => p.y),
+          extrapolate
         ),
       } as Move;
     }
@@ -173,36 +176,42 @@ export const interpolatePath = (
           x: interpolate(
             value,
             inputRange,
-            curves.map((c) => c.to.x)
+            curves.map((c) => c.to.x),
+            extrapolate
           ),
           y: interpolate(
             value,
             inputRange,
-            curves.map((c) => c.to.y)
+            curves.map((c) => c.to.y),
+            extrapolate
           ),
         },
         c1: {
           x: interpolate(
             value,
             inputRange,
-            curves.map((c) => c.c1.x)
+            curves.map((c) => c.c1.x),
+            extrapolate
           ),
           y: interpolate(
             value,
             inputRange,
-            curves.map((c) => c.c1.y)
+            curves.map((c) => c.c1.y),
+            extrapolate
           ),
         },
         c2: {
           x: interpolate(
             value,
             inputRange,
-            curves.map((c) => c.c2.x)
+            curves.map((c) => c.c2.x),
+            extrapolate
           ),
           y: interpolate(
             value,
             inputRange,
-            curves.map((c) => c.c2.y)
+            curves.map((c) => c.c2.y),
+            extrapolate
           ),
         },
       } as Curve;
@@ -212,9 +221,14 @@ export const interpolatePath = (
   return serialize(path);
 };
 
-export const mixPath = (value: number, p1: Path, p2: Path) => {
+export const mixPath = (
+  value: number,
+  p1: Path,
+  p2: Path,
+  extrapolate = Extrapolate.CLAMP
+) => {
   "worklet";
-  return interpolatePath(value, [0, 1], [p1, p2]);
+  return interpolatePath(value, [0, 1], [p1, p2], extrapolate);
 };
 
 export const move = (x: number, y: number) => {
