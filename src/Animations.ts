@@ -28,6 +28,10 @@ export type AnimationParameter<State extends AnimationState = AnimationState> =
   | (() => Animation<State>)
   | number;
 
+/**
+ *  @summary Access animations passed as parameters safely on both the UI and JS thread with the proper static types.
+ *  Animations can receive other animations as parameter.
+ */
 export const animationParameter = <
   State extends AnimationState = AnimationState
 >(
@@ -42,6 +46,18 @@ export const animationParameter = <
     : animationParam;
 };
 
+/**
+ *  @summary Declare custom animations that can be invoked on both the JS and UI thread.
+ *  @example
+ *  defineAnimation(() => {
+      "worklet";
+      // ...animation code
+      return {
+        animation,
+       start
+      }
+    });
+ */
 export const defineAnimation = <
   S extends AnimationState = AnimationState,
   Prev extends AnimationState = AnimationState
@@ -60,6 +76,16 @@ interface PausableAnimation extends AnimationState {
   elapsed: number;
 }
 
+/**
+ *  @summary Make an animation pausable. The state of the animation (paused or not)
+ *  is controlled by a boolean shared value.
+ *  @example
+    const progress = useSharedValue(0);
+    const paused = useSharedValue(false);
+    useEffect(() => {
+      progress.value = withPause(withLoop(withTiming(1)), paused);
+    }, []);
+ */
 export const withPause = (
   animationParam: AnimationParameter,
   paused: Animated.SharedValue<boolean>
@@ -97,6 +123,13 @@ export const withPause = (
   });
 };
 
+/**
+ *  @summary Add a bouncing behavior to a physics-based animation.
+ *  An animation is defined as being physics-based if it contains a velocity in its state.
+ *  @example
+    // will bounce if the animations hits the position 0 or 100
+    withBouncing(withDecay({ velocity }), 0, 100)
+ */
 export const withBouncing = (
   animationParam: AnimationParameter<PhysicsAnimationState>,
   lowerBound: number,

@@ -9,6 +9,12 @@ import { clamp, mix } from "./Math";
 
 declare let _WORKLET: boolean;
 
+/**
+ *  @summary TypeScript type to define an animation value as color.
+ *  @example
+    // Color can be of string or number depending of the context in which it was executed
+    const color: Animated.SharedValue<Color> = useDerivedValue(() => mixColor(progress.value, "blue", "red"));
+ */
 export type Color = string | number;
 export enum ColorSpace {
   RGB,
@@ -58,6 +64,9 @@ export const color = (r: number, g: number, b: number, alpha = 1): Color => {
   return c;
 };
 
+/**
+ * @summary Convert HSV to RGB
+ */
 export const hsv2rgb = (h: number, s: number, v: number) => {
   "worklet";
   // vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
@@ -86,18 +95,27 @@ export const hsv2rgb = (h: number, s: number, v: number) => {
   };
 };
 
+/**
+ * @summary Convert HSV to RGB
+ */
 export const hsv2color = (h: number, s: number, v: number): Color => {
   "worklet";
   const { r, g, b } = hsv2rgb(h, s, v);
   return color(r, g, b);
 };
 
+/**
+ * @summary Returns black or white depending on the value of the background color.
+ */
 export const colorForBackground = (r: number, g: number, b: number) => {
   "worklet";
   const L = 0.299 * r + 0.587 * g + 0.114 * b;
   return L > 186 ? 0x000000ff : 0xffffffff;
 };
 
+/**
+ * @summary Convert RGB to HSV
+ */
 const rgbToHsv = (c: number) => {
   "worklet";
   const r = red(c) / 255;
@@ -198,6 +216,20 @@ const interpolateColorsRGB = (
   return color(r, g, b, a);
 };
 
+/**
+ *  @summary Interpolate an animation value into a color.
+    The color can be interpolated in the RGB or HSV color space (default is RGB).
+ *  @example
+    const theta = useSharedValue(Math.PI);
+    const backgroundColor = useDerivedValue(() => {
+      return interpolateColor(
+        theta.value,
+        [0, Math.PI, Math.PI * 2],
+        ["#ff3884", StyleGuide.palette.primary, "#38ffb3"]
+        ColorSpace.HSV // default is RGB
+      );
+    });
+  */
 export const interpolateColor = (
   value: number,
   inputRange: number[],
@@ -215,6 +247,13 @@ export const interpolateColor = (
   return result;
 };
 
+/**
+ *  @summary Identical to interpolateColor() but with an animation value that goes from 0 to 1.
+ *  @example
+    const backgroundColor = useDerivedValue(() =>
+      mixColor(progress.value, "#ff3884", "#38ffb3")
+    );
+  */
 export const mixColor = (
   value: number,
   color1: Color,

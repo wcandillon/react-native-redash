@@ -73,6 +73,9 @@ const isClose = (command: Segment): command is Close => {
   return command.type === SVGCommand.CLOSE;
 };
 
+/**
+ * @summary Serialize a path into an SVG path string
+ */
 export const serialize = (path: Path) => {
   "worklet";
   return path
@@ -91,6 +94,11 @@ export const serialize = (path: Path) => {
     .reduce((acc, c) => acc + c);
 };
 
+/**
+ * @description ⚠️ this function cannot run on the UI thread. It must be executed on the JS thread
+ * @summary Parse an SVG path into a sequence of Bèzier curves.
+ * The SVG is normalized to have absolute values and to be approximated to a sequence of Bèzier curves.
+ */
 export const parse = (d: string): Path => {
   const segments: SVGNormalizedCommands = normalizeSVG(absSVG(parseSVG(d)));
   return segments.map((segment, index) => {
@@ -123,6 +131,9 @@ export const parse = (d: string): Path => {
   });
 };
 
+/**
+ * @summary Interpolate between paths.
+ */
 export const interpolatePath = (
   value: number,
   inputRange: number[],
@@ -221,6 +232,10 @@ export const interpolatePath = (
   return serialize(path);
 };
 
+/**
+ * @summary Interpolate two paths with an animation value that goes from 0 to 1
+ */
+
 export const mixPath = (
   value: number,
   p1: Path,
@@ -231,11 +246,17 @@ export const mixPath = (
   return interpolatePath(value, [0, 1], [p1, p2], extrapolate);
 };
 
+/**
+ * @summary Returns a Bèzier curve command.
+ */
 export const move = (x: number, y: number) => {
   "worklet";
   return { type: SVGCommand.MOVE as const, x, y };
 };
 
+/**
+ * @summary Returns a Bèzier curve command
+ */
 export const curve = (c: Omit<Curve, "type">) => {
   "worklet";
   return {
@@ -247,11 +268,25 @@ export const curve = (c: Omit<Curve, "type">) => {
   };
 };
 
+/**
+ * @summary Returns a close command.
+ */
 export const close = () => {
   "worklet";
   return { type: SVGCommand.CLOSE as const };
 };
 
+/**
+ * @summary Return the y value of a path given its x coordinate
+ * @example
+    const p1 = parse(
+      "M150,0 C150,0 0,75 200,75 C75,200 200,225 200,225 C225,200 200,150 0,150"
+    );
+    // 75
+    getYForX(p1, 200))
+    // ~151
+    getYForX(p1, 50)
+ */
 export const getYForX = (path: Path, x: number) => {
   "worklet";
   const p = path.filter((c) => {
