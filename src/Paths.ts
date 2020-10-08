@@ -298,6 +298,9 @@ export const getYForX = (path: Path, x: number) => {
     }
     return false;
   });
+  if (p.length === 0) {
+    return 0;
+  }
   if (isCurve(p[0])) {
     return cubicBezierYForX(x, p[0].from, p[0].c1, p[0].c2, p[0].to);
   }
