@@ -1,10 +1,21 @@
 import Animated, { useSharedValue } from "react-native-reanimated";
 
+/**
+ * @summary Type representing a vector
+ * @example
+   export interface Vector<T = number> {
+    x: T;
+    y: T;
+  }
+ */
 export interface Vector<T = number> {
   x: T;
   y: T;
 }
 
+/**
+ * @summary Returns a vector of shared values
+ */
 export const useVector = (
   x1 = 0,
   y1?: number
