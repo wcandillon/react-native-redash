@@ -235,7 +235,6 @@ export const interpolatePath = (
 /**
  * @summary Interpolate two paths with an animation value that goes from 0 to 1
  */
-
 export const mixPath = (
   value: number,
   p1: Path,
@@ -298,7 +297,7 @@ export const getYForX = (path: Path, x: number) => {
     }
     return false;
   });
-  if (isCurve(p[0])) {
+  if (p.length > 0 && isCurve(p[0])) {
     return cubicBezierYForX(x, p[0].from, p[0].c1, p[0].c2, p[0].to);
   }
   return 0;
