@@ -232,13 +232,9 @@ export const interpolatePath = (
   return serialize(path);
 };
 
-<<<<<<< HEAD
-=======
 /**
  * @summary Interpolate two paths with an animation value that goes from 0 to 1
  */
-
->>>>>>> master
 export const mixPath = (
   value: number,
   p1: Path,
