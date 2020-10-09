@@ -1,4 +1,4 @@
-export const reorder = (input: unknown[], from: number, to: number) => {
+export const move = <T>(input: T[], from: number, to: number) => {
   "worklet";
   const offsets = [...input];
   while (from < 0) {
