@@ -103,7 +103,7 @@ export const parse = (d: string): Path => {
   const segments: SVGNormalizedCommands = normalizeSVG(absSVG(parseSVG(d)));
   return segments.map((segment, index) => {
     if (segment[0] === "M") {
-      return move(segment[1], segment[2]);
+      return moveTo(segment[1], segment[2]);
     } else if (segment[0] === "Z") {
       return close();
     } else {
@@ -248,7 +248,7 @@ export const mixPath = (
 /**
  * @summary Returns a Bèzier curve command.
  */
-export const move = (x: number, y: number) => {
+export const moveTo = (x: number, y: number) => {
   "worklet";
   return { type: SVGCommand.MOVE as const, x, y };
 };
