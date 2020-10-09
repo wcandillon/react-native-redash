@@ -1,6 +1,6 @@
 export const move = <T>(input: T[], from: number, to: number) => {
   "worklet";
-  const offsets = [...input];
+  const offsets = input.slice();
   while (from < 0) {
     from += offsets.length;
   }
