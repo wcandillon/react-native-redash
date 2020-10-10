@@ -1,98 +1,89 @@
-import Animated, { useSharedValue } from "react-native-reanimated";
+import { useSharedValue } from "react-native-reanimated";
 
-export interface Vector<T = number> {
-  x: T;
-  y: T;
+// type RawSharedValue = number | string | boolean | object;
+type SharedValueType = number;
+
+export interface Vector<T extends SharedValueType> {
+  x: {
+    value: T;
+  };
+  y: {
+    value: T;
+  };
 }
 
-export const useVector = (
-  x1 = 0,
-  y1?: number
-): Vector<Animated.SharedValue<number>> => {
+export const useVector = (x1 = 0, y1?: number): Vector<number> => {
   const x = useSharedValue(x1);
   const y = useSharedValue(y1 ?? x1);
   return { x, y };
 };
 
-type SharedValueType = number;
-
-export type SharedVector<T extends SharedValueType = number> = {
-  x: Animated.SharedValue<T>;
-  y: Animated.SharedValue<T>;
-};
-
-type VectorType = Vector | SharedVector;
+type VectorType = Vector<SharedValueType>;
 
 type VectorList = (VectorType | SharedValueType)[];
 
-const _isVector = (value: unknown): value is Vector => {
+const isVector = (value: unknown): value is Vector<SharedValueType> => {
   "worklet";
 
   return (
-    typeof value === "object" &&
-    typeof value !== null &&
-    typeof value.x !== "undefined" &&
-    typeof value.y !== "undefined"
+    typeof value === "object" && value !== null && "x" in value && "y" in value
   );
 };
 
-const isSharedValue = (value: any): value is Animated.SharedValue<any> => {
-  "worklet";
-
-  return typeof value.value !== "undefined";
-};
-
-const _get = <
-  T extends Animated.SharedValue<SharedValueType> | SharedValueType
->(
+const resolveValue = <T extends Vector<SharedValueType>[VectorProp]>(
   value: T
 ) => {
   "worklet";
 
-  if (isSharedValue(value)) {
-    return value.value;
-  }
-
-  return value;
+  return value.value;
 };
-
-type Operation = "divide" | "add" | "sub" | "multiply";
 
 type VectorProp = "x" | "y";
 
-const _reduce = (
+const resolveValueByProp = (vector: VectorType | number, prop: VectorProp) => {
+  return isVector(vector) ? resolveValue(vector[prop]) : vector;
+};
+
+enum Operation {
+  "divide",
+  "add",
+  "sub",
+  "multiply",
+}
+
+const applyOperation = (
   operation: Operation,
   prop: VectorProp,
   vectors: VectorList
 ) => {
   "worklet";
-
-  const first = vectors[0];
+  const [first] = vectors;
   const rest = vectors.slice(1);
 
-  const initial = _get(_isVector(first) ? first[prop] : first);
+  const initial = resolveValueByProp(first, prop);
 
-  const res = rest.reduce((acc, current) => {
-    const value = _get(_isVector(current) ? current[prop] : current);
-    const r = (() => {
+  const res = rest.reduce<number>((acc, current) => {
+    const value = resolveValueByProp(current, prop);
+
+    const result = (() => {
       switch (operation) {
-        case "divide":
+        case Operation.divide:
           if (value === 0) {
             return 0;
           }
           return acc / value;
-        case "add":
+        case Operation.add:
           return acc + value;
-        case "sub":
+        case Operation.sub:
           return acc - value;
-        case "multiply":
+        case Operation.multiply:
           return acc * value;
         default:
           return acc;
       }
     })();
 
-    return r;
+    return result;
   }, initial);
 
   return res;
@@ -105,61 +96,62 @@ export const useSharedVector = <T>(x: T, y = x) => {
   };
 };
 
+const createValue = <T extends SharedValueType>(value: T) => ({
+  value,
+});
+
 export const create = <T extends SharedValueType>(x: T, y: T) => {
   "worklet";
 
   return {
-    x,
-    y,
+    x: createValue(x),
+    y: createValue(y),
   };
 };
 
 export const add = (...vectors: VectorList) => {
   "worklet";
 
-  return {
-    x: _reduce("add", "x", vectors),
-    y: _reduce("add", "y", vectors),
-  };
+  return create(
+    applyOperation(Operation.add, "x", vectors),
+    applyOperation(Operation.add, "y", vectors)
+  );
 };
 
 export const sub = (...vectors: VectorList) => {
   "worklet";
 
-  return {
-    x: _reduce("sub", "x", vectors),
-    y: _reduce("sub", "y", vectors),
-  };
+  return create(
+    applyOperation(Operation.sub, "x", vectors),
+    applyOperation(Operation.sub, "y", vectors)
+  );
 };
 
 export const divide = (...vectors: VectorList) => {
   "worklet";
 
-  return {
-    x: _reduce("divide", "x", vectors),
-    y: _reduce("divide", "y", vectors),
-  };
+  return create(
+    applyOperation(Operation.divide, "x", vectors),
+    applyOperation(Operation.divide, "y", vectors)
+  );
 };
 
 export const multiply = (...vectors: VectorList) => {
   "worklet";
 
-  return {
-    x: _reduce("multiply", "x", vectors),
-    y: _reduce("multiply", "y", vectors),
-  };
+  return create(
+    applyOperation(Operation.multiply, "x", vectors),
+    applyOperation(Operation.multiply, "y", vectors)
+  );
 };
 
-export const invert = <T extends Vector<any>>(vector: T) => {
+export const invert = <T extends VectorType>(vector: T) => {
   "worklet";
 
-  return {
-    x: _get(vector.x) * -1,
-    y: _get(vector.y) * -1,
-  };
+  return create(resolveValue(vector.x) * -1, resolveValue(vector.y) * -1);
 };
 
-type Callback = () => any;
+type Callback = () => number;
 
 export const set = <T extends VectorType>(
   vector: T,
@@ -171,17 +163,9 @@ export const set = <T extends VectorType>(
   if (typeof value === "function") {
     vector.x.value = value();
     vector.y.value = value();
-  }
-
-  const x = _get(_isVector(value) ? value.x : value);
-  const y = _get(_isVector(value) ? value.y : value);
-
-  if (typeof vector.x.value !== "undefined") {
-    vector.x.value = x;
-    vector.y.value = y;
   } else {
-    vector.x = x;
-    vector.y = y;
+    vector.x.value = resolveValueByProp(vector, "x");
+    vector.y.value = resolveValueByProp(vector, "y");
   }
 };
 
@@ -191,14 +175,11 @@ export const min = (...vectors: VectorList) => {
   const getMin = (prop: VectorProp) => {
     return Math.min.apply(
       void 0,
-      vectors.map((item) => _get(_isVector(item) ? item[prop] : item))
+      vectors.map((item) => resolveValueByProp(item, prop))
     );
   };
 
-  return {
-    x: getMin("x"),
-    y: getMin("y"),
-  };
+  return create(getMin("x"), getMin("y"));
 };
 
 export const max = (...vectors: VectorList) => {
@@ -207,16 +188,13 @@ export const max = (...vectors: VectorList) => {
   const getMax = (prop: VectorProp) =>
     Math.max.apply(
       void 0,
-      vectors.map((item) => _get(_isVector(item) ? item[prop] : item))
+      vectors.map((item) => resolveValueByProp(item, prop))
     );
 
-  return {
-    x: getMax("x"),
-    y: getMax("y"),
-  };
+  return create(getMax("x"), getMax("y"));
 };
 
-export const clamp = <T extends Vector<any>>(
+export const clamp = <T extends VectorType>(
   value: T,
   lowerBound: VectorType | SharedValueType,
   upperBound: VectorType | SharedValueType
@@ -226,14 +204,14 @@ export const clamp = <T extends Vector<any>>(
   return min(max(lowerBound, value), upperBound);
 };
 
-export const eq = <T extends Vector<any>>(
+export const eq = <T extends VectorType>(
   vector: T,
   value: VectorType | SharedValueType
 ) => {
   "worklet";
 
-  const x = _get(_isVector(value) ? value.x : value);
-  const y = _get(_isVector(value) ? value.y : value);
+  const x = resolveValueByProp(value, "x");
+  const y = resolveValueByProp(value, "y");
 
-  return _get(vector.x) === x && _get(vector.y) === y;
+  return resolveValue(vector.x) === x && resolveValue(vector.y) === y;
 };
