@@ -19,9 +19,9 @@ test("getYForX()", () => {
 
 test("getYForX2()", () => {
   const p1 = parse(d1);
-  expect(getYForX(p1, 358.7)).toBe(42.92573877023815);
-  expect(getYForX(p1, 358.8)).toBe(42.90651208682783);
-  expect(getYForX(p1, 359)).toBe(42.878457025833086);
+  expect(getYForX(p1, 358.7)).toBeCloseTo(42.92573877023815, 4);
+  expect(getYForX(p1, 358.8)).toBeCloseTo(42.90651208682783, 4);
+  expect(getYForX(p1, 359)).toBeCloseTo(42.878457025833086, 4);
 });
 
 test("getYForX3()", () => {
