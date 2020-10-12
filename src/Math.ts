@@ -184,7 +184,8 @@ export const cubicBezierYForX = (
   a: Vector,
   b: Vector,
   c: Vector,
-  d: Vector
+  d: Vector,
+  precision = 2
 ) => {
   "worklet";
   const pa = -a.x + 3 * b.x - 3 * c.x + d.x;
@@ -193,7 +194,7 @@ export const cubicBezierYForX = (
   const pd = a.x - x;
   // eslint-disable-next-line prefer-destructuring
   const t = solveCubic(pa, pb, pc, pd)
-    .map((root) => round(root, 5))
+    .map((root) => round(root, precision))
     .filter((root) => root >= 0 && root <= 1)[0];
   return cubicBezier(t, a.y, b.y, c.y, d.y);
 };
