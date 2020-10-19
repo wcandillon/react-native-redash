@@ -26,18 +26,13 @@ export type Path = {
   close: boolean;
 };
 
-const serializeCurve = (c: Curve) => {
-  "worklet";
-  return `C${c.c1.x},${c.c1.y} ${c.c2.x},${c.c2.y} ${c.to.x},${c.to.y} `;
-};
-
 /**
  * @summary Serialize a path into an SVG path string
  */
 export const serialize = (path: Path) => {
   "worklet";
   return `M${path.move.x},${path.move.y} ${path.curves
-    .map(serializeCurve)
+    .map((c) => `C${c.c1.x},${c.c1.y} ${c.c2.x},${c.c2.y} ${c.to.x},${c.to.y} `)
     .reduce((acc, c) => acc + c)}${path.close ? "Z" : ""}`;
 };
 
@@ -53,7 +48,7 @@ export const parse = (d: string): Path => {
     if (segment[0] === "Z") {
       close(path);
     } else if (segment[0] === "C") {
-      curve(path, {
+      addCurve(path, {
         c1: {
           x: segment[1],
           y: segment[2],
@@ -160,7 +155,7 @@ export const mixPath = (
 };
 
 /**
- * @summary Returns a Path
+ * @summary Create a new path
  */
 export const createPath = (move: Vector): Path => {
   "worklet";
@@ -172,9 +167,9 @@ export const createPath = (move: Vector): Path => {
 };
 
 /**
- * @summary Returns a Bèzier curve command
+ * @summary Add a Bèzier curve command to a path.
  */
-export const curve = (path: Path, c: Curve) => {
+export const addCurve = (path: Path, c: Curve) => {
   "worklet";
   path.curves.push({
     c1: c.c1,
@@ -184,7 +179,7 @@ export const curve = (path: Path, c: Curve) => {
 };
 
 /**
- * @summary Returns a close command.
+ * @summary Add a close command to a path.
  */
 export const close = (path: Path) => {
   "worklet";
