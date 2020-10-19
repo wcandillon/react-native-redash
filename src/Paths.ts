@@ -201,8 +201,10 @@ interface NullableSelectedCurve {
   curve: Curve | null;
 }
 
-const curveIsFound = (c: NullableSelectedCurve): c is SelectedCurve =>
-  c.curve !== null;
+const curveIsFound = (c: NullableSelectedCurve): c is SelectedCurve => {
+  "worklet";
+  return c.curve !== null;
+};
 
 /**
  * @summary Return the curves at x. This function assumes that only one curve is available at x
