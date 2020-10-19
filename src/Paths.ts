@@ -286,7 +286,7 @@ export const close = () => {
     // ~151
     getYForX(p1, 50)
  */
-export const getYForX = (path: Path, x: number) => {
+export const getYForX = (path: Path, x: number, precision = 2) => {
   "worklet";
   const p = path.filter((c) => {
     if (isCurve(c)) {
@@ -298,7 +298,7 @@ export const getYForX = (path: Path, x: number) => {
     return false;
   });
   if (p.length > 0 && isCurve(p[0])) {
-    return cubicBezierYForX(x, p[0].from, p[0].c1, p[0].c2, p[0].to);
+    return cubicBezierYForX(x, p[0].from, p[0].c1, p[0].c2, p[0].to, precision);
   }
   return 0;
 };
