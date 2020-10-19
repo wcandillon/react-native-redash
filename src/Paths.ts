@@ -10,47 +10,20 @@ type SVGCloseCommand = ["Z"];
 type SVGMoveCommand = ["M", number, number];
 type SVGCurveCommand = ["C", number, number, number, number, number, number];
 type SVGNormalizedCommands = [
-  SVGMoveCommand | SVGCurveCommand | SVGCloseCommand
+  SVGMoveCommand,
+  ...(SVGCurveCommand | SVGCloseCommand)[]
 ];
 
-export enum SVGCommand {
-  MOVE,
-  CURVE,
-  CLOSE,
-}
-
-interface Move extends Vector {
-  type: SVGCommand.MOVE;
-}
-
 interface Curve {
-  type: SVGCommand.CURVE;
-  from: Vector;
   to: Vector;
   c1: Vector;
   c2: Vector;
 }
 
-interface Close {
-  type: SVGCommand.CLOSE;
-}
-
-export type Segment = Close | Curve | Move;
-export type Path = Segment[];
-
-export const exhaustiveCheck = (command: never): never => {
-  "worklet";
-  throw new TypeError(`Unknown SVG Command: ${command}`);
-};
-
-const serializeMove = (c: Move) => {
-  "worklet";
-  return `M${c.x},${c.y} `;
-};
-
-const serializeClose = () => {
-  "worklet";
-  return "Z";
+export type Path = {
+  move: Vector;
+  curves: Curve[];
+  close: boolean;
 };
 
 const serializeCurve = (c: Curve) => {
@@ -58,40 +31,14 @@ const serializeCurve = (c: Curve) => {
   return `C${c.c1.x},${c.c1.y} ${c.c2.x},${c.c2.y} ${c.to.x},${c.to.y} `;
 };
 
-const isMove = (command: Segment): command is Move => {
-  "worklet";
-  return command.type === SVGCommand.MOVE;
-};
-
-const isCurve = (command: Segment): command is Curve => {
-  "worklet";
-  return command.type === SVGCommand.CURVE;
-};
-
-const isClose = (command: Segment): command is Close => {
-  "worklet";
-  return command.type === SVGCommand.CLOSE;
-};
-
 /**
  * @summary Serialize a path into an SVG path string
  */
 export const serialize = (path: Path) => {
   "worklet";
-  return path
-    .map((segment) => {
-      if (isMove(segment)) {
-        return serializeMove(segment);
-      }
-      if (isCurve(segment)) {
-        return serializeCurve(segment);
-      }
-      if (isClose(segment)) {
-        return serializeClose();
-      }
-      return exhaustiveCheck(segment);
-    })
-    .reduce((acc, c) => acc + c);
+  return `M${path.move.x},${path.move.y} ${path.curves
+    .map(serializeCurve)
+    .reduce((acc, c) => acc + c)}${path.close ? "Z" : ""}`;
 };
 
 /**
@@ -101,14 +48,12 @@ export const serialize = (path: Path) => {
  */
 export const parse = (d: string): Path => {
   const segments: SVGNormalizedCommands = normalizeSVG(absSVG(parseSVG(d)));
-  return segments.map((segment, index) => {
-    if (segment[0] === "M") {
-      return moveTo(segment[1], segment[2]);
-    } else if (segment[0] === "Z") {
-      return close();
-    } else {
-      const prev = segments[index - 1];
-      const r = curve({
+  const path = createPath({ x: segments[0][1], y: segments[0][2] });
+  segments.forEach((segment) => {
+    if (segment[0] === "Z") {
+      close(path);
+    } else if (segment[0] === "C") {
+      curve(path, {
         c1: {
           x: segment[1],
           y: segment[2],
@@ -121,14 +66,10 @@ export const parse = (d: string): Path => {
           x: segment[5],
           y: segment[6],
         },
-        from: {
-          x: (prev[0] === "M" ? prev[1] : prev[5]) ?? 0,
-          y: (prev[0] === "M" ? prev[2] : prev[6]) ?? 0,
-        },
       });
-      return r;
     }
   });
+  return path;
 };
 
 /**
@@ -141,94 +82,67 @@ export const interpolatePath = (
   extrapolate = Animated.Extrapolate.CLAMP
 ) => {
   "worklet";
-  const path = outputRange[0].map((segment, index) => {
-    if (isMove(segment)) {
-      const points = outputRange.map((p) => {
-        const s = p[index];
-        if (isMove(s)) {
-          return {
-            x: s.x,
-            y: s.y,
-          };
-        }
-        throw new Error("Paths to interpolate are not symetrical");
-      });
-      return {
-        type: SVGCommand.MOVE,
+  const path = {
+    move: {
+      x: interpolate(
+        value,
+        inputRange,
+        outputRange.map((p) => p.move.x),
+        extrapolate
+      ),
+      y: interpolate(
+        value,
+        inputRange,
+        outputRange.map((p) => p.move.y),
+        extrapolate
+      ),
+    },
+    curves: outputRange[0].curves.map((_, index) => ({
+      c1: {
         x: interpolate(
           value,
           inputRange,
-          points.map((p) => p.x),
+          outputRange.map((p) => p.curves[index].c1.x),
           extrapolate
         ),
         y: interpolate(
           value,
           inputRange,
-          points.map((p) => p.y),
+          outputRange.map((p) => p.curves[index].c1.y),
           extrapolate
         ),
-      } as Move;
-    }
-    if (isCurve(segment)) {
-      const curves = outputRange.map((p) => {
-        const s = p[index];
-        if (isCurve(s)) {
-          return {
-            to: s.to,
-            c1: s.c1,
-            c2: s.c2,
-          };
-        }
-        throw new Error("Paths to interpolate are not symetrical");
-      });
-      return {
-        type: SVGCommand.CURVE,
-        to: {
-          x: interpolate(
-            value,
-            inputRange,
-            curves.map((c) => c.to.x),
-            extrapolate
-          ),
-          y: interpolate(
-            value,
-            inputRange,
-            curves.map((c) => c.to.y),
-            extrapolate
-          ),
-        },
-        c1: {
-          x: interpolate(
-            value,
-            inputRange,
-            curves.map((c) => c.c1.x),
-            extrapolate
-          ),
-          y: interpolate(
-            value,
-            inputRange,
-            curves.map((c) => c.c1.y),
-            extrapolate
-          ),
-        },
-        c2: {
-          x: interpolate(
-            value,
-            inputRange,
-            curves.map((c) => c.c2.x),
-            extrapolate
-          ),
-          y: interpolate(
-            value,
-            inputRange,
-            curves.map((c) => c.c2.y),
-            extrapolate
-          ),
-        },
-      } as Curve;
-    }
-    return segment;
-  });
+      },
+      c2: {
+        x: interpolate(
+          value,
+          inputRange,
+          outputRange.map((p) => p.curves[index].c2.x),
+          extrapolate
+        ),
+        y: interpolate(
+          value,
+          inputRange,
+          outputRange.map((p) => p.curves[index].c2.y),
+          extrapolate
+        ),
+      },
+      to: {
+        x: interpolate(
+          value,
+          inputRange,
+          outputRange.map((p) => p.curves[index].to.x),
+          extrapolate
+        ),
+        y: interpolate(
+          value,
+          inputRange,
+          outputRange.map((p) => p.curves[index].to.y),
+          extrapolate
+        ),
+      },
+    })),
+    close: outputRange[0].close,
+  };
   return serialize(path);
 };
 
@@ -246,33 +160,75 @@ export const mixPath = (
 };
 
 /**
- * @summary Returns a Bèzier curve command.
+ * @summary Returns a Path
  */
-export const moveTo = (x: number, y: number) => {
+export const createPath = (move: Vector): Path => {
   "worklet";
-  return { type: SVGCommand.MOVE as const, x, y };
+  return {
+    move,
+    curves: [],
+    close: false,
+  };
 };
 
 /**
  * @summary Returns a Bèzier curve command
  */
-export const curve = (c: Omit<Curve, "type">) => {
+export const curve = (path: Path, c: Curve) => {
   "worklet";
-  return {
-    type: SVGCommand.CURVE as const,
+  path.curves.push({
     c1: c.c1,
     c2: c.c2,
     to: c.to,
-    from: c.from,
-  };
+  });
 };
 
 /**
  * @summary Returns a close command.
  */
-export const close = () => {
+export const close = (path: Path) => {
   "worklet";
-  return { type: SVGCommand.CLOSE as const };
+  path.close = true;
+};
+
+interface SelectedCurve {
+  from: Vector;
+  curve: Curve;
+}
+
+interface NullableSelectedCurve {
+  from: Vector;
+  curve: Curve | null;
+}
+
+const curveIsFound = (c: NullableSelectedCurve): c is SelectedCurve =>
+  c.curve !== null;
+
+/**
+ * @summary Return the curves at x. This function assumes that only one curve is available at x
+ */
+export const selectCurve = (path: Path, x: number): SelectedCurve => {
+  "worklet";
+  const result: NullableSelectedCurve = {
+    from: path.move,
+    curve: null,
+  };
+  for (let i = 0; i < path.curves.length; i++) {
+    const c = path.curves[i];
+    const contains =
+      result.from.x > c.to.x
+        ? x >= c.to.x && x <= result.from.x
+        : x >= result.from.x && x <= c.to.x;
+    if (contains) {
+      result.curve = c;
+      break;
+    }
+    result.from = c.to;
+  }
+  if (!curveIsFound(result)) {
+    throw new Error(`No curve found at ${x}`);
+  }
+  return result;
 };
 
 /**
@@ -288,17 +244,13 @@ export const close = () => {
  */
 export const getYForX = (path: Path, x: number, precision = 2) => {
   "worklet";
-  const p = path.filter((c) => {
-    if (isCurve(c)) {
-      if (c.from.x > c.to.x) {
-        return x >= c.to.x && x <= c.from.x;
-      }
-      return x >= c.from.x && x <= c.to.x;
-    }
-    return false;
-  });
-  if (p.length > 0 && isCurve(p[0])) {
-    return cubicBezierYForX(x, p[0].from, p[0].c1, p[0].c2, p[0].to, precision);
-  }
-  return 0;
+  const c = selectCurve(path, x);
+  return cubicBezierYForX(
+    x,
+    c.from,
+    c.curve.c1,
+    c.curve.c2,
+    c.curve.to,
+    precision
+  );
 };
