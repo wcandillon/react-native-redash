@@ -14,7 +14,7 @@ test("getYForX()", () => {
   );
   expect(getYForX(p1, 200)).toBe(75);
   expect(getYForX(p1, 50)).toBe(151.160325);
-  expect(getYForX(p1, 750)).toBe(0);
+  expect(() => getYForX(p1, 750)).toThrow();
 });
 
 test("getYForX2()", () => {

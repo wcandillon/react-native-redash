@@ -1,4 +1,3 @@
-import { Platform } from "react-native";
 import {
   interpolate,
   Extrapolate,
@@ -7,15 +6,12 @@ import {
 
 import { clamp, mix } from "./Math";
 
-declare let _WORKLET: boolean;
-
 /**
  *  @summary TypeScript type to define an animation value as color.
  *  @example
     // Color can be of string or number depending of the context in which it was executed
     const color: Animated.SharedValue<Color> = useDerivedValue(() => mixColor(progress.value, "blue", "red"));
  */
-export type Color = string | number;
 export enum ColorSpace {
   RGB,
   HSV,
@@ -46,22 +42,9 @@ export const blue = (c: number) => {
   return c & 255;
 };
 
-export const color = (r: number, g: number, b: number, alpha = 1): Color => {
+export const color = (r: number, g: number, b: number, alpha = 1): string => {
   "worklet";
-  if (Platform.OS === "web" || !_WORKLET) {
-    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-  }
-  const a = alpha * 255;
-  const c =
-    a * (1 << 24) +
-    Math.round(r) * (1 << 16) +
-    Math.round(g) * (1 << 8) +
-    Math.round(b);
-  if (Platform.OS === "android") {
-    // on Android color is represented as signed 32 bit int
-    return c < (1 << 31) >>> 0 ? c : c - Math.pow(2, 32);
-  }
-  return c;
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 };
 
 /**
@@ -98,7 +81,7 @@ export const hsv2rgb = (h: number, s: number, v: number) => {
 /**
  * @summary Convert HSV to RGB
  */
-export const hsv2color = (h: number, s: number, v: number): Color => {
+export const hsv2color = (h: number, s: number, v: number) => {
   "worklet";
   const { r, g, b } = hsv2rgb(h, s, v);
   return color(r, g, b);
@@ -233,9 +216,9 @@ const interpolateColorsRGB = (
 export const interpolateColor = (
   value: number,
   inputRange: number[],
-  rawOutputRange: Color[],
+  rawOutputRange: string[],
   colorSpace: ColorSpace = ColorSpace.RGB
-): Color => {
+) => {
   "worklet";
   const outputRange = rawOutputRange.map((c) =>
     typeof c === "number" ? c : processColor(c)
@@ -256,10 +239,10 @@ export const interpolateColor = (
   */
 export const mixColor = (
   value: number,
-  color1: Color,
-  color2: Color,
+  color1: string,
+  color2: string,
   colorSpace: ColorSpace = ColorSpace.RGB
-): Color => {
+) => {
   "worklet";
   return interpolateColor(value, [0, 1], [color1, color2], colorSpace);
 };
