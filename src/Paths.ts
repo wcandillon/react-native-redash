@@ -1,10 +1,10 @@
-/* eslint-disable prefer-destructuring */
 import Animated, { interpolate } from "react-native-reanimated";
 import parseSVG from "parse-svg-path";
 import absSVG from "abs-svg-path";
 import normalizeSVG from "normalize-svg-path";
 
 import { Vector } from "./Vectors";
+import { cartesian2Polar } from "./Coordinates";
 import { cubicBezierYForX } from "./Math";
 
 type SVGCloseCommand = ["Z"];
@@ -266,13 +266,11 @@ const controlPoint = (
   // Properties of the opposed-line
   const lengthX = n.x - p.x;
   const lengthY = n.y - p.y;
-  const o = {
-    angle: Math.atan2(lengthY, lengthX),
-    length: Math.sqrt(Math.pow(lengthX, 2) + Math.pow(lengthY, 2)),
-  };
+
+  const o = cartesian2Polar({ x: lengthX, y: lengthY });
   // If is end-control-point, add PI to the angle to go backward
-  const angle = o.angle + (reverse ? Math.PI : 0);
-  const length = o.length * smoothing;
+  const angle = o.theta + (reverse ? Math.PI : 0);
+  const length = o.radius * smoothing;
   // The control point position is relative to the current point
   const x = current.x + Math.cos(angle) * length;
   const y = current.x + Math.sin(angle) * length;
