@@ -1,3 +1,4 @@
+/* eslint-disable prefer-destructuring */
 import Animated, { interpolate } from "react-native-reanimated";
 import parseSVG from "parse-svg-path";
 import absSVG from "abs-svg-path";
@@ -250,4 +251,77 @@ export const getYForX = (path: Path, x: number, precision = 2) => {
     c.curve.to,
     precision
   );
+};
+
+const controlPoint = (
+  current: Vector,
+  previous: Vector,
+  next: Vector,
+  reverse: boolean,
+  smoothing: number
+) => {
+  "worklet";
+  const p = previous || current;
+  const n = next || current;
+  // Properties of the opposed-line
+  const lengthX = n.x - p.x;
+  const lengthY = n.y - p.y;
+  const o = {
+    angle: Math.atan2(lengthY, lengthX),
+    length: Math.sqrt(Math.pow(lengthX, 2) + Math.pow(lengthY, 2)),
+  };
+  // If is end-control-point, add PI to the angle to go backward
+  const angle = o.angle + (reverse ? Math.PI : 0);
+  const length = o.length * smoothing;
+  // The control point position is relative to the current point
+  const x = current.x + Math.cos(angle) * length;
+  const y = current.x + Math.sin(angle) * length;
+  return { x, y };
+};
+
+/**
+ * @summary Link points via a smooth cubic Bézier curves
+ * from https://github.com/rainbow-me/rainbow
+ */
+export const curveLines = (
+  points: Vector<number>[],
+  smoothing: number,
+  strategy: "complex" | "bezier"
+) => {
+  "worklet";
+  const path = createPath(points[0]);
+  // build the d attributes by looping over the points
+  path.curves = points.slice(1).map((point, i) => {
+    const next = points[i + 1];
+    const prev = points[i - 1];
+    const cps = controlPoint(prev, points[i - 2], point, false, smoothing);
+    const cpe = controlPoint(point, prev, next, true, smoothing);
+    if (strategy === "complex") {
+      return {
+        to: point,
+        c1: cps,
+        c2: cpe,
+      };
+    } else {
+      const p0 = points[i - 2] || prev;
+      const p1 = points[i - 1];
+      const cp1x = (2 * p0.x + p1.x) / 3;
+      const cp1y = (2 * p0.y + p1.y) / 3;
+      const cp2x = (p0.x + 2 * p1.x) / 3;
+      const cp2y = (p0.y + 2 * p1.y) / 3;
+      const cp3x = (p0.x + 4 * p1.x + point.x) / 6;
+      const cp3y = (p0.y + 4 * p1.y + point.y) / 6;
+      return {
+        c1: { x: cp1x, y: cp1y },
+        c2: { x: cp2x, y: cp2y },
+        to: { x: cp3x, y: cp3y },
+      };
+    }
+  });
+  path.curves.push({
+    to: points[points.length - 1],
+    c1: points[points.length - 1],
+    c2: points[points.length - 1],
+  });
+  return path;
 };
