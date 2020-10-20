@@ -32,8 +32,8 @@ export type Path = {
 export const serialize = (path: Path) => {
   "worklet";
   return `M${path.move.x},${path.move.y} ${path.curves
-    .map((c) => `C${c.c1.x},${c.c1.y} ${c.c2.x},${c.c2.y} ${c.to.x},${c.to.y} `)
-    .reduce((acc, c) => acc + c)}${path.close ? "Z" : ""}`;
+    .map((c) => `C${c.c1.x},${c.c1.y} ${c.c2.x},${c.c2.y} ${c.to.x},${c.to.y}`)
+    .join(" ")}${path.close ? "Z" : ""}`;
 };
 
 /**
