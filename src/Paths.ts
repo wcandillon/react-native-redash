@@ -273,7 +273,7 @@ const controlPoint = (
   const length = o.radius * smoothing;
   // The control point position is relative to the current point
   const x = current.x + Math.cos(angle) * length;
-  const y = current.x + Math.sin(angle) * length;
+  const y = current.y + Math.sin(angle) * length;
   return { x, y };
 };
 
