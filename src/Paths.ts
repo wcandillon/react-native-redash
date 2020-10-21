@@ -183,6 +183,7 @@ export const addCurve = (path: Path, c: Curve) => {
  * @summary Add a quadratic Bèzier curve command to a path.
  */
 export const addQuadraticCurve = (path: Path, cp: Vector, to: Vector) => {
+  "worklet";
   const last = path.curves[path.curves.length - 1];
   const from = last ? last.to : path.move;
   path.curves.push({
