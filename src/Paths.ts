@@ -277,6 +277,10 @@ const controlPoint = (
   return { x, y };
 };
 
+const exhaustiveCheck = (a: never): never => {
+  throw new Error(`Unexhaustive handling for ${a}`);
+};
+
 /**
  * @summary Link points via a smooth cubic Bézier curves
  * from https://github.com/rainbow-me/rainbow
@@ -284,7 +288,7 @@ const controlPoint = (
 export const curveLines = (
   points: Vector<number>[],
   smoothing: number,
-  strategy: "complex" | "bezier"
+  strategy: "complex" | "bezier" | "simple"
 ) => {
   "worklet";
   const path = createPath(points[0]);
@@ -298,33 +302,54 @@ export const curveLines = (
     const prev = points[i - 1];
     const cps = controlPoint(prev, points[i - 2], point, false, smoothing);
     const cpe = controlPoint(point, prev, next, true, smoothing);
-    if (strategy === "complex") {
-      path.curves.push({
-        to: point,
-        c1: cps,
-        c2: cpe,
-      });
-    } else {
-      const p0 = points[i - 2] || prev;
-      const p1 = points[i - 1];
-      const cp1x = (2 * p0.x + p1.x) / 3;
-      const cp1y = (2 * p0.y + p1.y) / 3;
-      const cp2x = (p0.x + 2 * p1.x) / 3;
-      const cp2y = (p0.y + 2 * p1.y) / 3;
-      const cp3x = (p0.x + 4 * p1.x + point.x) / 6;
-      const cp3y = (p0.y + 4 * p1.y + point.y) / 6;
-      path.curves.push({
-        c1: { x: cp1x, y: cp1y },
-        c2: { x: cp2x, y: cp2y },
-        to: { x: cp3x, y: cp3y },
-      });
-      if (i === points.length - 1) {
+    switch (strategy) {
+      case "simple":
+        const cx = (cps.x + cpe.x) / 2;
+        const cy = (cps.y + cpe.y) / 2;
+        // point
         path.curves.push({
-          to: points[points.length - 1],
-          c1: points[points.length - 1],
-          c2: points[points.length - 1],
+          c1: {
+            x: prev.x / 3 + (2 / 3) * cx,
+            y: prev.y / 3 + (2 / 3) * cy,
+          },
+          c2: {
+            x: point.x / 3 + (2 / 3) * cx,
+            y: point.y / 3 + (2 / 3) * cy,
+          },
+          to: point,
         });
-      }
+        break;
+      case "bezier":
+        const p0 = points[i - 2] || prev;
+        const p1 = points[i - 1];
+        const cp1x = (2 * p0.x + p1.x) / 3;
+        const cp1y = (2 * p0.y + p1.y) / 3;
+        const cp2x = (p0.x + 2 * p1.x) / 3;
+        const cp2y = (p0.y + 2 * p1.y) / 3;
+        const cp3x = (p0.x + 4 * p1.x + point.x) / 6;
+        const cp3y = (p0.y + 4 * p1.y + point.y) / 6;
+        path.curves.push({
+          c1: { x: cp1x, y: cp1y },
+          c2: { x: cp2x, y: cp2y },
+          to: { x: cp3x, y: cp3y },
+        });
+        if (i === points.length - 1) {
+          path.curves.push({
+            to: points[points.length - 1],
+            c1: points[points.length - 1],
+            c2: points[points.length - 1],
+          });
+        }
+        break;
+      case "complex":
+        path.curves.push({
+          to: point,
+          c1: cps,
+          c2: cpe,
+        });
+        break;
+      default:
+        exhaustiveCheck(strategy);
     }
   }
   return path;
