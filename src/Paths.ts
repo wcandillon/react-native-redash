@@ -289,17 +289,21 @@ export const curveLines = (
   "worklet";
   const path = createPath(points[0]);
   // build the d attributes by looping over the points
-  path.curves = points.slice(1).map((point, i) => {
+  for (let i = 0; i < points.length; i++) {
+    if (i === 0) {
+      continue;
+    }
+    const point = points[i];
     const next = points[i + 1];
     const prev = points[i - 1];
     const cps = controlPoint(prev, points[i - 2], point, false, smoothing);
     const cpe = controlPoint(point, prev, next, true, smoothing);
     if (strategy === "complex") {
-      return {
+      path.curves.push({
         to: point,
         c1: cps,
         c2: cpe,
-      };
+      });
     } else {
       const p0 = points[i - 2] || prev;
       const p1 = points[i - 1];
@@ -309,17 +313,19 @@ export const curveLines = (
       const cp2y = (p0.y + 2 * p1.y) / 3;
       const cp3x = (p0.x + 4 * p1.x + point.x) / 6;
       const cp3y = (p0.y + 4 * p1.y + point.y) / 6;
-      return {
+      path.curves.push({
         c1: { x: cp1x, y: cp1y },
         c2: { x: cp2x, y: cp2y },
         to: { x: cp3x, y: cp3y },
-      };
+      });
+      if (i === points.length - 1) {
+        path.curves.push({
+          to: points[points.length - 1],
+          c1: points[points.length - 1],
+          c2: points[points.length - 1],
+        });
+      }
     }
-  });
-  path.curves.push({
-    to: points[points.length - 1],
-    c1: points[points.length - 1],
-    c2: points[points.length - 1],
-  });
+  }
   return path;
 };
