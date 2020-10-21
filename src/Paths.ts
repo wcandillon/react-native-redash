@@ -167,6 +167,28 @@ export const createPath = (move: Vector): Path => {
   };
 };
 
+const lerp2 = (a: Vector, b: Vector, c: number) => {
+  "worklet";
+  return {
+    x: (b.x - a.x) * c + a.x,
+    y: (b.y - a.y) * c + a.y
+  };
+};
+
+/**
+ * @summary Add an arc command to a path
+ */
+export const addArc = (path: Path, corner: Vector, to: Vector) => {
+  "worklet";
+  const last = path.curves[path.curves.length - 1];
+  const from = last ? last.to : path.move;
+  path.curves.push({
+    c1: lerp2(from, corner, 9 / 16),
+    c2: lerp2(to, corner, 9 / 16),
+    to,
+  });
+};
+
 /**
  * @summary Add a cubic Bèzier curve command to a path.
  */
