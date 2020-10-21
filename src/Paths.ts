@@ -168,7 +168,7 @@ export const createPath = (move: Vector): Path => {
 };
 
 /**
- * @summary Add a Bèzier curve command to a path.
+ * @summary Add a cubic Bèzier curve command to a path.
  */
 export const addCurve = (path: Path, c: Curve) => {
   "worklet";
@@ -176,6 +176,25 @@ export const addCurve = (path: Path, c: Curve) => {
     c1: c.c1,
     c2: c.c2,
     to: c.to,
+  });
+};
+
+/**
+ * @summary Add a quadratic Bèzier curve command to a path.
+ */
+export const addQuadraticCurve = (path: Path, cp: Vector, to: Vector) => {
+  const last = path.curves[path.curves.length - 1];
+  const from = last ? last.to : path.move;
+  path.curves.push({
+    c1: {
+      x: from.x / 3 + (2 / 3) * cp.x,
+      y: from.y / 3 + (2 / 3) * cp.y,
+    },
+    c2: {
+      x: to.x / 3 + (2 / 3) * cp.x,
+      y: to.y / 3 + (2 / 3) * cp.y,
+    },
+    to,
   });
 };
 
@@ -304,20 +323,11 @@ export const curveLines = (
     const cpe = controlPoint(point, prev, next, true, smoothing);
     switch (strategy) {
       case "simple":
-        const cx = (cps.x + cpe.x) / 2;
-        const cy = (cps.y + cpe.y) / 2;
-        // point
-        path.curves.push({
-          c1: {
-            x: prev.x / 3 + (2 / 3) * cx,
-            y: prev.y / 3 + (2 / 3) * cy,
-          },
-          c2: {
-            x: point.x / 3 + (2 / 3) * cx,
-            y: point.y / 3 + (2 / 3) * cy,
-          },
-          to: point,
-        });
+        const cp = {
+          x: (cps.x + cpe.x) / 2,
+          y: (cps.y + cpe.y) / 2,
+        };
+        addQuadraticCurve(path, cp, point);
         break;
       case "bezier":
         const p0 = points[i - 2] || prev;
