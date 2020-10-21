@@ -36,7 +36,7 @@ const points: Vector[] = [
 
 test("parse()", () => {
   const path =
-    "M150,0 C150,0 0,75 200,75 C75,200 200,225 200,225 C225,200 200,150 0,150 ";
+    "M150,0 C150,0 0,75 200,75 C75,200 200,225 200,225 C225,200 200,150 0,150";
   expect(serialize(parse(path))).toBe(path);
 });
 
