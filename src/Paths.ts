@@ -168,6 +168,27 @@ export const createPath = (move: Vector): Path => {
 };
 
 /**
+ * @summary Add an arc command to a path
+ */
+export const addArc = (path: Path, corner: Vector, to: Vector) => {
+  "worklet";
+  const last = path.curves[path.curves.length - 1];
+  const from = last ? last.to : path.move;
+  const arc = 9 / 16;
+  path.curves.push({
+    c1: {
+      x: (corner.x - from.x) * arc + from.x,
+      y: (corner.y - from.y) * arc + from.y,
+    },
+    c2: {
+      x: (corner.x - to.x) * arc + to.x,
+      y: (corner.y - to.y) * arc + to.y,
+    },
+    to,
+  });
+};
+
+/**
  * @summary Add a cubic Bèzier curve command to a path.
  */
 export const addCurve = (path: Path, c: Curve) => {
@@ -176,6 +197,20 @@ export const addCurve = (path: Path, c: Curve) => {
     c1: c.c1,
     c2: c.c2,
     to: c.to,
+  });
+};
+
+/**
+ * @summary Add a line command to a path.
+ */
+export const addLine = (path: Path, to: Vector) => {
+  "worklet";
+  const last = path.curves[path.curves.length - 1];
+  const from = last ? last.to : path.move;
+  path.curves.push({
+    c1: from,
+    c2: to,
+    to,
   });
 };
 
