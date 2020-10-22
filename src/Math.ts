@@ -14,11 +14,6 @@ export const mix = (value: number, x: number, y: number) => {
   return x + value * (y - x);
 };
 
-export const lerp = (x: number, y: number, value: number) => {
-  "worklet";
-  return (1 - value) * x + value * y;
-};
-
 /**
  * @summary Transforms an angle from radians to degrees.
  */

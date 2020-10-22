@@ -1,7 +1,6 @@
 import {
   mix,
   round,
-  lerp,
   bin,
   cubicBezier,
   clamp,
@@ -30,12 +29,7 @@ test("mix()", () => {
   expect(mix(0.5, 10, 20)).toBe(15);
   expect(mix(0.25, 10, 20)).toBe(12.5);
   expect(mix(0.8, 10, 20)).toBe(18);
-});
-
-test("lerp()", () => {
-  expect(lerp(0, 10, 1)).toBe(10);
-  expect(lerp(1, 10, 0)).toBe(1);
-  expect(lerp(0, 10, 0.5)).toBe(5);
+  expect(mix(1.5, 10, 20)).toBe(30);
 });
 
 test("cubicBezier()", () => {
