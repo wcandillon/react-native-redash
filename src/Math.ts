@@ -31,6 +31,15 @@ export const toRad = (deg: number) => {
 };
 
 /**
+ *
+ * @summary Returns the average value
+ */
+export const avg = (values: number[]) => {
+  "worklet";
+  return values.reduce((a, v) => a + v, 0) / values.length;
+};
+
+/**
  * @summary Returns true if node is within lowerBound and upperBound.
  */
 export const between = (
