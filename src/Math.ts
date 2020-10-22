@@ -11,12 +11,7 @@ export const bin = (value: boolean): 0 | 1 => {
 
 export const mix = (value: number, x: number, y: number) => {
   "worklet";
-  return x + value * (y - x);
-};
-
-export const lerp = (x: number, y: number, value: number) => {
-  "worklet";
-  return (1 - value) * x + value * y;
+  return x * (1 - value) + y * value;
 };
 
 /**
