@@ -174,14 +174,15 @@ export const addArc = (path: Path, corner: Vector, to: Vector) => {
   "worklet";
   const last = path.curves[path.curves.length - 1];
   const from = last ? last.to : path.move;
+  const arc = 9 / 16;
   path.curves.push({
     c1: {
-      x: ((corner.x - from.x) * 9) / 16 + to.x,
-      y: ((corner.y - from.y) * 9) / 16 + to.y,
+      x: (corner.x - from.x) * arc + from.x,
+      y: (corner.y - from.y) * arc + from.y,
     },
     c2: {
-      x: ((corner.x - to.x) * 9) / 16 + to.x,
-      y: ((corner.y - to.y) * 9) / 16 + to.y,
+      x: (corner.x - to.x) * arc + to.x,
+      y: (corner.y - to.y) * arc + to.y,
     },
     to,
   });
