@@ -167,14 +167,6 @@ export const createPath = (move: Vector): Path => {
   };
 };
 
-const lerp2 = (a: Vector, b: Vector, c: number) => {
-  "worklet";
-  return {
-    x: (b.x - a.x) * c + a.x,
-    y: (b.y - a.y) * c + a.y
-  };
-};
-
 /**
  * @summary Add an arc command to a path
  */
@@ -183,8 +175,14 @@ export const addArc = (path: Path, corner: Vector, to: Vector) => {
   const last = path.curves[path.curves.length - 1];
   const from = last ? last.to : path.move;
   path.curves.push({
-    c1: lerp2(from, corner, 9 / 16),
-    c2: lerp2(to, corner, 9 / 16),
+    c1: {
+      x: ((corner.x - from.x) * 9) / 16 + to.x,
+      y: ((corner.y - from.y) * 9) / 16 + to.y,
+    },
+    c2: {
+      x: ((corner.x - to.x) * 9) / 16 + to.x,
+      y: ((corner.y - to.y) * 9) / 16 + to.y,
+    },
     to,
   });
 };
@@ -200,7 +198,6 @@ export const addCurve = (path: Path, c: Curve) => {
     to: c.to,
   });
 };
-
 
 /**
  * @summary Add a line command to a path.
