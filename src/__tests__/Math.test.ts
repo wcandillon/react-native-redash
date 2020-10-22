@@ -29,7 +29,7 @@ test("mix()", () => {
   expect(mix(0.5, 10, 20)).toBe(15);
   expect(mix(0.25, 10, 20)).toBe(12.5);
   expect(mix(0.8, 10, 20)).toBe(18);
-  expect(mix(1.5, 10, 20)).toBe(30);
+  expect(mix(1.5, 10, 20)).toBe(25);
 });
 
 test("cubicBezier()", () => {
