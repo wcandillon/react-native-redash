@@ -18,7 +18,6 @@ type Transform3dName =
   | "rotateY"
   | "rotateZ"
   | "matrix";
-
 type Transformations = {
   [Name in Transform3dName]: Name extends "matrix" ? Matrix4 : number;
 };
@@ -175,10 +174,13 @@ export const dot4 = (row: Vec4, col: Vec4) => {
   return row[0] * col[0] + row[1] * col[1] + row[2] * col[2] + row[3] * col[3];
 };
 
-export const matrixVecMul4 = (m: Matrix4, v: Vec4) =>
-  [dot4(m[0], v), dot4(m[1], v), dot4(m[2], v), dot4(m[3], v)] as const;
+export const matrixVecMul4 = (m: Matrix4, v: Vec4) => {
+  "worklet";
+  return [dot4(m[0], v), dot4(m[1], v), dot4(m[2], v), dot4(m[3], v)] as const;
+};
 
 export const multiply4 = (m1: Matrix4, m2: Matrix4) => {
+  "worklet";
   const col0 = [m2[0][0], m2[1][0], m2[2][0], m2[3][0]] as const;
   const col1 = [m2[0][1], m2[1][1], m2[2][1], m2[3][1]] as const;
   const col2 = [m2[0][2], m2[1][2], m2[2][2], m2[3][2]] as const;
@@ -211,8 +213,9 @@ export const multiply4 = (m1: Matrix4, m2: Matrix4) => {
   ] as const;
 };
 
-export const processTransform3d = (transforms: Transforms3d) =>
-  transforms.reduce((acc, transform) => {
+export const processTransform3d = (transforms: Transforms3d) => {
+  "worklet";
+  return transforms.reduce((acc, transform) => {
     const key = Object.keys(transform)[0] as Transform3dName;
     if (key === "translateX") {
       const value = (transform as Pick<Transformations, typeof key>)[key];
@@ -268,3 +271,4 @@ export const processTransform3d = (transforms: Transforms3d) =>
     }
     return exhaustiveCheck(key);
   }, identityMatrix4);
+};
