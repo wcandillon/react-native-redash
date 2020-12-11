@@ -8,6 +8,7 @@ const styles = StyleSheet.create({
     color: "black",
   },
 });
+Animated.addWhitelistedNativeProps({ text: true });
 
 interface TextProps {
   text: Animated.SharedValue<string>;
