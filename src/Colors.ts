@@ -1,5 +1,7 @@
 import { interpolateColor } from "react-native-reanimated";
 
+export type AnimatedColor = string | number;
+
 /**
  * @summary Returns black or white depending on the value of the background color.
  */
