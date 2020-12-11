@@ -65,7 +65,7 @@ export const hsv2color = proc(
     v: Animated.Adaptable<number>
   ) => {
     const { r, g, b } = hsv2rgb(h, s, v);
-    return color(r, g, b);
+    return color(r, g, b) as Animated.Node<number>;
   }
 );
 
@@ -76,7 +76,11 @@ export const colorForBackground = proc(
     b: Animated.Adaptable<number>
   ) => {
     const L = add(multiply(0.299, r), multiply(0.587, g), multiply(0.114, b));
-    return cond(greaterThan(L, 186), color(0, 0, 0), color(255, 255, 255));
+    return cond(
+      greaterThan(L, 186),
+      color(0, 0, 0) as Animated.Node<number>,
+      color(255, 255, 255) as Animated.Node<number>
+    );
   }
 );
 
@@ -168,7 +172,7 @@ const interpolateColorsRGB = (
     extrapolate: Extrapolate.CLAMP,
   });
 
-  return color(r, g, b, a);
+  return color(r, g, b, a) as Animated.Node<number>;
 };
 
 interface ColorInterpolationConfig {
