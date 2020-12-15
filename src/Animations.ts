@@ -21,6 +21,7 @@ export type Animation<
     now: number,
     lastAnimation: PrevState
   ) => void;
+  callback?: () => void;
 } & State;
 
 export type AnimationParameter<State extends AnimationState = AnimationState> =
@@ -119,6 +120,7 @@ export const withPause = (
     return {
       onFrame,
       onStart,
+      callback: nextAnimation.callback,
     };
   });
 };
@@ -163,6 +165,7 @@ export const withBouncing = (
     return {
       onFrame,
       onStart,
+      callback: nextAnimation.callback,
     };
   });
 };
