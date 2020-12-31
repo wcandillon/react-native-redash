@@ -1,12 +1,12 @@
 import * as React from "react";
-import { TextInput, TextStyle } from "react-native";
+import { TextInput, TextStyle, StyleProp } from "react-native";
 import Animated from "react-native-reanimated";
 
 const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
 
 interface TextProps {
   text: Animated.Node<string>;
-  style?: TextStyle;
+  style?: StyleProp<Animated.AnimateStyle<TextStyle>>;
 }
 
 const ReText = (props: TextProps) => {
