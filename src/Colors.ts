@@ -4,6 +4,7 @@ export type AnimatedColor = string | number;
 
 /**
  * @summary Returns black or white depending on the value of the background color.
+ * @worklet
  */
 export const colorForBackground = (r: number, g: number, b: number) => {
   "worklet";
@@ -11,6 +12,14 @@ export const colorForBackground = (r: number, g: number, b: number) => {
   return L > 186 ? 0x000000ff : 0xffffffff;
 };
 
+/**
+ * Interpolate color from 0 to 1
+ * @param value
+ * @param color1
+ * @param color2
+ * @param colorSpace
+ * @worklet
+ */
 export const mixColor = (
   value: number,
   color1: AnimatedColor,

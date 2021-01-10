@@ -5,6 +5,9 @@ export interface PolarPoint {
   radius: number;
 }
 
+/**
+ * @worklet
+ */
 export const canvas2Cartesian = (v: Vector, center: Vector) => {
   "worklet";
   return {
@@ -13,6 +16,9 @@ export const canvas2Cartesian = (v: Vector, center: Vector) => {
   };
 };
 
+/**
+ * @worklet
+ */
 export const cartesian2Canvas = (v: Vector, center: Vector) => {
   "worklet";
   return {
@@ -21,6 +27,9 @@ export const cartesian2Canvas = (v: Vector, center: Vector) => {
   };
 };
 
+/**
+ * @worklet
+ */
 export const cartesian2Polar = (v: Vector) => {
   "worklet";
   return {
@@ -29,6 +38,9 @@ export const cartesian2Polar = (v: Vector) => {
   };
 };
 
+/**
+ * @worklet
+ */
 export const polar2Cartesian = (p: PolarPoint) => {
   "worklet";
   return {
@@ -37,11 +49,17 @@ export const polar2Cartesian = (p: PolarPoint) => {
   };
 };
 
+/**
+ * @worklet
+ */
 export const polar2Canvas = (p: PolarPoint, center: Vector) => {
   "worklet";
   return cartesian2Canvas(polar2Cartesian(p), center);
 };
 
+/**
+ * @worklet
+ */
 export const canvas2Polar = (v: Vector, center: Vector) => {
   "worklet";
   return cartesian2Polar(canvas2Cartesian(v, center));

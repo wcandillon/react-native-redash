@@ -58,6 +58,7 @@ export const animationParameter = <
        start
       }
     });
+ * @worklet
  */
 export const defineAnimation = <
   S extends AnimationState = AnimationState,
@@ -86,6 +87,7 @@ interface PausableAnimation extends AnimationState {
     useEffect(() => {
       progress.value = withPause(withLoop(withTiming(1)), paused);
     }, []);
+  * @worklet
  */
 export const withPause = (
   animationParam: AnimationParameter,
@@ -131,6 +133,7 @@ export const withPause = (
  *  @example
     // will bounce if the animations hits the position 0 or 100
     withBouncing(withDecay({ velocity }), 0, 100)
+ * @worklet
  */
 export const withBouncing = (
   animationParam: AnimationParameter<PhysicsAnimationState>,
