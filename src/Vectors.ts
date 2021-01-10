@@ -30,6 +30,12 @@ type Create = {
   <T extends Animated.Adaptable<number>>(x: T, y?: T): Vector<T>;
 };
 
+/**
+ *
+ * @param x
+ * @param y
+ * @worklet
+ */
 const create: Create = <T extends Animated.Adaptable<number>>(x?: T, y?: T) => {
   "worklet";
   return {

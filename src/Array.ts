@@ -1,3 +1,6 @@
+/**
+ * @worklet
+ */
 export const move = <T>(input: T[], from: number, to: number) => {
   "worklet";
   const offsets = input.slice();

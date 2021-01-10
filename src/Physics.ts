@@ -1,5 +1,6 @@
 /**
  * @summary Select a point where the animation should snap to given the value of the gesture and it's velocity.
+ * @worklet
  */
 export const snapPoint = (
   value: number,

@@ -17,31 +17,49 @@ export enum ColorSpace {
   HSV,
 }
 
+/**
+ * @worklet
+ */
 const fract = (v: number) => {
   "worklet";
   return v - Math.floor(v);
 };
 
+/**
+ * @worklet
+ */
 export const opacity = (c: number) => {
   "worklet";
   return ((c >> 24) & 255) / 255;
 };
 
+/**
+ * @worklet
+ */
 export const red = (c: number) => {
   "worklet";
   return (c >> 16) & 255;
 };
 
+/**
+ * @worklet
+ */
 export const green = (c: number) => {
   "worklet";
   return (c >> 8) & 255;
 };
 
+/**
+ * @worklet
+ */
 export const blue = (c: number) => {
   "worklet";
   return c & 255;
 };
 
+/**
+ * @worklet
+ */
 export const color = (r: number, g: number, b: number, alpha = 1): string => {
   "worklet";
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
@@ -49,6 +67,7 @@ export const color = (r: number, g: number, b: number, alpha = 1): string => {
 
 /**
  * @summary Convert HSV to RGB
+ * @worklet
  */
 export const hsv2rgb = (h: number, s: number, v: number) => {
   "worklet";
@@ -80,6 +99,7 @@ export const hsv2rgb = (h: number, s: number, v: number) => {
 
 /**
  * @summary Convert HSV to RGB
+ * @worklet
  */
 export const hsv2color = (h: number, s: number, v: number) => {
   "worklet";
@@ -89,6 +109,7 @@ export const hsv2color = (h: number, s: number, v: number) => {
 
 /**
  * @summary Returns black or white depending on the value of the background color.
+ * @worklet
  */
 export const colorForBackground = (r: number, g: number, b: number) => {
   "worklet";
@@ -98,6 +119,7 @@ export const colorForBackground = (r: number, g: number, b: number) => {
 
 /**
  * @summary Convert RGB to HSV
+ * @worklet
  */
 const rgbToHsv = (c: number) => {
   "worklet";
@@ -132,6 +154,9 @@ const rgbToHsv = (c: number) => {
   return { h, s, v };
 };
 
+/**
+ * @worklet
+ */
 const interpolateColorsHSV = (
   value: number,
   inputRange: number[],
@@ -160,6 +185,9 @@ const interpolateColorsHSV = (
   return hsv2color(h, s, v);
 };
 
+/**
+ * @worklet
+ */
 const interpolateColorsRGB = (
   value: number,
   inputRange: number[],
@@ -212,6 +240,7 @@ const interpolateColorsRGB = (
         ColorSpace.HSV // default is RGB
       );
     });
+  * @worklet
   */
 export const interpolateColor = (
   value: number,
@@ -236,6 +265,7 @@ export const interpolateColor = (
     const backgroundColor = useDerivedValue(() =>
       mixColor(progress.value, "#ff3884", "#38ffb3")
     );
+  * @worklet
   */
 export const mixColor = (
   value: number,

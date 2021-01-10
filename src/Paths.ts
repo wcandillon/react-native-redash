@@ -28,6 +28,7 @@ export type Path = {
 
 /**
  * @summary Serialize a path into an SVG path string
+ * @worklet
  */
 export const serialize = (path: Path) => {
   "worklet";
@@ -69,6 +70,7 @@ export const parse = (d: string): Path => {
 
 /**
  * @summary Interpolate between paths.
+ * @worklet
  */
 export const interpolatePath = (
   value: number,
@@ -143,6 +145,7 @@ export const interpolatePath = (
 
 /**
  * @summary Interpolate two paths with an animation value that goes from 0 to 1
+ * @worklet
  */
 export const mixPath = (
   value: number,
@@ -156,6 +159,7 @@ export const mixPath = (
 
 /**
  * @summary Create a new path
+ * @worklet
  */
 export const createPath = (move: Vector): Path => {
   "worklet";
@@ -168,6 +172,7 @@ export const createPath = (move: Vector): Path => {
 
 /**
  * @summary Add a Bèzier curve command to a path.
+ * @worklet
  */
 export const addCurve = (path: Path, c: Curve) => {
   "worklet";
@@ -180,6 +185,7 @@ export const addCurve = (path: Path, c: Curve) => {
 
 /**
  * @summary Add a close command to a path.
+ * @worklet
  */
 export const close = (path: Path) => {
   "worklet";
@@ -196,6 +202,9 @@ interface NullableSelectedCurve {
   curve: Curve | null;
 }
 
+/**
+ * @worklet
+ */
 const curveIsFound = (c: NullableSelectedCurve): c is SelectedCurve => {
   "worklet";
   return c.curve !== null;
@@ -203,6 +212,7 @@ const curveIsFound = (c: NullableSelectedCurve): c is SelectedCurve => {
 
 /**
  * @summary Return the curves at x. This function assumes that only one curve is available at x
+ * @worklet
  */
 export const selectCurve = (path: Path, x: number): SelectedCurve => {
   "worklet";
@@ -238,6 +248,7 @@ export const selectCurve = (path: Path, x: number): SelectedCurve => {
     getYForX(p1, 200))
     // ~151
     getYForX(p1, 50)
+ * @worklet
  */
 export const getYForX = (path: Path, x: number, precision = 2) => {
   "worklet";

@@ -3,24 +3,28 @@ import { Vector } from "./Vectors";
 /**
  * @summary Convert a boolean value into a number.
  * This can be useful in reanimated since 0 and 1 are used for conditional statements.
+ * @worklet
  */
 export const bin = (value: boolean): 0 | 1 => {
   "worklet";
   return value ? 1 : 0;
 };
 
+/**
+ * Linear interpolation
+ * @param value
+ * @param x
+ * @param y
+ * @worklet
+ */
 export const mix = (value: number, x: number, y: number) => {
   "worklet";
   return x + value * (y - x);
 };
 
-export const lerp = (x: number, y: number, value: number) => {
-  "worklet";
-  return (1 - value) * x + value * y;
-};
-
 /**
  * @summary Transforms an angle from radians to degrees.
+ * @worklet
  */
 export const toDeg = (rad: number) => {
   "worklet";
@@ -29,6 +33,7 @@ export const toDeg = (rad: number) => {
 
 /**
  * @summary Transforms an angle from degrees to radians.
+ * @worklet
  */
 export const toRad = (deg: number) => {
   "worklet";
@@ -37,6 +42,7 @@ export const toRad = (deg: number) => {
 
 /**
  * @summary Returns true if node is within lowerBound and upperBound.
+ * @worklet
  */
 export const between = (
   value: number,
@@ -57,6 +63,7 @@ export const between = (
     clamp(-1, 0, 100); // 0
     clamp(1, 0, 100); // 1
     clamp(101, 0, 100); // 100
+  * @worklet
   */
 export const clamp = (
   value: number,
@@ -71,6 +78,7 @@ export const clamp = (
  * @description Returns the coordinate of a cubic bezier curve. t is the length of the curve from 0 to 1.
  * cubicBezier(0, p0, p1, p2, p3) equals p0 and cubicBezier(1, p0, p1, p2, p3) equals p3.
  * p0 and p3 are respectively the starting and ending point of the curve. p1 and p2 are the control points.
+ * @worklet
  */
 export const cubicBezier = (
   t: number,
@@ -90,6 +98,7 @@ export const cubicBezier = (
 
 /**
  * @summary Computes animation node rounded to precision.
+ * @worklet
  */
 export const round = (value: number, precision = 0) => {
   "worklet";
@@ -178,6 +187,7 @@ const solveCubic = (a: number, b: number, c: number, d: number) => {
     const to = vec.create(227, 89);
     // y= 139
     const y = cubicBezierYForX(x, from, c1, c2, to)));
+  * @worklet
   */
 export const cubicBezierYForX = (
   x: number,
