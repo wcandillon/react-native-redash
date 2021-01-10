@@ -14,13 +14,14 @@ export type Animation<
   State extends AnimationState = AnimationState,
   PrevState = State
 > = {
-  animation: (animation: State, now: number) => boolean;
-  start: (
+  onFrame: (animation: State, now: number) => boolean;
+  onStart: (
     animation: State,
     value: number,
     now: number,
     lastAnimation: PrevState
   ) => void;
+  callback?: () => void;
 } & State;
 
 export type AnimationParameter<State extends AnimationState = AnimationState> =
@@ -96,19 +97,19 @@ export const withPause = (
   return defineAnimation<PausableAnimation>(() => {
     "worklet";
     const nextAnimation = animationParameter(animationParam);
-    const animation = (state: PausableAnimation, now: number) => {
+    const onFrame = (state: PausableAnimation, now: number) => {
       const { lastTimestamp, elapsed } = state;
       if (paused.value) {
         state.elapsed = now - lastTimestamp;
         return false;
       }
       const dt = now - elapsed;
-      const finished = nextAnimation.animation(nextAnimation, dt);
+      const finished = nextAnimation.onFrame(nextAnimation, dt);
       state.current = nextAnimation.current;
       state.lastTimestamp = dt;
       return finished;
     };
-    const start = (
+    const onStart = (
       state: PausableAnimation,
       value: number,
       now: number,
@@ -116,11 +117,12 @@ export const withPause = (
     ) => {
       state.lastTimestamp = now;
       state.elapsed = 0;
-      nextAnimation.start(nextAnimation, value, now, previousState);
+      nextAnimation.onStart(nextAnimation, value, now, previousState);
     };
     return {
-      animation,
-      start,
+      onFrame,
+      onStart,
+      callback: nextAnimation.callback,
     };
   });
 };
@@ -142,8 +144,8 @@ export const withBouncing = (
   return defineAnimation<PhysicsAnimationState, PhysicsAnimationState>(() => {
     "worklet";
     const nextAnimation = animationParameter(animationParam);
-    const animation = (state: PhysicsAnimationState, now: number) => {
-      const finished = nextAnimation.animation(nextAnimation, now);
+    const onFrame = (state: PhysicsAnimationState, now: number) => {
+      const finished = nextAnimation.onFrame(nextAnimation, now);
       const { velocity, current } = nextAnimation;
       state.current = current;
       if (
@@ -155,17 +157,18 @@ export const withBouncing = (
       }
       return finished;
     };
-    const start = (
+    const onStart = (
       _state: PhysicsAnimationState,
       value: number,
       now: number,
       previousState: PhysicsAnimationState
     ) => {
-      nextAnimation.start(nextAnimation, value, now, previousState);
+      nextAnimation.onStart(nextAnimation, value, now, previousState);
     };
     return {
-      animation,
-      start,
+      onFrame,
+      onStart,
+      callback: nextAnimation.callback,
     };
   });
 };

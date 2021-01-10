@@ -19,7 +19,7 @@ export const bin = (value: boolean): 0 | 1 => {
  */
 export const mix = (value: number, x: number, y: number) => {
   "worklet";
-  return x + value * (y - x);
+  return x * (1 - value) + y * value;
 };
 
 /**
@@ -38,6 +38,15 @@ export const toDeg = (rad: number) => {
 export const toRad = (deg: number) => {
   "worklet";
   return (deg * Math.PI) / 180;
+};
+
+/**
+ *
+ * @summary Returns the average value
+ */
+export const avg = (values: number[]) => {
+  "worklet";
+  return values.reduce((a, v) => a + v, 0) / values.length;
 };
 
 /**

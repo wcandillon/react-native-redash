@@ -1,13 +1,18 @@
-import * as React from "react";
-import { TextStyle, TextProps as RNTextProps, StyleSheet } from "react-native";
+import React from "react";
+import {
+  TextStyle,
+  TextProps as RNTextProps,
+  StyleSheet,
+  TextInput,
+} from "react-native";
 import Animated, { useAnimatedProps } from "react-native-reanimated";
-import { TextInput } from "react-native-gesture-handler";
 
 const styles = StyleSheet.create({
   baseStyle: {
     color: "black",
   },
 });
+Animated.addWhitelistedNativeProps({ text: true });
 
 interface TextProps {
   text: Animated.SharedValue<string>;
