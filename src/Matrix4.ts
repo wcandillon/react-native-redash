@@ -21,6 +21,7 @@ type Transform3dName =
 type Transformations = {
   [Name in Transform3dName]: Name extends "matrix" ? Matrix4 : number;
 };
+
 export type Transforms3d = (
   | Pick<Transformations, "translateX">
   | Pick<Transformations, "translateY">
@@ -169,16 +170,25 @@ const rotateZMatrix = (r: number): Matrix4 => {
   ];
 };
 
+/**
+ * @worklet
+ */
 export const dot4 = (row: Vec4, col: Vec4) => {
   "worklet";
   return row[0] * col[0] + row[1] * col[1] + row[2] * col[2] + row[3] * col[3];
 };
 
+/**
+ * @worklet
+ */
 export const matrixVecMul4 = (m: Matrix4, v: Vec4) => {
   "worklet";
   return [dot4(m[0], v), dot4(m[1], v), dot4(m[2], v), dot4(m[3], v)] as const;
 };
 
+/**
+ * @worklet
+ */
 export const multiply4 = (m1: Matrix4, m2: Matrix4) => {
   "worklet";
   const col0 = [m2[0][0], m2[1][0], m2[2][0], m2[3][0]] as const;
@@ -213,6 +223,9 @@ export const multiply4 = (m1: Matrix4, m2: Matrix4) => {
   ] as const;
 };
 
+/**
+ * @worklet
+ */
 export const processTransform3d = (transforms: Transforms3d) => {
   "worklet";
   return transforms.reduce((acc, transform) => {
