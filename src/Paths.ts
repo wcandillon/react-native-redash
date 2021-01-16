@@ -195,6 +195,7 @@ export const addArc = (path: Path, corner: Vector, to: Vector) => {
 
 /**
  * @summary Add a cubic Bèzier curve command to a path.
+ * @worklet
  */
 export const addCurve = (path: Path, c: Curve) => {
   "worklet";
@@ -207,6 +208,7 @@ export const addCurve = (path: Path, c: Curve) => {
 
 /**
  * @summary Add a line command to a path.
+ * @worklet
  */
 export const addLine = (path: Path, to: Vector) => {
   "worklet";
@@ -221,6 +223,7 @@ export const addLine = (path: Path, to: Vector) => {
 
 /**
  * @summary Add a quadratic Bèzier curve command to a path.
+ * @worklet
  */
 export const addQuadraticCurve = (path: Path, cp: Vector, to: Vector) => {
   "worklet";
