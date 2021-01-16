@@ -43,6 +43,7 @@ export const toRad = (deg: number) => {
 /**
  *
  * @summary Returns the average value
+ * @worklet
  */
 export const avg = (values: number[]) => {
   "worklet";
