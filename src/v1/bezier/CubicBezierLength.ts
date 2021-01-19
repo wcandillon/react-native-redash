@@ -709,7 +709,7 @@ const cValues = [
 const binomialCoefficients = [[1], [1, 1], [1, 2, 1], [1, 3, 3, 1]];
 
 // Look up what the binomial coefficient is for pair {n,k}
-const binomials = (n: number, k: number) => binomialCoefficients[n][k];
+const binomials = (n: number, k: number) => binomialCoefficients[n]![k]!;
 
 /**
  * Compute the curve derivative (hodograph) at t.
@@ -727,7 +727,7 @@ const getDerivative = (derivative: number, t: number, vs: number[]): number => {
   if (derivative === 0) {
     value = 0;
     for (k = 0; k <= n; k += 1) {
-      value += binomials(n, k) * (1 - t ** n - k) * t ** k * vs[k];
+      value += binomials(n, k) * (1 - t ** n - k) * t ** k * vs[k]!;
     }
     return value;
   }
@@ -735,7 +735,7 @@ const getDerivative = (derivative: number, t: number, vs: number[]): number => {
   // for the lower order curve's.
   const vs1 = new Array(n);
   for (k = 0; k < n; k += 1) {
-    vs1[k] = n * (vs[k + 1] - vs[k]);
+    vs1[k] = n * (vs[k + 1]! - vs[k]!);
   }
   return getDerivative(derivative - 1, t, vs1);
 };
@@ -755,8 +755,8 @@ const getArcLength = (xs: CtrlPoint, ys: CtrlPoint, t = 1, n = 20) => {
   let sum = 0;
   let i;
   for (i = 0; i < n; i += 1) {
-    const correctedT = z * tValues[n][i] + z;
-    sum += cValues[n][i] * B(xs, ys, correctedT);
+    const correctedT = z * tValues[n]![i]! + z;
+    sum += cValues[n]![i]! * B(xs, ys, correctedT);
   }
   return z * sum;
 };

@@ -1,10 +1,9 @@
 import { serialize, parse, getYForX, curveLines } from "../Paths";
-import { Vector } from "../Vectors";
 
 import { d1, d2 } from "./paths";
 
 // Graph line with random points
-const points: Vector[] = [
+const points = [
   { x: 0, y: 192 },
   { x: 16.189944134078214, y: 192 },
   { x: 32.37988826815643, y: 192 },
@@ -32,7 +31,7 @@ const points: Vector[] = [
   { x: 388.5586592178771, y: 192 },
   { x: 404.7486033519553, y: 192 },
   { x: 414, y: 192 },
-];
+] as const;
 
 test("parse()", () => {
   const path =

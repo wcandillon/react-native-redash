@@ -87,7 +87,7 @@ export const parsePath = (d: string): ReanimatedPath => {
     absSVG(parseSVG(d))
   );
   const parts: BezierCubicCurve[] = curves.map((curve, index) => {
-    const prevCurve = curves[index - 1];
+    const prevCurve = curves[index - 1]!;
     const p0 =
       index === 0
         ? { x: move[MX], y: move[MY] }
@@ -171,7 +171,7 @@ export const interpolatePath = (
     typeof path === "string" ? parsePath(path) : path
   );
   const [path] = paths;
-  const commands = path.segments.map((_, index) => {
+  const commands = path!.segments.map((_, index) => {
     const interpolatePoint = (point: BezierPoint) =>
       interpolateNode(value, {
         inputRange,

@@ -5,7 +5,6 @@ export * from "./Math";
 export * from "./Vectors";
 export * from "./Paths";
 export * from "./Physics";
-export * from "./Array";
 export * from "./Matrix4";
 export * from "./Colors";
 export { default as ReText } from "./ReText";
