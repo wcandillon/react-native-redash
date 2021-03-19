@@ -41,6 +41,15 @@ export const toRad = (deg: number) => {
 };
 
 /**
+ * @summary Normalize a radian value to be from 0 to 2PI.
+ * @worklet
+ */
+const normalizeRad = (rad: number) => {
+  "worklet";
+  return rad - 2 * Math.PI * Math.floor(rad / 2 * Math.PI);
+};
+
+/**
  *
  * @summary Returns the average value
  * @worklet
