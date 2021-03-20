@@ -46,7 +46,8 @@ export const toRad = (deg: number) => {
  */
 const normalizeRad = (rad: number) => {
   "worklet";
-  return rad - 2 * Math.PI * Math.floor(rad / 2 * Math.PI);
+  const rest = value % TAU;
+  return rest > 0 ? rest : TAU + rest;
 };
 
 /**
