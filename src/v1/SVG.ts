@@ -1,8 +1,7 @@
-import Animated from "react-native-reanimated";
+import Animated, { interpolateNode } from "react-native-reanimated";
 import parseSVG from "parse-svg-path";
 import absSVG from "abs-svg-path";
 import normalizeSVG from "normalize-svg-path";
-import interpolateNode from "react-native-reanimated/src/derived/interpolate";
 
 import { get } from "./Array";
 import { string } from "./String";
