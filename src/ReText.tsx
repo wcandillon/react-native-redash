@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  TextStyle,
-  TextProps as RNTextProps,
-  StyleSheet,
-  TextInput,
-} from "react-native";
+import { TextProps as RNTextProps, StyleSheet, TextInput } from "react-native";
 import Animated, { useAnimatedProps } from "react-native-reanimated";
 
 const styles = StyleSheet.create({
@@ -16,16 +11,19 @@ Animated.addWhitelistedNativeProps({ text: true });
 
 interface TextProps {
   text: Animated.SharedValue<string>;
-  style?: Animated.AnimateProps<TextStyle, RNTextProps>["style"];
+  style?: Animated.AnimateProps<RNTextProps>["style"];
 }
 
 const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
+
 const ReText = (props: TextProps) => {
   const { text, style } = { style: {}, ...props };
   const animatedProps = useAnimatedProps(() => {
     return {
       text: text.value,
-    };
+      // Here we use any because the text prop is not available in the type
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any;
   });
   return (
     <AnimatedTextInput
