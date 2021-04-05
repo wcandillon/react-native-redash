@@ -273,7 +273,7 @@ const curveIsFound = (c: NullableSelectedCurve): c is SelectedCurve => {
  * @summary Return the curves at x. This function assumes that only one curve is available at x
  * @worklet
  */
-export const selectCurve = (path: Path, x: number): SelectedCurve => {
+export const selectCurve = (path: Path, x: number): SelectedCurve | null => {
   "worklet";
   const result: NullableSelectedCurve = {
     from: path.move,
@@ -292,7 +292,7 @@ export const selectCurve = (path: Path, x: number): SelectedCurve => {
     result.from = c.to;
   }
   if (!curveIsFound(result)) {
-    throw new Error(`No curve found at ${x}`);
+    return null;
   }
   return result;
 };
@@ -312,6 +312,9 @@ export const selectCurve = (path: Path, x: number): SelectedCurve => {
 export const getYForX = (path: Path, x: number, precision = 2) => {
   "worklet";
   const c = selectCurve(path, x);
+  if (c === null) {
+    return null;
+  }
   return cubicBezierYForX(
     x,
     c.from,
