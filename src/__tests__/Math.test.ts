@@ -8,6 +8,7 @@ import {
   toRad,
   toDeg,
   cubicBezierYForX,
+  dist,
 } from "../Math";
 import { vec } from "../Vectors";
 
@@ -73,4 +74,10 @@ test("cubicBezierYForX2()", () => {
   const c = vec.create(204, 223);
   const d = vec.create(227, 89);
   expect(Math.round(cubicBezierYForX(x, a, b, c, d))).toBe(y);
+});
+
+test("dist()", () => {
+  const v1 = { x: 0, y: 0 };
+  const v2 = { x: 100, y: 100 };
+  expect(dist(v1, v2)).toBe(Math.sqrt(100 ** 2 + 100 ** 2));
 });
