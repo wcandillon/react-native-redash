@@ -218,3 +218,12 @@ export const cubicBezierYForX = (
     .filter((root) => root >= 0 && root <= 1)[0];
   return cubicBezier(t, a.y, b.y, c.y, d.y);
 };
+
+/**
+ * @summary Euclidean distance between two vectors
+ * @worklet
+ */
+export const dist = (v1: Vector, v2: Vector) => {
+  "worklet";
+  return Math.sqrt((v1.x - v2.x) ** 2 + (v1.y - v2.y) ** 2);
+};
