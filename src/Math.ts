@@ -227,3 +227,12 @@ export const dist = (v1: Vector, v2: Vector) => {
   "worklet";
   return Math.sqrt((v1.x - v2.x) ** 2 + (v1.y - v2.y) ** 2);
 };
+
+/**
+ * @summary Returns true if a approximates b. Default precision is 0.001
+ * @worklet
+ */
+export const approximates = (a: number, b: number, precision = 0.001) => {
+  "worklet";
+  return Math.abs(a - b) <= precision;
+};

@@ -9,6 +9,7 @@ import {
   toDeg,
   cubicBezierYForX,
   dist,
+  approximates,
 } from "../Math";
 import { vec } from "../Vectors";
 
@@ -80,4 +81,11 @@ test("dist()", () => {
   const v1 = { x: 0, y: 0 };
   const v2 = { x: 100, y: 100 };
   expect(dist(v1, v2)).toBe(Math.sqrt(100 ** 2 + 100 ** 2));
+});
+
+test("approximates()", () => {
+  expect(approximates(1, 1)).toBe(true);
+  expect(approximates(1, 1.001)).toBe(true);
+  expect(approximates(1, 1.0011)).toBe(false);
+  expect(approximates(1, 2, 1)).toBe(true);
 });
