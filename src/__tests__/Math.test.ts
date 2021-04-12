@@ -10,6 +10,8 @@ import {
   cubicBezierYForX,
   dist,
   approximates,
+  step,
+  smoothstep,
 } from "../Math";
 import { vec } from "../Vectors";
 
@@ -88,4 +90,14 @@ test("approximates()", () => {
   expect(approximates(1, 1.001)).toBe(true);
   expect(approximates(1, 1.0011)).toBe(false);
   expect(approximates(1, 2, 1)).toBe(true);
+});
+
+test("step()", () => {
+  expect(step(1.5, 1)).toBe(1);
+  expect(step(0.5, 1)).toBe(0);
+});
+
+test("smoothstep()", () => {
+  expect(smoothstep(1.5, 1, 2)).toBe(0.5);
+  expect(smoothstep(0.5, 1, 2)).toBe(0);
 });
