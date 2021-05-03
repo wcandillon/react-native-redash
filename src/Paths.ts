@@ -356,6 +356,7 @@ const exhaustiveCheck = (a: never): never => {
 /**
  * @summary Link points via a smooth cubic Bézier curves
  * from https://github.com/rainbow-me/rainbow
+ * @worklet
  */
 export const curveLines = (
   points: Vector<number>[],
