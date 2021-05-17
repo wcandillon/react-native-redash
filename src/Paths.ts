@@ -73,10 +73,12 @@ export const parse = (d: string): Path => {
  * @summary Interpolate between paths.
  * @worklet
  */
-export const interpolatePath = (
+export const interpolatePath = <
+  T extends readonly [number, number, ...number[]]
+>(
   value: number,
-  inputRange: number[],
-  outputRange: Path[],
+  inputRange: T,
+  outputRange: { [K in keyof T]: Path },
   extrapolate = Animated.Extrapolate.CLAMP
 ) => {
   "worklet";
@@ -100,13 +102,13 @@ export const interpolatePath = (
         x: interpolate(
           value,
           inputRange,
-          outputRange.map((p) => p.curves[index].c1.x),
+          outputRange.map((p) => p.curves[index]!.c1.x),
           extrapolate
         ),
         y: interpolate(
           value,
           inputRange,
-          outputRange.map((p) => p.curves[index].c1.y),
+          outputRange.map((p) => p.curves[index]!.c1.y),
           extrapolate
         ),
       },
@@ -114,13 +116,13 @@ export const interpolatePath = (
         x: interpolate(
           value,
           inputRange,
-          outputRange.map((p) => p.curves[index].c2.x),
+          outputRange.map((p) => p.curves[index]!.c2.x),
           extrapolate
         ),
         y: interpolate(
           value,
           inputRange,
-          outputRange.map((p) => p.curves[index].c2.y),
+          outputRange.map((p) => p.curves[index]!.c2.y),
           extrapolate
         ),
       },
@@ -128,13 +130,13 @@ export const interpolatePath = (
         x: interpolate(
           value,
           inputRange,
-          outputRange.map((p) => p.curves[index].to.x),
+          outputRange.map((p) => p.curves[index]!.to.x),
           extrapolate
         ),
         y: interpolate(
           value,
           inputRange,
-          outputRange.map((p) => p.curves[index].to.y),
+          outputRange.map((p) => p.curves[index]!.to.y),
           extrapolate
         ),
       },
@@ -279,8 +281,7 @@ export const selectCurve = (path: Path, x: number): SelectedCurve | null => {
     from: path.move,
     curve: null,
   };
-  for (let i = 0; i < path.curves.length; i++) {
-    const c = path.curves[i];
+  for (const c of path.curves) {
     const contains =
       result.from.x > c.to.x
         ? x >= c.to.x && x <= result.from.x
@@ -327,8 +328,8 @@ export const getYForX = (path: Path, x: number, precision = 2) => {
 
 const controlPoint = (
   current: Vector,
-  previous: Vector,
-  next: Vector,
+  previous: Vector | undefined,
+  next: Vector | undefined,
   reverse: boolean,
   smoothing: number
 ) => {
@@ -359,22 +360,21 @@ const exhaustiveCheck = (a: never): never => {
  * @worklet
  */
 export const curveLines = (
-  points: Vector<number>[],
+  points: readonly [Vector<number>, ...Vector<number>[]],
   smoothing: number,
   strategy: "complex" | "bezier" | "simple"
 ) => {
   "worklet";
   const path = createPath(points[0]);
   // build the d attributes by looping over the points
-  for (let i = 0; i < points.length; i++) {
-    if (i === 0) {
-      continue;
-    }
-    const point = points[i];
+  points.forEach((point, i) => {
     const next = points[i + 1];
-    const prev = points[i - 1];
-    const cps = controlPoint(prev, points[i - 2], point, false, smoothing);
-    const cpe = controlPoint(point, prev, next, true, smoothing);
+    const p1 = points[i - 1];
+    if (p1 === undefined) {
+      return;
+    }
+    const cps = controlPoint(p1, points[i - 2], point, false, smoothing);
+    const cpe = controlPoint(point, p1, next, true, smoothing);
     switch (strategy) {
       case "simple":
         const cp = {
@@ -384,8 +384,7 @@ export const curveLines = (
         addQuadraticCurve(path, cp, point);
         break;
       case "bezier":
-        const p0 = points[i - 2] || prev;
-        const p1 = points[i - 1];
+        const p0 = points[i - 2] || p1;
         const cp1x = (2 * p0.x + p1.x) / 3;
         const cp1y = (2 * p0.y + p1.y) / 3;
         const cp2x = (p0.x + 2 * p1.x) / 3;
@@ -399,9 +398,9 @@ export const curveLines = (
         });
         if (i === points.length - 1) {
           path.curves.push({
-            to: points[points.length - 1],
-            c1: points[points.length - 1],
-            c2: points[points.length - 1],
+            to: point,
+            c1: point,
+            c2: point,
           });
         }
         break;
@@ -415,6 +414,6 @@ export const curveLines = (
       default:
         exhaustiveCheck(strategy);
     }
-  }
+  });
   return path;
 };

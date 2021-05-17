@@ -216,5 +216,8 @@ export const cubicBezierYForX = (
   const t = solveCubic(pa, pb, pc, pd)
     .map((root) => round(root, precision))
     .filter((root) => root >= 0 && root <= 1)[0];
+  if (t === undefined) {
+    throw new Error("y not found for x=" + x);
+  }
   return cubicBezier(t, a.y, b.y, c.y, d.y);
 };

@@ -12,7 +12,7 @@
         ]
       }
     ],
-    "import/no-named-as-default-member": 0
+    "@typescript-eslint/no-non-null-assertion": 0
   },
   "env": {
     "jest": true
