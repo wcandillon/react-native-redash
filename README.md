@@ -15,18 +15,7 @@ yarn add react-native-redash
 
 [https://wcandillon.gitbook.io/redash/](https://wcandillon.gitbook.io/redash/)
 
-## ⚠️ v1 Users ⚠️
+## ⚠️ Reanimated v1 ⚠️
 
+Please use `v14.2.2`
 v1 documentation: https://wcandillon.github.io/react-native-redash-v1-docs/
-
-To access functions that work with Reanimated v1 nodes, use the following import:
-
-```ts
-import {usePanGestureHandler} from  "react-native-redash/lib/module/v1";
-```
-
-To add TypeScript support for the v1 functions, add the following type to your `tsconfig`:
-
-```json
-  "include": ["node_modules/react-native-redash/lib/typescript/v1/index.d.ts"]
-```
