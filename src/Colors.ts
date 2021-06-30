@@ -27,12 +27,5 @@ export const mixColor = (
   colorSpace: "RGB" | "HSV" = "RGB"
 ) => {
   "worklet";
-  return interpolateColor(
-    value,
-    [0, 1],
-    // TODO: remove any cast once https://github.com/software-mansion/react-native-reanimated/pull/1479 is merged
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    [color1 as any, color2 as any],
-    colorSpace
-  );
+  return interpolateColor(value, [0, 1], [color1, color2], colorSpace);
 };
