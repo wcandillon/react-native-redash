@@ -1,5 +1,6 @@
 /* eslint-disable prefer-destructuring */
 import { Vector } from "./Vectors";
+
 export type Vec3 = readonly [number, number, number];
 
 export type Matrix3 = readonly [Vec3, Vec3, Vec3];
