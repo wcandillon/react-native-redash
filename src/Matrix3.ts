@@ -1,5 +1,5 @@
 /* eslint-disable prefer-destructuring */
-import { Vector } from "./Vectors";
+import type { Vector } from "./Vectors";
 
 export type Vec3 = readonly [number, number, number];
 
@@ -136,6 +136,11 @@ export const multiply3 = (m1: Matrix3, m2: Matrix3) => {
     [dot3(m1[1], col0), dot3(m1[1], col1), dot3(m1[1], col2)],
     [dot3(m1[2], col0), dot3(m1[2], col1), dot3(m1[2], col2)],
   ] as const;
+};
+
+export const serializeToSVGMatrixArray = (m: Matrix3) => {
+  "worklet";
+  return [m[0][0], m[1][0], m[0][1], m[1][1], m[0][2], m[1][2]];
 };
 
 export const serializeToSVGMatrix = (m: Matrix3) => {

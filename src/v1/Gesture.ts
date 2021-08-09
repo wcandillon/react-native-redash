@@ -1,5 +1,5 @@
 import Animated, { diff, lessThan, or } from "react-native-reanimated";
-import {
+import type {
   FlingGestureHandlerEventExtra,
   ForceTouchGestureHandlerEventExtra,
   GestureHandlerStateChangeNativeEvent,
@@ -7,9 +7,9 @@ import {
   PanGestureHandlerEventExtra,
   PinchGestureHandlerEventExtra,
   RotationGestureHandlerEventExtra,
-  State,
   TapGestureHandlerEventExtra,
 } from "react-native-gesture-handler";
+import { State } from "react-native-gesture-handler";
 import { Platform } from "react-native";
 
 import { snapPoint } from "./Animations";

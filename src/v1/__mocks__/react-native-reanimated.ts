@@ -1,18 +1,13 @@
 import { Platform } from "react-native";
-import Animated from "react-native-reanimated";
-
-enum Extrapolate {
-  EXTEND = "extend",
-  CLAMP = "clamp",
-  IDENTITY = "identity",
-}
+import type Animated from "react-native-reanimated";
+import { Extrapolate } from "react-native-reanimated";
 
 interface InterpolationConfig {
   inputRange: ReadonlyArray<Animated.Adaptable<number>>;
   outputRange: ReadonlyArray<Animated.Adaptable<number>>;
-  extrapolate?: Extrapolate;
-  extrapolateLeft?: Extrapolate;
-  extrapolateRight?: Extrapolate;
+  extrapolate?: typeof Extrapolate;
+  extrapolateLeft?: typeof Extrapolate;
+  extrapolateRight?: typeof Extrapolate;
 }
 
 const getValue = (node) => {

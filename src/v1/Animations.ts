@@ -1,7 +1,8 @@
 import Animated, { block, defined } from "react-native-reanimated";
 
 import { clamp, max, min } from "./Math";
-import { Matrix3, Transforms2d, decompose2d } from "./Matrix3";
+import type { Matrix3, Transforms2d } from "./Matrix3";
+import { decompose2d } from "./Matrix3";
 
 const {
   Value,
