@@ -2,7 +2,7 @@
 import Animated from "react-native-reanimated";
 
 import { atan2 } from "./Math";
-import { Vector } from "./Vectors";
+import type { Vector } from "./Vectors";
 
 const { add, multiply, sqrt, cos, sin, sub, divide, pow, tan } = Animated;
 

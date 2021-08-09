@@ -1,5 +1,6 @@
 import * as React from "react";
-import { TextInput, TextStyle, StyleProp } from "react-native";
+import type { TextStyle, StyleProp } from "react-native";
+import { TextInput } from "react-native";
 import Animated from "react-native-reanimated";
 
 const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);

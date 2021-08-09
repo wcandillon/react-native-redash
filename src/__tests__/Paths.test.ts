@@ -1,5 +1,5 @@
 import { serialize, parse, getYForX, curveLines } from "../Paths";
-import { Vector } from "../Vectors";
+import type { Vector } from "../Vectors";
 
 import { d1, d2 } from "./paths";
 

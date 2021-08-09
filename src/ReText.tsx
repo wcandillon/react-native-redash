@@ -1,5 +1,6 @@
 import React from "react";
-import { TextProps as RNTextProps, StyleSheet, TextInput } from "react-native";
+import type { TextProps as RNTextProps } from "react-native";
+import { StyleSheet, TextInput } from "react-native";
 import Animated, { useAnimatedProps } from "react-native-reanimated";
 
 const styles = StyleSheet.create({

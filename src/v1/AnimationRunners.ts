@@ -1,6 +1,6 @@
 import Animated, { add } from "react-native-reanimated";
 
-import { SpringConfig } from "./Animations";
+import type { SpringConfig } from "./Animations";
 
 const {
   Clock,

@@ -9,7 +9,8 @@ import {
   tapGestureHandler,
   scrollHandler,
 } from "./Gesture";
-import { Vector, vec } from "./Vectors";
+import type { Vector } from "./Vectors";
+import { vec } from "./Vectors";
 import { loop } from "./AnimationRunners";
 
 const { Clock, Value, diff, set, useCode, debug, block } = Animated;
