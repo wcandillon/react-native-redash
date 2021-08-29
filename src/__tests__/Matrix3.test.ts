@@ -8,7 +8,7 @@ test("processTransform3d()", () => {
       processTransform2d([
         { translateX: width / 2 },
         { translateY: height / 2 },
-        { rotate: Math.PI / 2 },
+        { rotate: `${Math.PI / 2}rad` },
         { translateX: -width / 2 },
         { translateY: -height / 2 },
       ])
