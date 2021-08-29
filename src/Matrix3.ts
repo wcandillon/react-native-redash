@@ -5,24 +5,22 @@ export type Vec3 = readonly [number, number, number];
 
 export type Matrix3 = readonly [Vec3, Vec3, Vec3];
 
-type Transform2dName =
-  | "translateX"
-  | "translateY"
-  | "scale"
-  | "skewX"
-  | "skewY"
-  | "scaleX"
-  | "scaleY"
-  | "rotateZ"
-  | "rotate";
-
 export interface TransformProp {
   transform: Transforms2d;
 }
 
 type Transformations = {
-  [Name in Transform2dName]: number;
+  translateX: number;
+  translateY: number;
+  scale: number;
+  skewX: string;
+  skewY: string;
+  scaleX: number;
+  scaleY: number;
+  rotateZ: string;
+  rotate: string;
 };
+
 export type Transforms2d = (
   | Pick<Transformations, "translateX">
   | Pick<Transformations, "translateY">
@@ -32,9 +30,82 @@ export type Transforms2d = (
   | Pick<Transformations, "skewX">
   | Pick<Transformations, "skewY">
   | Pick<Transformations, "rotate">
+  | Pick<Transformations, "rotateZ">
 )[];
 
+export const parseAngle = (angle: string) => {
+  "worklet";
+  if (angle.endsWith("deg")) {
+    return parseFloat(angle) * (Math.PI / 180);
+  }
+  return parseFloat(angle);
+};
+
+export const isTranslateX = (
+  transform: Transforms2d[0]
+): transform is Pick<Transformations, "translateX"> => {
+  "worklet";
+  return Object.keys(transform).indexOf("translateX") !== -1;
+};
+
+export const isTranslateY = (
+  transform: Transforms2d[0]
+): transform is Pick<Transformations, "translateY"> => {
+  "worklet";
+  return Object.keys(transform).indexOf("translateY") !== -1;
+};
+
+export const isScale = (
+  transform: Transforms2d[0]
+): transform is Pick<Transformations, "scale"> => {
+  "worklet";
+  return Object.keys(transform).indexOf("scale") !== -1;
+};
+
+export const isScaleX = (
+  transform: Transforms2d[0]
+): transform is Pick<Transformations, "scaleX"> => {
+  "worklet";
+  return Object.keys(transform).indexOf("scaleX") !== -1;
+};
+
+export const isScaleY = (
+  transform: Transforms2d[0]
+): transform is Pick<Transformations, "scaleY"> => {
+  "worklet";
+  return Object.keys(transform).indexOf("scaleY") !== -1;
+};
+
+export const isSkewX = (
+  transform: Transforms2d[0]
+): transform is Pick<Transformations, "skewX"> => {
+  "worklet";
+  return Object.keys(transform).indexOf("skewX") !== -1;
+};
+
+export const isSkewY = (
+  transform: Transforms2d[0]
+): transform is Pick<Transformations, "skewY"> => {
+  "worklet";
+  return Object.keys(transform).indexOf("skewY") !== -1;
+};
+
+export const isRotate = (
+  transform: Transforms2d[0]
+): transform is Pick<Transformations, "rotate"> => {
+  "worklet";
+  return Object.keys(transform).indexOf("rotate") !== -1;
+};
+
+export const isRotateZ = (
+  transform: Transforms2d[0]
+): transform is Pick<Transformations, "rotateZ"> => {
+  "worklet";
+  return Object.keys(transform).indexOf("rotateZ") !== -1;
+};
+
 const exhaustiveCheck = (a: never): never => {
+  "worklet";
   throw new Error(`Unexhaustive handling for ${a}`);
 };
 
@@ -151,33 +222,34 @@ export const serializeToSVGMatrix = (m: Matrix3) => {
 export const processTransform2d = (transforms: Transforms2d) => {
   "worklet";
   return transforms.reduce((acc, transform) => {
-    const key = Object.keys(transform)[0] as Transform2dName;
-    const value = (transform as Pick<Transformations, typeof key>)[key];
-    if (key === "translateX") {
-      return multiply3(acc, translateXMatrix(value));
+    if (isTranslateX(transform)) {
+      return multiply3(acc, translateXMatrix(transform.translateX));
     }
-    if (key === "translateY") {
-      return multiply3(acc, translateYMatrix(value));
+    if (isTranslateY(transform)) {
+      return multiply3(acc, translateYMatrix(transform.translateY));
     }
-    if (key === "scale") {
-      return multiply3(acc, scaleMatrix(value));
+    if (isScale(transform)) {
+      return multiply3(acc, scaleMatrix(transform.scale));
     }
-    if (key === "scaleX") {
-      return multiply3(acc, scaleXMatrix(value));
+    if (isScaleX(transform)) {
+      return multiply3(acc, scaleXMatrix(transform.scaleX));
     }
-    if (key === "scaleY") {
-      return multiply3(acc, scaleYMatrix(value));
+    if (isScaleY(transform)) {
+      return multiply3(acc, scaleYMatrix(transform.scaleY));
     }
-    if (key === "skewX") {
-      return multiply3(acc, skewXMatrix(value));
+    if (isSkewX(transform)) {
+      return multiply3(acc, skewXMatrix(parseAngle(transform.skewX)));
     }
-    if (key === "skewY") {
-      return multiply3(acc, skewYMatrix(value));
+    if (isSkewY(transform)) {
+      return multiply3(acc, skewYMatrix(parseAngle(transform.skewY)));
     }
-    if (key === "rotate" || key === "rotateZ") {
-      return multiply3(acc, rotateZMatrix(value));
+    if (isRotate(transform)) {
+      return multiply3(acc, rotateZMatrix(parseAngle(transform.rotate)));
     }
-    return exhaustiveCheck(key);
+    if (isRotateZ(transform)) {
+      return multiply3(acc, rotateZMatrix(parseAngle(transform.rotateZ)));
+    }
+    return exhaustiveCheck(transform);
   }, identityMatrix);
 };
 
