@@ -19,7 +19,7 @@ export const transformOrigin = (
   ];
 };
 
-export const transform2d = (
+export const transformOrigin2d = (
   { x, y }: Vector,
   transformations: Transforms2d
 ): Transforms2d => {
