@@ -1,4 +1,6 @@
 import type { TransformsStyle } from "react-native";
+import type Animated from "react-native-reanimated";
+import { useAnimatedStyle } from "react-native-reanimated";
 
 import type { Vector } from "./Vectors";
 import type { Transforms2d } from "./Matrix3";
@@ -32,3 +34,11 @@ export const transformOrigin2d = (
     { translateY: -y },
   ];
 };
+
+export const useTranslation = ({
+  x,
+  y,
+}: Vector<Animated.SharedValue<number>>) =>
+  useAnimatedStyle(() => ({
+    transform: [{ translateX: x.value }, { translateY: y.value }],
+  }));

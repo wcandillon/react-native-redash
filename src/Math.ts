@@ -246,3 +246,8 @@ export const cubicBezierYForX = (
     .filter((root) => root >= 0 && root <= 1)[0];
   return cubicBezier(t, a.y, b.y, c.y, d.y);
 };
+
+export const fract = (x: number) => {
+  "worklet";
+  return x - Math.floor(x);
+};
