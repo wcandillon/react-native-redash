@@ -32,3 +32,8 @@ export const transformOrigin2d = (
     { translateY: -y },
   ];
 };
+
+export const useTranslation = ({ x, y }: Vector<Animated.SharedValue<number>>) =>
+  useAnimatedStyle(() => ({
+    transform: [{ translateX: x.value }, { translateY: y.value }],
+  }));
