@@ -209,14 +209,14 @@ export const multiply3 = (m1: Matrix3, m2: Matrix3) => {
   ] as const;
 };
 
-export const serializeToSVGMatrixArray = (m: Matrix3) => {
-  "worklet";
-  return [m[0][0], m[1][0], m[0][1], m[1][1], m[0][2], m[1][2]];
-};
-
-export const serializeToSVGMatrix = (m: Matrix3) => {
+const serializeToSVGMatrix = (m: Matrix3) => {
   "worklet";
   return `matrix(${m[0][0]}, ${m[1][0]}, ${m[0][1]}, ${m[1][1]}, ${m[0][2]}, ${m[1][2]})`;
+};
+
+export const svgMatrix = (transforms: Transforms2d) => {
+  "worklet";
+  return serializeToSVGMatrix(processTransform2d(transforms));
 };
 
 export const processTransform2d = (transforms: Transforms2d) => {
