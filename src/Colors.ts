@@ -58,3 +58,23 @@ export const hsv2rgb = (h: number, s: number, v: number) => {
 
   return { r, g, b };
 };
+
+export const opacity = (c: number): number => {
+  'worklet';
+  return ((c >> 24) & 255) / 255;
+};
+
+export const red = (c: number): number => {
+  'worklet';
+  return (c >> 16) & 255;
+};
+
+export const green = (c: number): number => {
+  'worklet';
+  return (c >> 8) & 255;
+};
+
+export const blue = (c: number): number => {
+  'worklet';
+  return c & 255;
+};
