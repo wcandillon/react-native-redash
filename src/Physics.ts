@@ -9,23 +9,28 @@ export const snapPoint = (
   threshold = 0.5
 ): number => {
   "worklet";
-  const point = value + 0.2 * velocity;
+  const point = Math.abs(value + 0.2 * velocity);
+  const absolutePoints = points.map((_point) => Math.abs(_point));
 
   let startPointIndex = 0;
   let endPointIndex = points.length - 1;
 
   for (let i = 0, k = points.length - 1; i < points.length; i++, k--) {
-    if (points[i] < point) {
+    if (absolutePoints[i] < point) {
       startPointIndex = i;
     }
-    if (points[k] > point && points[k] < points[endPointIndex]) {
+    if (
+      absolutePoints[k] > point &&
+      absolutePoints[k] < absolutePoints[endPointIndex]
+    ) {
       endPointIndex = k;
     }
   }
 
   const middlePoint =
-    points[startPointIndex] +
-    (points[endPointIndex] - points[startPointIndex]) * threshold;
+    absolutePoints[startPointIndex] +
+    (absolutePoints[endPointIndex] - absolutePoints[startPointIndex]) *
+      threshold;
 
   return point < middlePoint ? points[startPointIndex] : points[endPointIndex];
 };
