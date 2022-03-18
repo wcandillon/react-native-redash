@@ -155,6 +155,21 @@ export const mixPath = (
   extrapolate = Animated.Extrapolate.CLAMP
 ) => {
   "worklet";
+
+  // handle issues on different path length
+  // https://github.com/wcandillon/react-native-redash/issues/466
+  if (p2.curves.length !== p1.curves.length) {
+    const p1a = {
+      ...p2,
+      // if and old curve is present return it
+        // otherwise use the new one directly 
+      curves: p2.curves.map((curve, index) => (p1.curves[index] || { ...curve })),
+    };
+
+    return interpolatePath(value, [0, 1], [p1a, p2], extrapolate);
+  }
+
+  
   return interpolatePath(value, [0, 1], [p1, p2], extrapolate);
 };
 
