@@ -14,11 +14,11 @@ export const transformOrigin = (
   "worklet";
   return [
     { translateX: x },
-    { translateY: y },
-    ...transformations,
+    { translateY: y }
+  ].concat(transformations).concat([
     { translateX: -x },
-    { translateY: -y },
-  ];
+    { translateY: -y }
+  ]);
 };
 
 export const transformOrigin2d = (
@@ -28,11 +28,11 @@ export const transformOrigin2d = (
   "worklet";
   return [
     { translateX: x },
-    { translateY: y },
-    ...transformations,
+    { translateY: y }
+  ].concat(transformations).concat([
     { translateX: -x },
-    { translateY: -y },
-  ];
+    { translateY: -y }
+  ]);
 };
 
 export const useTranslation = ({
