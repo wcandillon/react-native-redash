@@ -12,7 +12,7 @@ export const transformOrigin = (
   transformations: RNTransform
 ): RNTransform => {
   "worklet";
-  return [{ translateX: x }, { translateY: y }]
+  return ([{ translateX: x }, { translateY: y }] as RNTransform)
     .concat(transformations)
     .concat([{ translateX: -x }, { translateY: -y }]);
 };
@@ -22,7 +22,7 @@ export const transformOrigin2d = (
   transformations: Transforms2d
 ): Transforms2d => {
   "worklet";
-  return [{ translateX: x }, { translateY: y }]
+  return ([{ translateX: x }, { translateY: y }] as Transforms2d)
     .concat(transformations)
     .concat([{ translateX: -x }, { translateY: -y }]);
 };
