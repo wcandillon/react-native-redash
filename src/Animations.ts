@@ -68,9 +68,9 @@ export const defineAnimation = <
 ) => {
   "worklet";
   if (_WORKLET) {
-    return (factory() as unknown) as number;
+    return factory() as unknown as number;
   }
-  return (factory as unknown) as number;
+  return factory as unknown as number;
 };
 
 interface PausableAnimation extends AnimationState {
