@@ -1,6 +1,6 @@
 import Animated, { add } from "react-native-reanimated";
 
-import { SpringConfig } from "./Animations";
+import type { SpringConfig } from "./Animations";
 
 const {
   Clock,
@@ -163,7 +163,13 @@ export interface SpringParams {
 }
 
 export const spring = (params: SpringParams) => {
-  const { clock, from, velocity, config: springConfig, to } = {
+  const {
+    clock,
+    from,
+    velocity,
+    config: springConfig,
+    to,
+  } = {
     clock: new Clock(),
     velocity: new Value(0),
     from: 0,

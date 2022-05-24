@@ -1,4 +1,5 @@
-import Animated, { useSharedValue } from "react-native-reanimated";
+import type Animated from "react-native-reanimated";
+import { useSharedValue } from "react-native-reanimated";
 
 /**
  * @summary Type representing a vector
@@ -36,7 +37,10 @@ type Create = {
  * @param y
  * @worklet
  */
-const create: Create = <T extends Animated.Adaptable<number>>(x?: T, y?: T) => {
+export const vec2: Create = <T extends Animated.Adaptable<number>>(
+  x?: T,
+  y?: T
+) => {
   "worklet";
   return {
     x: x ?? 0,
@@ -45,5 +49,5 @@ const create: Create = <T extends Animated.Adaptable<number>>(x?: T, y?: T) => {
 };
 
 export const vec = {
-  create,
+  create: vec2,
 };

@@ -2,7 +2,7 @@
 import { useEffect } from "react";
 import Animated, { not, add } from "react-native-reanimated";
 
-import { SpringConfig, TimingConfig } from "./Animations";
+import type { SpringConfig, TimingConfig } from "./Animations";
 import { useConst } from "./Hooks";
 
 const {

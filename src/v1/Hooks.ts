@@ -9,7 +9,8 @@ import {
   tapGestureHandler,
   scrollHandler,
 } from "./Gesture";
-import { Vector, vec } from "./Vectors";
+import type { Vector } from "./Vectors";
+import { vec } from "./Vectors";
 import { loop } from "./AnimationRunners";
 
 const { Clock, Value, diff, set, useCode, debug, block } = Animated;
@@ -60,12 +61,12 @@ type UseVectors = {
   (...v: P[]): R[];
 };
 
-export const useVectors = (((
+export const useVectors = ((
   ...defaultValues: Parameters<typeof vec.createValue>[]
 ) =>
   useConst(() =>
     defaultValues.map((values) => vec.createValue(...values))
-  )) as unknown) as UseVectors;
+  )) as unknown as UseVectors;
 
 export const useClock = () => useConst(() => new Clock());
 
@@ -142,8 +143,8 @@ type UseValues = {
   <V extends Atomic>(...values: V[]): Animated.Value<V>[];
 };
 
-export const useValues = ((<V extends Atomic>(...values: [V, ...V[]]) =>
-  useConst(() => values.map((v) => new Value(v)))) as unknown) as UseValues;
+export const useValues = (<V extends Atomic>(...values: [V, ...V[]]) =>
+  useConst(() => values.map((v) => new Value(v)))) as unknown as UseValues;
 
 export const useClocks = (numberOfClocks: number): Animated.Clock[] =>
   useConst(() => new Array(numberOfClocks).fill(0).map(() => new Clock()));
@@ -156,8 +157,8 @@ export const useDiff = (node: Animated.Node<number>) => {
 
 export const useDebug = (values: { [key: string]: Animated.Node<number> }) => {
   const keys = Object.keys(values);
-  useCode(() => block(keys.map((name) => debug(name, values[name]))), [
-    keys,
-    values,
-  ]);
+  useCode(
+    () => block(keys.map((name) => debug(name, values[name]))),
+    [keys, values]
+  );
 };

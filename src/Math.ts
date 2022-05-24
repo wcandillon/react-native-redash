@@ -1,4 +1,7 @@
-import { Vector } from "./Vectors";
+import type { Vector } from "./Vectors";
+
+export const { PI } = Math;
+export const TAU = PI * 2;
 
 /**
  * @summary Convert a boolean value into a number.
@@ -20,6 +23,31 @@ export const bin = (value: boolean): 0 | 1 => {
 export const mix = (value: number, x: number, y: number) => {
   "worklet";
   return x * (1 - value) + y * value;
+};
+
+/**
+ * @summary Check is value is almost equal to the target.
+ * @worklet
+ */
+export const approximates = (
+  value: number,
+  target: number,
+  epsilon = 0.001
+) => {
+  "worklet";
+  return Math.abs(value - target) < epsilon;
+};
+
+/**
+ * @summary Normalize any radian value between 0 and 2PI.
+ * For example, if the value is -PI/2, it will be comverted to 1.5PI.
+ * Or 4PI will be converted to 0.
+ * @worklet
+ */
+export const normalizeRad = (value: number) => {
+  "worklet";
+  const rest = value % TAU;
+  return rest > 0 ? rest : TAU + rest;
 };
 
 /**
@@ -217,4 +245,9 @@ export const cubicBezierYForX = (
     .map((root) => round(root, precision))
     .filter((root) => root >= 0 && root <= 1)[0];
   return cubicBezier(t, a.y, b.y, c.y, d.y);
+};
+
+export const fract = (x: number) => {
+  "worklet";
+  return x - Math.floor(x);
 };

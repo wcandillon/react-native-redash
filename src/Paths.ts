@@ -3,7 +3,7 @@ import parseSVG from "parse-svg-path";
 import absSVG from "abs-svg-path";
 import normalizeSVG from "normalize-svg-path";
 
-import { Vector } from "./Vectors";
+import type { Vector } from "./Vectors";
 import { cartesian2Polar } from "./Coordinates";
 import { cubicBezierYForX } from "./Math";
 
@@ -356,6 +356,7 @@ const exhaustiveCheck = (a: never): never => {
 /**
  * @summary Link points via a smooth cubic Bézier curves
  * from https://github.com/rainbow-me/rainbow
+ * @worklet
  */
 export const curveLines = (
   points: Vector<number>[],

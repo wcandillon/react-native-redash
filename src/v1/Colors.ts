@@ -7,17 +7,8 @@ import { processColor } from "react-native";
 import { mix } from "./Animations";
 import { clamp, fract } from "./Math";
 
-const {
-  add,
-  multiply,
-  abs,
-  round,
-  sub,
-  proc,
-  color,
-  greaterThan,
-  cond,
-} = Animated;
+const { add, multiply, abs, round, sub, proc, color, greaterThan, cond } =
+  Animated;
 
 // type Color = Animated.Adaptable<string> | Animated.Adaptable<number>;
 type StaticColor = string | number;

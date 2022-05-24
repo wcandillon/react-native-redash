@@ -1,4 +1,4 @@
-import { Vector } from "./Vectors";
+import type { Vector } from "./Vectors";
 
 export interface PolarPoint {
   theta: number;

@@ -1,5 +1,9 @@
 import { useEffect } from "react";
-import Animated, {
+import type {
+  WithSpringConfig,
+  WithTimingConfig,
+} from "react-native-reanimated";
+import {
   useSharedValue,
   useDerivedValue,
   withTiming,
@@ -10,7 +14,7 @@ import { bin } from "./Math";
 
 export const useSpring = (
   state: boolean | number,
-  config?: Animated.WithSpringConfig
+  config?: WithSpringConfig
 ) => {
   const value = useSharedValue(0);
   useEffect(() => {
@@ -24,7 +28,7 @@ export const useSpring = (
 
 export const useTiming = (
   state: boolean | number,
-  config?: Animated.WithTimingConfig
+  config?: WithTimingConfig
 ) => {
   const value = useSharedValue(0);
   useEffect(() => {
