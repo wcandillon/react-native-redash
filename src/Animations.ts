@@ -1,102 +1,22 @@
-import type Animated from "react-native-reanimated";
+/* eslint-disable @typescript-eslint/consistent-type-imports */
+import type { AnimatableValue, Animation } from "react-native-reanimated";
+import Animated, { defineAnimation } from "react-native-reanimated";
 
-declare let _WORKLET: boolean;
-
-export interface AnimationState {
-  current: number;
-}
-
-export interface PhysicsAnimationState extends AnimationState {
-  velocity: number;
-}
-
-export type Animation<
-  State extends AnimationState = AnimationState,
-  PrevState = State
-> = {
-  onFrame: (animation: State, now: number) => boolean;
-  onStart: (
-    animation: State,
-    value: number,
-    now: number,
-    lastAnimation: PrevState
-  ) => void;
-  callback?: () => void;
-} & State;
-
-export type AnimationParameter<State extends AnimationState = AnimationState> =
-  | Animation<State>
-  | (() => Animation<State>)
-  | number;
-
-/**
- *  @summary Access animations passed as parameters safely on both the UI and JS thread with the proper static types.
- *  Animations can receive other animations as parameter.
- */
-export const animationParameter = <
-  State extends AnimationState = AnimationState
->(
-  animationParam: AnimationParameter<State>
-) => {
-  "worklet";
-  if (typeof animationParam === "number") {
-    throw new Error("Expected Animation as parameter");
-  }
-  return typeof animationParam === "function"
-    ? animationParam()
-    : animationParam;
-};
-
-/**
- *  @summary Declare custom animations that can be invoked on both the JS and UI thread.
- *  @example
- *  defineAnimation(() => {
-      "worklet";
-      // ...animation code
-      return {
-        animation,
-       start
-      }
-    });
- * @worklet
- */
-export const defineAnimation = <
-  S extends AnimationState = AnimationState,
-  Prev extends AnimationState = AnimationState
->(
-  factory: () => Omit<Animation<S, Prev>, keyof S>
-) => {
-  "worklet";
-  if (_WORKLET) {
-    return factory() as unknown as number;
-  }
-  return factory as unknown as number;
-};
-
-interface PausableAnimation extends AnimationState {
+interface PausableAnimation extends Animation<PausableAnimation> {
   lastTimestamp: number;
   elapsed: number;
 }
 
-/**
- *  @summary Make an animation pausable. The state of the animation (paused or not)
- *  is controlled by a boolean shared value.
- *  @example
-    const progress = useSharedValue(0);
-    const paused = useSharedValue(false);
-    useEffect(() => {
-      progress.value = withPause(withLoop(withTiming(1)), paused);
-    }, []);
-  * @worklet
- */
 export const withPause = (
-  animationParam: AnimationParameter,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  _nextAnimation: any,
   paused: Animated.SharedValue<boolean>
 ) => {
   "worklet";
-  return defineAnimation<PausableAnimation>(() => {
+  return defineAnimation<PausableAnimation>(_nextAnimation, () => {
     "worklet";
-    const nextAnimation = animationParameter(animationParam);
+    const nextAnimation: PausableAnimation =
+      typeof _nextAnimation === "function" ? _nextAnimation() : _nextAnimation;
     const onFrame = (state: PausableAnimation, now: number) => {
       const { lastTimestamp, elapsed } = state;
       if (paused.value) {
@@ -111,21 +31,39 @@ export const withPause = (
     };
     const onStart = (
       state: PausableAnimation,
-      value: number,
+      value: AnimatableValue,
       now: number,
-      previousState: AnimationState
+      previousState: PausableAnimation
     ) => {
       state.lastTimestamp = now;
       state.elapsed = 0;
+      state.current = 0;
       nextAnimation.onStart(nextAnimation, value, now, previousState);
+    };
+    const callback = (finished?: boolean): void => {
+      if (nextAnimation.callback) {
+        nextAnimation.callback(finished);
+      }
     };
     return {
       onFrame,
       onStart,
-      callback: nextAnimation.callback,
+      isHigherOrder: true,
+      current: nextAnimation.current,
+      callback,
+      previousAnimation: null,
+      startTime: 0,
+      started: false,
+      lastTimestamp: 0,
+      elapsed: 0,
     };
   });
 };
+
+export interface PhysicsAnimation extends Animation<PhysicsAnimation> {
+  velocity: number;
+  current: number;
+}
 
 /**
  *  @summary Add a bouncing behavior to a physics-based animation.
@@ -136,15 +74,19 @@ export const withPause = (
  * @worklet
  */
 export const withBouncing = (
-  animationParam: AnimationParameter<PhysicsAnimationState>,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  _nextAnimation: any,
   lowerBound: number,
   upperBound: number
 ): number => {
   "worklet";
-  return defineAnimation<PhysicsAnimationState, PhysicsAnimationState>(() => {
+  return defineAnimation<PhysicsAnimation>(_nextAnimation, () => {
     "worklet";
-    const nextAnimation = animationParameter(animationParam);
-    const onFrame = (state: PhysicsAnimationState, now: number) => {
+
+    const nextAnimation: PhysicsAnimation =
+      typeof _nextAnimation === "function" ? _nextAnimation() : _nextAnimation;
+
+    const onFrame = (state: PhysicsAnimation, now: number) => {
       const finished = nextAnimation.onFrame(nextAnimation, now);
       const { velocity, current } = nextAnimation;
       state.current = current;
@@ -158,17 +100,19 @@ export const withBouncing = (
       return finished;
     };
     const onStart = (
-      _state: PhysicsAnimationState,
+      _state: PhysicsAnimation,
       value: number,
       now: number,
-      previousState: PhysicsAnimationState
+      previousState: PhysicsAnimation
     ) => {
       nextAnimation.onStart(nextAnimation, value, now, previousState);
     };
     return {
       onFrame,
       onStart,
+      current: nextAnimation.current,
       callback: nextAnimation.callback,
+      velocity: 0,
     };
   });
 };
