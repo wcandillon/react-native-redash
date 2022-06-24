@@ -77,7 +77,7 @@ export const interpolatePath = (
   value: number,
   inputRange: number[],
   outputRange: Path[],
-  extrapolate = Animated.Extrapolate.CLAMP
+  extrapolate = "clamp"
 ) => {
   "worklet";
   const path = {
@@ -152,7 +152,7 @@ export const mixPath = (
   value: number,
   p1: Path,
   p2: Path,
-  extrapolate = Animated.Extrapolate.CLAMP
+  extrapolate = "clamp"
 ) => {
   "worklet";
   return interpolatePath(value, [0, 1], [p1, p2], extrapolate);
