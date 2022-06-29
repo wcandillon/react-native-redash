@@ -1,3 +1,4 @@
+export type Vec3 = readonly [number, number, number];
 export type Vec4 = readonly [number, number, number, number];
 
 export type Matrix4 = readonly [
@@ -193,6 +194,12 @@ export const matrixVecMul4 = (m: Matrix4, v: Vec4) => {
   const row2 = [m[8], m[9], m[10], m[11]] as const;
   const row3 = [m[12], m[13], m[14], m[15]] as const;
   return [dot4(row0, v), dot4(row1, v), dot4(row2, v), dot4(row3, v)] as const;
+};
+
+export const mapPoint3d = (m: Matrix4, v: Vec3) => {
+  "worklet";
+  const r = matrixVecMul4(m, [v[0], v[1], v[2], 1]);
+  return [r[0] / r[3], r[1] / r[3], r[2] / r[3]] as const;
 };
 
 /**
