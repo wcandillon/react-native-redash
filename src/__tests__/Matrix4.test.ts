@@ -1,6 +1,7 @@
 import {
+  concat4,
   multiply4,
-  identityMatrix4,
+  identity4,
   matrixVecMul4,
   processTransform3d,
   mapPoint3d,
@@ -30,7 +31,7 @@ test("processTransform3d()", () => {
 test("multiply4()", () => {
   expect(
     multiply4(
-      identityMatrix4,
+      identity4,
       processTransform3d([{ rotateX: Math.PI }, { rotateY: Math.PI }])
     )
   ).toStrictEqual([
@@ -92,5 +93,27 @@ describe("4x4 matrices", () => {
       { translateZ: 10 },
     ]);
     expect(mapPoint3d(a, [0, 0, 10])).toEqual([50, 0, 20]);
+    const b = processTransform3d([
+      { translateX: 10 },
+      { translateY: 20 },
+      { translateZ: 30 },
+    ]);
+    expect(mapPoint3d(b, [0, 0, 0])).toEqual([10, 20, 30]);
+    expect(
+      concat4(
+        concat4(b, [
+          { translateX: 10 },
+          { translateY: 20 },
+          { translateZ: 30 },
+        ]),
+        [{ translateX: 10 }, { translateY: 20 }, { translateZ: 30 }]
+      )
+    ).toEqual(
+      processTransform3d([
+        { translateX: 30 },
+        { translateY: 60 },
+        { translateZ: 90 },
+      ])
+    );
   });
 });

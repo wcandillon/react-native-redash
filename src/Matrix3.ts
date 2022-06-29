@@ -1,6 +1,6 @@
 /* eslint-disable prefer-destructuring */
 export type Vec2 = readonly [number, number];
-export type Vec3 = readonly [number, number, number];
+type Vec3 = readonly [number, number, number];
 
 export type Matrix3 = readonly [
   number,
@@ -42,6 +42,9 @@ export type Transforms2d = (
   | Pick<Transformations, "rotateZ">
 )[];
 
+/**
+ * @worklet
+ */
 export const parseAngle = (angle: string) => {
   "worklet";
   if (angle.endsWith("deg")) {
@@ -50,6 +53,9 @@ export const parseAngle = (angle: string) => {
   return parseFloat(angle);
 };
 
+/**
+ * @worklet
+ */
 export const isTranslateX = (
   transform: Transforms2d[0]
 ): transform is Pick<Transformations, "translateX"> => {
@@ -57,6 +63,9 @@ export const isTranslateX = (
   return Object.keys(transform).indexOf("translateX") !== -1;
 };
 
+/**
+ * @worklet
+ */
 export const isTranslateY = (
   transform: Transforms2d[0]
 ): transform is Pick<Transformations, "translateY"> => {
@@ -64,6 +73,9 @@ export const isTranslateY = (
   return Object.keys(transform).indexOf("translateY") !== -1;
 };
 
+/**
+ * @worklet
+ */
 export const isScale = (
   transform: Transforms2d[0]
 ): transform is Pick<Transformations, "scale"> => {
@@ -71,6 +83,9 @@ export const isScale = (
   return Object.keys(transform).indexOf("scale") !== -1;
 };
 
+/**
+ * @worklet
+ */
 export const isScaleX = (
   transform: Transforms2d[0]
 ): transform is Pick<Transformations, "scaleX"> => {
@@ -78,6 +93,9 @@ export const isScaleX = (
   return Object.keys(transform).indexOf("scaleX") !== -1;
 };
 
+/**
+ * @worklet
+ */
 export const isScaleY = (
   transform: Transforms2d[0]
 ): transform is Pick<Transformations, "scaleY"> => {
@@ -85,6 +103,9 @@ export const isScaleY = (
   return Object.keys(transform).indexOf("scaleY") !== -1;
 };
 
+/**
+ * @worklet
+ */
 export const isSkewX = (
   transform: Transforms2d[0]
 ): transform is Pick<Transformations, "skewX"> => {
@@ -92,6 +113,9 @@ export const isSkewX = (
   return Object.keys(transform).indexOf("skewX") !== -1;
 };
 
+/**
+ * @worklet
+ */
 export const isSkewY = (
   transform: Transforms2d[0]
 ): transform is Pick<Transformations, "skewY"> => {
@@ -99,6 +123,9 @@ export const isSkewY = (
   return Object.keys(transform).indexOf("skewY") !== -1;
 };
 
+/**
+ * @worklet
+ */
 export const isRotate = (
   transform: Transforms2d[0]
 ): transform is Pick<Transformations, "rotate"> => {
@@ -106,6 +133,9 @@ export const isRotate = (
   return Object.keys(transform).indexOf("rotate") !== -1;
 };
 
+/**
+ * @worklet
+ */
 export const isRotateZ = (
   transform: Transforms2d[0]
 ): transform is Pick<Transformations, "rotateZ"> => {
@@ -113,48 +143,75 @@ export const isRotateZ = (
   return Object.keys(transform).indexOf("rotateZ") !== -1;
 };
 
+/**
+ * @worklet
+ */
 const exhaustiveCheck = (a: never): never => {
   "worklet";
   throw new Error(`Unexhaustive handling for ${a}`);
 };
 
-const identityMatrix: Matrix3 = [1, 0, 0, 0, 1, 0, 0, 0, 1];
+export const identity3: Matrix3 = [1, 0, 0, 0, 1, 0, 0, 0, 1];
 
+/**
+ * @worklet
+ */
 const translateXMatrix = (x: number): Matrix3 => {
   "worklet";
   return [1, 0, x, 0, 1, 0, 0, 0, 1];
 };
 
+/**
+ * @worklet
+ */
 const translateYMatrix = (y: number): Matrix3 => {
   "worklet";
   return [1, 0, 0, 0, 1, y, 0, 0, 1];
 };
 
+/**
+ * @worklet
+ */
 const scaleMatrix = (s: number): Matrix3 => {
   "worklet";
   return [s, 0, 0, 0, s, 0, 0, 0, 1];
 };
 
+/**
+ * @worklet
+ */
 const scaleXMatrix = (s: number): Matrix3 => {
   "worklet";
   return [s, 0, 0, 0, 1, 0, 0, 0, 1];
 };
 
+/**
+ * @worklet
+ */
 const scaleYMatrix = (s: number): Matrix3 => {
   "worklet";
   return [1, 0, 0, 0, s, 0, 0, 0, 1];
 };
 
+/**
+ * @worklet
+ */
 const skewXMatrix = (s: number): Matrix3 => {
   "worklet";
   return [1, Math.tan(s), 0, 0, 1, 0, 0, 0, 1];
 };
 
+/**
+ * @worklet
+ */
 const skewYMatrix = (s: number): Matrix3 => {
   "worklet";
   return [1, 0, 0, Math.tan(s), 1, 0, 0, 0, 1];
 };
 
+/**
+ * @worklet
+ */
 const rotateZMatrix = (r: number): Matrix3 => {
   "worklet";
   return [
@@ -170,11 +227,17 @@ const rotateZMatrix = (r: number): Matrix3 => {
   ];
 };
 
+/**
+ * @worklet
+ */
 export const dot3 = (row: Vec3, col: Vec3) => {
   "worklet";
   return row[0] * col[0] + row[1] * col[1] + row[2] * col[2];
 };
 
+/**
+ * @worklet
+ */
 export const matrixVecMul3 = (m: Matrix3, v: Vec3) => {
   "worklet";
   return [
@@ -184,12 +247,18 @@ export const matrixVecMul3 = (m: Matrix3, v: Vec3) => {
   ] as const;
 };
 
+/**
+ * @worklet
+ */
 export const mapPoint = (m: Matrix3, v: Vec2) => {
   "worklet";
   const r = matrixVecMul3(m, [v[0], v[1], 1]);
   return [r[0] / r[2], r[1] / r[2]] as const;
 };
 
+/**
+ * @worklet
+ */
 export const multiply3 = (m1: Matrix3, m2: Matrix3) => {
   "worklet";
   const row0 = [m1[0], m1[1], m1[2]] as const;
@@ -211,6 +280,9 @@ export const multiply3 = (m1: Matrix3, m2: Matrix3) => {
   ] as const;
 };
 
+/**
+ * @worklet
+ */
 const serializeToSVGMatrix = (m: Matrix3) => {
   "worklet";
   return `matrix(${m[0]}, ${m[3 + 0]}, ${m[1]}, ${m[3 + 1]}, ${m[2]}, ${
@@ -218,11 +290,17 @@ const serializeToSVGMatrix = (m: Matrix3) => {
   })`;
 };
 
+/**
+ * @worklet
+ */
 export const svgMatrix = (transforms: Transforms2d) => {
   "worklet";
   return serializeToSVGMatrix(processTransform2d(transforms));
 };
 
+/**
+ * @worklet
+ */
 export const processTransform2d = (transforms: Transforms2d) => {
   "worklet";
   return transforms.reduce((acc, transform) => {
@@ -254,12 +332,15 @@ export const processTransform2d = (transforms: Transforms2d) => {
       return multiply3(acc, rotateZMatrix(parseAngle(transform.rotateZ)));
     }
     return exhaustiveCheck(transform);
-  }, identityMatrix);
+  }, identity3);
 };
 
+/**
+ * @worklet
+ */
 const isMatrix3 = (arg: Matrix3 | Transforms2d): arg is Matrix3 => {
   "worklet";
-  return arg.length === 3 && arg[0] instanceof Array;
+  return arg.length === 9 && arg[0] instanceof Array;
 };
 
 // https://math.stackexchange.com/questions/13150/extracting-rotation-scale-values-from-2d-transformation-matrix
@@ -267,6 +348,9 @@ const isMatrix3 = (arg: Matrix3 | Transforms2d): arg is Matrix3 => {
 // https://math.stackexchange.com/questions/296794/finding-the-transform-matrix-from-4-projected-points-with-javascript
 // https://franklinta.com/2014/09/08/computing-css-matrix3d-transforms/
 // http://jsfiddle.net/dFrHS/1/
+/**
+ * @worklet
+ */
 export const decompose2d = (arg: Matrix3 | Transforms2d) => {
   "worklet";
   const m = isMatrix3(arg) ? arg : processTransform2d(arg);

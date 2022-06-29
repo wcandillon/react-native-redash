@@ -1,3 +1,5 @@
+import type { Matrix3 } from "./Matrix3";
+
 export type Vec3 = readonly [number, number, number];
 export type Vec4 = readonly [number, number, number, number];
 
@@ -36,6 +38,7 @@ type Transform3dName =
   | "rotateY"
   | "rotateZ"
   | "matrix";
+
 type Transformations = {
   [Name in Transform3dName]: Name extends "matrix" ? Matrix4 : number;
 };
@@ -57,59 +60,93 @@ export type Transforms3d = (
   | Pick<Transformations, "matrix">
 )[];
 
+/**
+ * @worklet
+ */
 const exhaustiveCheck = (a: never): never => {
+  "worklet";
   throw new Error(`Unexhaustive handling for ${a}`);
 };
 
-export const identityMatrix4: Matrix4 = [
+export const identity4: Matrix4 = [
   1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1,
 ];
 
+/**
+ * @worklet
+ */
 const translateXMatrix = (x: number): Matrix4 => {
   "worklet";
   return [1, 0, 0, x, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
 };
 
+/**
+ * @worklet
+ */
 const translateYMatrix = (y: number): Matrix4 => {
   "worklet";
   return [1, 0, 0, 0, 0, 1, 0, y, 0, 0, 1, 0, 0, 0, 0, 1];
 };
 
+/**
+ * @worklet
+ */
 const translateZMatrix = (z: number): Matrix4 => {
   "worklet";
   return [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, z, 0, 0, 0, 1];
 };
 
+/**
+ * @worklet
+ */
 const scaleMatrix = (s: number): Matrix4 => {
   "worklet";
   return [s, 0, 0, 0, 0, s, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
 };
 
+/**
+ * @worklet
+ */
 const scaleXMatrix = (s: number): Matrix4 => {
   "worklet";
   return [s, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
 };
 
+/**
+ * @worklet
+ */
 const skewXMatrix = (s: number): Matrix4 => {
   "worklet";
   return [1, Math.tan(s), 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
 };
 
+/**
+ * @worklet
+ */
 const skewYMatrix = (s: number): Matrix4 => {
   "worklet";
   return [1, 0, 0, 0, Math.tan(s), 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
 };
 
+/**
+ * @worklet
+ */
 const scaleYMatrix = (s: number): Matrix4 => {
   "worklet";
   return [1, 0, 0, 0, 0, s, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
 };
 
+/**
+ * @worklet
+ */
 const perspectiveMatrix = (p: number): Matrix4 => {
   "worklet";
   return [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, -1 / p, 1];
 };
 
+/**
+ * @worklet
+ */
 const rotateXMatrix = (r: number): Matrix4 => {
   "worklet";
   return [
@@ -132,6 +169,9 @@ const rotateXMatrix = (r: number): Matrix4 => {
   ];
 };
 
+/**
+ * @worklet
+ */
 const rotateYMatrix = (r: number): Matrix4 => {
   "worklet";
   return [
@@ -154,6 +194,9 @@ const rotateYMatrix = (r: number): Matrix4 => {
   ];
 };
 
+/**
+ * @worklet
+ */
 const rotateZMatrix = (r: number): Matrix4 => {
   "worklet";
   return [
@@ -196,6 +239,9 @@ export const matrixVecMul4 = (m: Matrix4, v: Vec4) => {
   return [dot4(row0, v), dot4(row1, v), dot4(row2, v), dot4(row3, v)] as const;
 };
 
+/**
+ * @worklet
+ */
 export const mapPoint3d = (m: Matrix4, v: Vec3) => {
   "worklet";
   const r = matrixVecMul4(m, [v[0], v[1], v[2], 1]);
@@ -233,6 +279,14 @@ export const multiply4 = (m1: Matrix4, m2: Matrix4) => {
     dot4(row3, col2),
     dot4(row3, col3),
   ] as const;
+};
+
+/**
+ * @worklet
+ */
+export const toMatrix3 = (m: Matrix4): Matrix3 => {
+  "worklet";
+  return [m[0], m[4], m[12], m[1], m[5], m[13], m[3], m[7], m[15]];
 };
 
 /**
@@ -295,5 +349,13 @@ export const processTransform3d = (transforms: Transforms3d) => {
       return multiply4(acc, matrix);
     }
     return exhaustiveCheck(key);
-  }, identityMatrix4);
+  }, identity4);
+};
+
+/**
+ * @worklet
+ */
+export const concat4 = (m: Matrix4, transform: Transforms3d) => {
+  "worklet";
+  return multiply4(m, processTransform3d(transform));
 };
