@@ -286,7 +286,7 @@ export const multiply4 = (m1: Matrix4, m2: Matrix4) => {
  */
 export const toMatrix3 = (m: Matrix4): Matrix3 => {
   "worklet";
-  return [m[0], m[4], m[12], m[1], m[5], m[13], m[3], m[7], m[15]];
+  return [m[0], m[1], m[3], m[4], m[5], m[7], m[12], m[13], m[15]];
 };
 
 /**
