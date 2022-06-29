@@ -1,10 +1,4 @@
-import {
-  mapPoint,
-  matrixVecMul3,
-  multiply3,
-  processTransform2d,
-  svgMatrix,
-} from "../Matrix3";
+import { mapPoint, multiply3, processTransform2d, svgMatrix } from "../Matrix3";
 
 const expectArrayCloseTo = (
   a: readonly number[],

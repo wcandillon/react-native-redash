@@ -1,6 +1,23 @@
 export type Vec4 = readonly [number, number, number, number];
 
-export type Matrix4 = readonly [Vec4, Vec4, Vec4, Vec4];
+export type Matrix4 = readonly [
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number
+];
 
 type Transform3dName =
   | "translateX"
@@ -44,129 +61,117 @@ const exhaustiveCheck = (a: never): never => {
 };
 
 export const identityMatrix4: Matrix4 = [
-  [1, 0, 0, 0],
-  [0, 1, 0, 0],
-  [0, 0, 1, 0],
-  [0, 0, 0, 1],
+  1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1,
 ];
 
 const translateXMatrix = (x: number): Matrix4 => {
   "worklet";
-  return [
-    [1, 0, 0, x],
-    [0, 1, 0, 0],
-    [0, 0, 1, 0],
-    [0, 0, 0, 1],
-  ];
+  return [1, 0, 0, x, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
 };
 
 const translateYMatrix = (y: number): Matrix4 => {
   "worklet";
-  return [
-    [1, 0, 0, 0],
-    [0, 1, 0, y],
-    [0, 0, 1, 0],
-    [0, 0, 0, 1],
-  ];
+  return [1, 0, 0, 0, 0, 1, 0, y, 0, 0, 1, 0, 0, 0, 0, 1];
 };
 
 const translateZMatrix = (z: number): Matrix4 => {
   "worklet";
-  return [
-    [1, 0, 0, 0],
-    [0, 1, 0, 0],
-    [0, 0, 1, z],
-    [0, 0, 0, 1],
-  ];
+  return [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, z, 0, 0, 0, 1];
 };
 
 const scaleMatrix = (s: number): Matrix4 => {
   "worklet";
-  return [
-    [s, 0, 0, 0],
-    [0, s, 0, 0],
-    [0, 0, 1, 0],
-    [0, 0, 0, 1],
-  ];
+  return [s, 0, 0, 0, 0, s, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
 };
 
 const scaleXMatrix = (s: number): Matrix4 => {
   "worklet";
-  return [
-    [s, 0, 0, 0],
-    [0, 1, 0, 0],
-    [0, 0, 1, 0],
-    [0, 0, 0, 1],
-  ];
+  return [s, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
 };
 
 const skewXMatrix = (s: number): Matrix4 => {
   "worklet";
-  return [
-    [1, Math.tan(s), 0, 0],
-    [0, 1, 0, 0],
-    [0, 0, 1, 0],
-    [0, 0, 0, 1],
-  ];
+  return [1, Math.tan(s), 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
 };
 
 const skewYMatrix = (s: number): Matrix4 => {
   "worklet";
-  return [
-    [1, 0, 0, 0],
-    [Math.tan(s), 1, 0, 0],
-    [0, 0, 1, 0],
-    [0, 0, 0, 1],
-  ];
+  return [1, 0, 0, 0, Math.tan(s), 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
 };
 
 const scaleYMatrix = (s: number): Matrix4 => {
   "worklet";
-  return [
-    [1, 0, 0, 0],
-    [0, s, 0, 0],
-    [0, 0, 1, 0],
-    [0, 0, 0, 1],
-  ];
+  return [1, 0, 0, 0, 0, s, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
 };
 
 const perspectiveMatrix = (p: number): Matrix4 => {
   "worklet";
-  return [
-    [1, 0, 0, 0],
-    [0, 1, 0, 0],
-    [0, 0, 1, 0],
-    [0, 0, -1 / p, 1],
-  ];
+  return [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, -1 / p, 1];
 };
 
 const rotateXMatrix = (r: number): Matrix4 => {
   "worklet";
   return [
-    [1, 0, 0, 0],
-    [0, Math.cos(r), -Math.sin(r), 0],
-    [0, Math.sin(r), Math.cos(r), 0],
-    [0, 0, 0, 1],
+    1,
+    0,
+    0,
+    0,
+    0,
+    Math.cos(r),
+    -Math.sin(r),
+    0,
+    0,
+    Math.sin(r),
+    Math.cos(r),
+    0,
+    0,
+    0,
+    0,
+    1,
   ];
 };
 
 const rotateYMatrix = (r: number): Matrix4 => {
   "worklet";
   return [
-    [Math.cos(r), 0, Math.sin(r), 0],
-    [0, 1, 0, 0],
-    [-Math.sin(r), 0, Math.cos(r), 0],
-    [0, 0, 0, 1],
+    Math.cos(r),
+    0,
+    Math.sin(r),
+    0,
+    0,
+    1,
+    0,
+    0,
+    -Math.sin(r),
+    0,
+    Math.cos(r),
+    0,
+    0,
+    0,
+    0,
+    1,
   ];
 };
 
 const rotateZMatrix = (r: number): Matrix4 => {
   "worklet";
   return [
-    [Math.cos(r), -Math.sin(r), 0, 0],
-    [Math.sin(r), Math.cos(r), 0, 0],
-    [0, 0, 1, 0],
-    [0, 0, 0, 1],
+    Math.cos(r),
+    -Math.sin(r),
+    0,
+    0,
+    Math.sin(r),
+    Math.cos(r),
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
   ];
 };
 
@@ -183,7 +188,11 @@ export const dot4 = (row: Vec4, col: Vec4) => {
  */
 export const matrixVecMul4 = (m: Matrix4, v: Vec4) => {
   "worklet";
-  return [dot4(m[0], v), dot4(m[1], v), dot4(m[2], v), dot4(m[3], v)] as const;
+  const row0 = [m[0], m[1], m[2], m[3]] as const;
+  const row1 = [m[4], m[5], m[6], m[7]] as const;
+  const row2 = [m[8], m[9], m[10], m[11]] as const;
+  const row3 = [m[12], m[13], m[14], m[15]] as const;
+  return [dot4(row0, v), dot4(row1, v), dot4(row2, v), dot4(row3, v)] as const;
 };
 
 /**
@@ -191,35 +200,31 @@ export const matrixVecMul4 = (m: Matrix4, v: Vec4) => {
  */
 export const multiply4 = (m1: Matrix4, m2: Matrix4) => {
   "worklet";
-  const col0 = [m2[0][0], m2[1][0], m2[2][0], m2[3][0]] as const;
-  const col1 = [m2[0][1], m2[1][1], m2[2][1], m2[3][1]] as const;
-  const col2 = [m2[0][2], m2[1][2], m2[2][2], m2[3][2]] as const;
-  const col3 = [m2[0][3], m2[1][3], m2[2][3], m2[3][3]] as const;
+  const col0 = [m2[0], m2[4 + 0], m2[8 + 0], m2[12 + 0]] as const;
+  const col1 = [m2[1], m2[4 + 1], m2[8 + 1], m2[12 + 1]] as const;
+  const col2 = [m2[2], m2[4 + 2], m2[8 + 2], m2[12 + 2]] as const;
+  const col3 = [m2[3], m2[4 + 3], m2[8 + 3], m2[12 + 3]] as const;
+  const row0 = [m1[0], m1[1], m1[2], m1[3]] as const;
+  const row1 = [m1[4], m1[5], m1[6], m1[7]] as const;
+  const row2 = [m1[8], m1[9], m1[10], m1[11]] as const;
+  const row3 = [m1[12], m1[13], m1[14], m1[15]] as const;
   return [
-    [
-      dot4(m1[0], col0),
-      dot4(m1[0], col1),
-      dot4(m1[0], col2),
-      dot4(m1[0], col3),
-    ],
-    [
-      dot4(m1[1], col0),
-      dot4(m1[1], col1),
-      dot4(m1[1], col2),
-      dot4(m1[1], col3),
-    ],
-    [
-      dot4(m1[2], col0),
-      dot4(m1[2], col1),
-      dot4(m1[2], col2),
-      dot4(m1[2], col3),
-    ],
-    [
-      dot4(m1[3], col0),
-      dot4(m1[3], col1),
-      dot4(m1[3], col2),
-      dot4(m1[3], col3),
-    ],
+    dot4(row0, col0),
+    dot4(row0, col1),
+    dot4(row0, col2),
+    dot4(row0, col3),
+    dot4(row1, col0),
+    dot4(row1, col1),
+    dot4(row1, col2),
+    dot4(row1, col3),
+    dot4(row2, col0),
+    dot4(row2, col1),
+    dot4(row2, col2),
+    dot4(row2, col3),
+    dot4(row3, col0),
+    dot4(row3, col1),
+    dot4(row3, col2),
+    dot4(row3, col3),
   ] as const;
 };
 
