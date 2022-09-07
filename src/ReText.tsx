@@ -1,5 +1,5 @@
 import React from "react";
-import type { TextProps as RNTextProps } from "react-native";
+import type { TextInputProps, TextProps as RNTextProps } from "react-native";
 import { StyleSheet, TextInput } from "react-native";
 import Animated, { useAnimatedProps } from "react-native-reanimated";
 
@@ -12,6 +12,7 @@ Animated.addWhitelistedNativeProps({ text: true });
 
 interface TextProps {
   text: Animated.SharedValue<string>;
+  textInputProps?: TextInputProps;
   style?: Animated.AnimateProps<RNTextProps>["style"];
 }
 
@@ -32,6 +33,7 @@ const ReText = (props: TextProps) => {
       editable={false}
       value={text.value}
       style={[styles.baseStyle, style]}
+      {...props.textInputProps}
       {...{ animatedProps }}
     />
   );
