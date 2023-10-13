@@ -25,7 +25,7 @@ const ReText = (props: TextProps) => {
       // Here we use any because the text prop is not available in the type
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } as any;
-  });
+  }, [text]);
   return (
     <AnimatedTextInput
       underlineColorAndroid="transparent"
