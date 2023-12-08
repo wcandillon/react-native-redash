@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export const sdot = (...args: number[]): number => {
   let acc = 0;
@@ -89,22 +90,22 @@ const dot = (a: number[], b: number[]): number => {
 const vectorLengthSquared = (v: number[]): number => dot(v, v);
 const vectorLength = (v: number[]): number => Math.sqrt(vectorLengthSquared(v));
 const mulScalar = (v: number[], s: number): number[] => v.map((val) => val * s);
-const addVectors = (a: number[], b: number[]): number[] =>
-  a.map((val, i) => val + b[i]);
-const subVectors = (a: number[], b: number[]): number[] =>
-  a.map((val, i) => val - b[i]);
+// const addVectors = (a: number[], b: number[]): number[] =>
+//   a.map((val, i) => val + b[i]);
+// const subVectors = (a: number[], b: number[]): number[] =>
+//   a.map((val, i) => val - b[i]);
 const normalize = (v: number[]): number[] => mulScalar(v, 1 / vectorLength(v));
 
-const cross = (a: number[], b: number[]): number[] => {
-  if (a.length !== 3 || b.length !== 3) {
-    throw new Error("Cross product is only defined for 3-dimensional vectors.");
-  }
-  return [
-    a[1] * b[2] - a[2] * b[1],
-    a[2] * b[0] - a[0] * b[2],
-    a[0] * b[1] - a[1] * b[0],
-  ];
-};
+// const cross = (a: number[], b: number[]): number[] => {
+//   if (a.length !== 3 || b.length !== 3) {
+//     throw new Error("Cross product is only defined for 3-dimensional vectors.");
+//   }
+//   return [
+//     a[1] * b[2] - a[2] * b[1],
+//     a[2] * b[0] - a[0] * b[2],
+//     a[0] * b[1] - a[1] * b[0],
+//   ];
+// };
 
 // Matrix operations
 export const translated = (vec: number[]): number[] =>
