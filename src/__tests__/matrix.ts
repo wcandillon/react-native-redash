@@ -156,3 +156,8 @@ export const transformPoint = (m4: number[], t: number[]): number[] => {
   const w = m4[3] * t[0] + m4[7] * t[1] + m4[11] * t[2] + m4[15] * t[3];
   return [x, y, z, w];
 };
+
+export const transformPoint3d = (m4: number[], t: number[]): number[] => {
+  const [x, y, z, w] = transformPoint(m4, [...t, 1]);
+  return [x / w, y / w, z / w];
+};
