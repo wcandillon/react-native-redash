@@ -88,14 +88,14 @@ const scale = (sx: number, sy: number, sz: number): Matrix4 => {
   return [sx, 0, 0, 0, 0, sy, 0, 0, 0, 0, sz, 0, 0, 0, 0, 1];
 };
 
-const skewX = (s: number): Matrix4 => {
+const skewX = (angle: number): Matrix4 => {
   "worklet";
-  return [1, 0, 0, 0, Math.tan(s), 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
+  return [1, Math.tan(angle), 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
 };
 
-const skewY = (s: number): Matrix4 => {
+const skewY = (angle: number): Matrix4 => {
   "worklet";
-  return [1, Math.tan(s), 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
+  return [1, 0, 0, 0, Math.tan(angle), 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
 };
 
 const perspective = (p: number): Matrix4 => {
