@@ -150,11 +150,11 @@ const rotatedUnitSinCos = (
   ];
 };
 
-export const transformPoint = (m4: number[], t: number[]): number[] => {
-  const x = m4[0] * t[0] + m4[4] * t[1] + m4[8] * t[2] + m4[12] * t[3];
-  const y = m4[1] * t[0] + m4[5] * t[1] + m4[9] * t[2] + m4[13] * t[3];
-  const z = m4[2] * t[0] + m4[6] * t[1] + m4[10] * t[2] + m4[14] * t[3];
-  const w = m4[3] * t[0] + m4[7] * t[1] + m4[11] * t[2] + m4[15] * t[3];
+export const transformPoint = (m: number[], t: number[]): number[] => {
+  const x = m[0] * t[0] + m[1] * t[1] + m[2] * t[2] + m[3] * t[3];
+  const y = m[4] * t[0] + m[5] * t[1] + m[6] * t[2] + m[7] * t[3];
+  const z = m[8] * t[0] + m[9] * t[1] + m[10] * t[2] + m[11] * t[3];
+  const w = m[12] * t[0] + m[13] * t[1] + m[14] * t[2] + m[15] * t[3];
   return [x, y, z, w];
 };
 

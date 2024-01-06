@@ -1,6 +1,7 @@
 import {
   concat4,
   identity4,
+  translate,
   mapPoint3d,
   matrixVecMul4,
   multiply4,
@@ -138,5 +139,17 @@ describe("4x4 matrices", () => {
         { translateZ: 90 },
       ])
     );
+  });
+  it("should correctly transform a point with an identity matrix", () => {
+    const point = [100, -100, 200] as const; // Define some test point
+    const result = mapPoint3d(identity4, point);
+    expect(result).toEqual(point);
+  });
+  it("should correctly transform a point with a translation matrix", () => {
+    const translationMatrix = translate(100, 100, 100);
+    const point = [100, -100, 200] as const; // Define some test point
+    const expectedResult = [200, 0, 300] as const;
+    const result = mapPoint3d(translationMatrix, point);
+    expect(result).toEqual(expectedResult);
   });
 });
