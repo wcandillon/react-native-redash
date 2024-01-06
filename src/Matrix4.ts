@@ -78,27 +78,42 @@ export const identity4: Matrix4 = [
   1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1,
 ];
 
-const translate = (x: number, y: number, z: number): Matrix4 => {
+/**
+ * @worklet
+ */
+export const translate = (x: number, y: number, z: number): Matrix4 => {
   "worklet";
   return [1, 0, 0, x, 0, 1, 0, y, 0, 0, 1, z, 0, 0, 0, 1];
 };
 
+/**
+ * @worklet
+ */
 const scale = (sx: number, sy: number, sz: number): Matrix4 => {
   "worklet";
   return [sx, 0, 0, 0, 0, sy, 0, 0, 0, 0, sz, 0, 0, 0, 0, 1];
 };
 
-const skewX = (s: number): Matrix4 => {
+/**
+ * @worklet
+ */
+export const skewX = (s: number): Matrix4 => {
   "worklet";
   return [1, 0, 0, 0, Math.tan(s), 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
 };
 
-const skewY = (s: number): Matrix4 => {
+/**
+ * @worklet
+ */
+export const skewY = (s: number): Matrix4 => {
   "worklet";
   return [1, Math.tan(s), 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
 };
 
-const perspective = (p: number): Matrix4 => {
+/**
+ * @worklet
+ */
+export const perspective = (p: number): Matrix4 => {
   "worklet";
   return [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, -1 / p, 1];
 };
@@ -144,7 +159,10 @@ const rotatedUnitSinCos = (
   ];
 };
 
-const rotate = (axis: Vec3, value: number) => {
+/**
+ * @worklet
+ */
+export const rotate = (axis: Vec3, value: number) => {
   "worklet";
   return rotatedUnitSinCos(
     normalizeVec(axis),
@@ -156,14 +174,13 @@ const rotate = (axis: Vec3, value: number) => {
 /**
  * @worklet
  */
-export const matrixVecMul4 = (m: Matrix4, v: Vec4) => {
+export const matrixVecMul4 = (m: Matrix4, v: Vec4): Vec4 => {
   "worklet";
-  const [vx, vy, vz, vw] = v;
   return [
-    vx * m[0] + vy * m[4] + vz * m[8] + vw * m[12],
-    vx * m[1] + vy * m[5] + vz * m[9] + vw * m[13],
-    vx * m[2] + vy * m[6] + vz * m[10] + vw * m[14],
-    vx * m[3] + vy * m[7] + vz * m[11] + vw * m[15],
+    m[0] * v[0] + m[1] * v[1] + m[2] * v[2] + m[3] * v[3],
+    m[4] * v[0] + m[5] * v[1] + m[6] * v[2] + m[7] * v[3],
+    m[8] * v[0] + m[9] * v[1] + m[10] * v[2] + m[11] * v[3],
+    m[12] * v[0] + m[13] * v[1] + m[14] * v[2] + m[15] * v[3],
   ];
 };
 
