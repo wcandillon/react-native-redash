@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import type { TextInputProps, TextProps as RNTextProps } from "react-native";
 import { StyleSheet, TextInput } from "react-native";
 import Animated, { useAnimatedProps } from "react-native-reanimated";
@@ -19,6 +19,7 @@ const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
 
 const ReText = (props: TextProps) => {
   const { style, text, ...rest } = props;
+  const initialValue = useMemo(() => text.value, [text]);
   const animatedProps = useAnimatedProps(() => {
     return {
       text: text.value,
@@ -30,7 +31,7 @@ const ReText = (props: TextProps) => {
     <AnimatedTextInput
       underlineColorAndroid="transparent"
       editable={false}
-      value={text.value}
+      value={initialValue}
       style={[styles.baseStyle, style || undefined]}
       {...rest}
       {...{ animatedProps }}
