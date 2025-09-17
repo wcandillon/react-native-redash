@@ -1,3 +1,4 @@
+/* eslint-disable prefer-destructuring */
 type Vec2 = readonly [number, number];
 type Vec3 = readonly [number, number, number];
 type Vec4 = readonly [number, number, number, number];
@@ -120,7 +121,9 @@ export const perspective = (p: number): Matrix4 => {
 
 const normalizeVec = (vec: Vec3): Vec3 => {
   "worklet";
-  const [x, y, z] = vec;
+  const x = vec[0];
+  const y = vec[1];
+  const z = vec[2];
   const length = Math.sqrt(x * x + y * y + z * z);
   // Check for zero length to avoid division by zero
   if (length === 0) {
@@ -135,7 +138,9 @@ const rotatedUnitSinCos = (
   cosAngle: number
 ): Matrix4 => {
   "worklet";
-  const [x, y, z] = axisVec;
+  const x = axisVec[0];
+  const y = axisVec[1];
+  const z = axisVec[2];
   const c = cosAngle;
   const s = sinAngle;
   const t = 1 - c;
@@ -189,7 +194,7 @@ export const matrixVecMul4 = (m: Matrix4, v: Vec4): Vec4 => {
  */
 export const mapPoint3d = (m: Matrix4, v: Vec3) => {
   "worklet";
-  const r = matrixVecMul4(m, [...v, 1]);
+  const r = matrixVecMul4(m, [v[0], v[1], v[2], 1]);
   return [r[0] / r[3], r[1] / r[3], r[2] / r[3]] as const;
 };
 
@@ -216,7 +221,7 @@ export const multiply4 = (a: Matrix4, b: Matrix4): Matrix4 => {
  */
 export const toMatrix3 = (m: Matrix4) => {
   "worklet";
-  return [m[0], m[1], m[3], m[4], m[5], m[7], m[12], m[13], m[15]];
+  return [m[0], m[1], m[2], m[4], m[5], m[6], m[3], m[7], 1];
 };
 
 /**
@@ -232,7 +237,10 @@ export const processTransform3d = (transforms: Transforms3d) => {
       return multiply4(acc, translate(value, 0, 0));
     }
     if (key === "translate") {
-      const [x, y, z = 0] = transform[key];
+      const translateValue = transform[key];
+      const x = translateValue[0];
+      const y = translateValue[1];
+      const z = translateValue[2] ?? 0;
       return multiply4(acc, translate(x, y, z));
     }
     if (key === "translateY") {
