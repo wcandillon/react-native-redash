@@ -12,7 +12,7 @@ type SVGMoveCommand = ["M", number, number];
 type SVGCurveCommand = ["C", number, number, number, number, number, number];
 type SVGNormalizedCommands = [
   SVGMoveCommand,
-  ...(SVGCurveCommand | SVGCloseCommand)[]
+  ...(SVGCurveCommand | SVGCloseCommand)[],
 ];
 
 interface Curve {

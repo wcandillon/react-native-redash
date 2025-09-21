@@ -11,7 +11,7 @@ export type Matrix3 = readonly [
   number,
   number,
   number,
-  number
+  number,
 ];
 
 export interface TransformProp {

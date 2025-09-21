@@ -21,5 +21,5 @@
     "skipLibCheck": true
   },
   "files": ["src/index.d.ts", "src/__tests__/index.ts"],
-  "include": ["src/index.ts", "node_modules/@types/jest"]
+  "include": ["src/**/*.ts", "src/**/*.tsx", "node_modules/@types/jest"]
 }
