@@ -1,4 +1,3 @@
-/* eslint-disable no-shadow */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export const sdot = (...args: number[]): number => {
   let acc = 0;
@@ -69,15 +68,15 @@ export const multiply = (...listOfMatrices: any[]) => {
 
 export const stride = (
   v: number[],
-  m: number[],
+  matrix: number[],
   width: number,
   offset: number,
   colStride: number
 ): number[] => {
   for (let i = 0; i < v.length; i++) {
-    m[i * width + ((i * colStride + offset + width) % width)] = v[i];
+    matrix[i * width + ((i * colStride + offset + width) % width)] = v[i];
   }
-  return m;
+  return matrix;
 };
 
 const dot = (a: number[], b: number[]): number => {
@@ -150,11 +149,18 @@ const rotatedUnitSinCos = (
   ];
 };
 
-export const transformPoint = (m: number[], t: number[]): number[] => {
-  const x = m[0] * t[0] + m[1] * t[1] + m[2] * t[2] + m[3] * t[3];
-  const y = m[4] * t[0] + m[5] * t[1] + m[6] * t[2] + m[7] * t[3];
-  const z = m[8] * t[0] + m[9] * t[1] + m[10] * t[2] + m[11] * t[3];
-  const w = m[12] * t[0] + m[13] * t[1] + m[14] * t[2] + m[15] * t[3];
+export const transformPoint = (matrix: number[], t: number[]): number[] => {
+  const x =
+    matrix[0] * t[0] + matrix[1] * t[1] + matrix[2] * t[2] + matrix[3] * t[3];
+  const y =
+    matrix[4] * t[0] + matrix[5] * t[1] + matrix[6] * t[2] + matrix[7] * t[3];
+  const z =
+    matrix[8] * t[0] + matrix[9] * t[1] + matrix[10] * t[2] + matrix[11] * t[3];
+  const w =
+    matrix[12] * t[0] +
+    matrix[13] * t[1] +
+    matrix[14] * t[2] +
+    matrix[15] * t[3];
   return [x, y, z, w];
 };
 

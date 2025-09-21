@@ -14,14 +14,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/wcandillon/redash.git"
+    "url": "https://github.com/wcandillon/react-native-redash.git"
   },
   "author": "William Candillon",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/wcandillon/redash/issues"
+    "url": "https://github.com/wcandillon/react-native-redash/issues"
   },
-  "homepage": "https://github.com/wcandillon/redash#readme",
+  "homepage": "https://github.com/wcandillon/react-native-redash#readme",
   "peerDependencies": {
     "react": "*",
     "react-native": "*",
@@ -36,8 +36,8 @@
     "@types/react-native": "0.63.20",
     "babel-jest": "^24.9.0",
     "babel-preset-expo": "^8.0.0",
-    "eslint": "^7.8.1",
-    "eslint-config-react-native-wcandillon": "3.6.3",
+    "eslint": "^9.0.0",
+    "eslint-config-react-native-wcandillon": "4.0.1",
     "jest": "^24.9.0",
     "react": "^16.8.6",
     "react-native": "^0.62.3",
