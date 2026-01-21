@@ -44,7 +44,13 @@ export const serialize = (path: Path) => {
  * The SVG is normalized to have absolute values and to be approximated to a sequence of Bèzier curves.
  */
 export const parse = (d: string): Path => {
+  if (!d || d.trim() === "") {
+    return createPath({ x: 0, y: 0 });
+  }
   const segments: SVGNormalizedCommands = normalizeSVG(absSVG(parseSVG(d)));
+  if (!segments || segments.length === 0) {
+    return createPath({ x: 0, y: 0 });
+  }
   const path = createPath({ x: segments[0][1], y: segments[0][2] });
   segments.forEach((segment) => {
     if (segment[0] === "Z") {
