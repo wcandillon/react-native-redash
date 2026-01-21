@@ -40,6 +40,39 @@ test("parse()", () => {
   expect(serialize(parse(path))).toBe(path);
 });
 
+describe("parse edge cases", () => {
+  it("should handle empty string without crashing", () => {
+    expect(() => parse("")).not.toThrow();
+  });
+
+  it("should return empty path for empty string", () => {
+    const result = parse("");
+    expect(result).toEqual({
+      move: { x: 0, y: 0 },
+      curves: [],
+      close: false,
+    });
+  });
+
+  it("should handle whitespace-only string", () => {
+    const result = parse("   ");
+    expect(result).toEqual({
+      move: { x: 0, y: 0 },
+      curves: [],
+      close: false,
+    });
+  });
+
+  it("should handle newlines and tabs", () => {
+    const result = parse("\n\t\n");
+    expect(result).toEqual({
+      move: { x: 0, y: 0 },
+      curves: [],
+      close: false,
+    });
+  });
+});
+
 test("getYForX()", () => {
   const p1 = parse(
     "M150,0 C150,0 0,75 200,75 C75,200 200,225 200,225 C225,200 200,150 0,150"
