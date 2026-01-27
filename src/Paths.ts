@@ -161,6 +161,31 @@ export const mixPath = (
   extrapolate = Extrapolation.CLAMP
 ) => {
   "worklet";
+
+  // handle issues on different path length
+  // https://github.com/wcandillon/react-native-redash/issues/466
+
+  if (p2.curves.length !== p1.curves.length) {
+    const maxY = Math.max(...p2.curves.map((c) => c.c1.y));
+    const p1a = {
+      ...p2,
+      curves: p2.curves.map((_curve) => {
+        const c = JSON.parse(JSON.stringify(_curve));
+
+        c.c1.x = 0;
+        c.c2.x = 0;
+        c.to.x = 0;
+
+        c.c1.y = maxY;
+        c.c2.y = maxY;
+        c.to.y = maxY;
+
+        return c;
+      }),
+    };
+    return interpolatePath(value, [0, 1], [p1a, p2]);
+  }
+
   return interpolatePath(value, [0, 1], [p1, p2], extrapolate);
 };
 
